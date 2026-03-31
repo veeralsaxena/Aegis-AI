@@ -417,28 +417,15 @@ git clone https://github.com/veeralsaxena/Aegis-AI.git
 cd Aegis-AI
 ```
 
-### 2. Start the Bahmni Backend
+### 2. Start the Application
+
+The repository includes a unified startup script that will launch both the Bahmni backend (via Docker) and the Next.js frontend automatically.
 
 ```bash
-cd bahmni-docker
-docker compose up -d
+./start.sh
 ```
 
-Wait for all services to be healthy (PostgreSQL, OpenMRS, Bahmni Web):
-
-```bash
-docker compose ps
-```
-
-### 3. Start the Frontend
-
-```bash
-cd omnicare-frontend
-npm install
-npm run dev
-```
-
-The application will be available at **https://localhost:3000**
+Wait for the frontend to finish compiling. The application will be available at **https://localhost:3000**
 
 ### 4. Login
 
@@ -449,7 +436,7 @@ Password: Admin123
 
 ### Environment Variables
 
-Create a `.env.local` file in the `omnicare-frontend/` directory:
+Create a `.env.local` file in the `frontend/` directory (not the root):
 
 ```env
 NEXT_PUBLIC_BACKEND_URL=https://localhost
