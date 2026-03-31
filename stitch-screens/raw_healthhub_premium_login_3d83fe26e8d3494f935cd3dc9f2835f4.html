@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Patient Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a1114",
+        },
+        fontFamily: {
+          "display": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+</style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center z-0 opacity-20" data-alt="Abstract midnight blue mesh pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-HaSwB-iBEftYAyerdJJhFf3jLPAwL_GDX3tbskIdeFjVXSodJ2-76kfR5FMbXKmel4xaT51ooAbgPWhk5BRaAGhhFhuNHtm2gK236-au1VoVVk4p-h1YyPsM2awpryTVI3DrxoSDx-XE-bJtIgBQwQgKYYTaVXt8nyET_0ZFzawrdPzYVIxkUYZ5ozydYBxl_8YXmrSs8dJpA2O57741XVExWumueI7NM8S6N7tbJEsQ9_7yI_kdW6vAXDus6Wmw1Qr8ygXLm8Jh');"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-background-dark/95 via-background-dark/80 to-primary/10 z-0"></div>
+<div class="relative z-10 w-full max-w-5xl backdrop-blur-[20px] bg-slate-900/60 border border-primary/20 rounded-2xl shadow-[0_0_40px_rgba(37,192,244,0.15)] overflow-hidden flex flex-col md:flex-row">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_15px_rgba(37,192,244,0.6)]"></div>
+<div class="w-full md:w-1/3 bg-black/40 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-700/50">
+<div class="flex flex-col items-center mb-10 text-center">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="filter: drop-shadow(0 0 8px rgba(37,192,244,0.5));">ecg_heart</span>
+<span class="text-2xl font-bold tracking-tight text-white">OmniCare AI</span>
+</div>
+<p class="text-slate-400 text-xs font-light tracking-[0.1em] uppercase">Secure Intake</p>
+</div>
+<div class="w-full flex flex-col gap-6">
+<div class="border-2 border-dashed border-slate-600 hover:border-primary/60 transition-colors rounded-xl p-6 flex flex-col items-center justify-center text-slate-400 cursor-pointer group bg-black/20 hover:bg-black/40">
+<span class="material-symbols-outlined text-4xl mb-3 text-slate-500 group-hover:text-primary transition-colors">account_circle</span>
+<span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">Upload Profile Photo</span>
+<span class="text-xs font-light mt-1">JPEG, PNG up to 5MB</span>
+</div>
+<div class="border-2 border-dashed border-slate-600 hover:border-primary/60 transition-colors rounded-xl p-6 flex flex-col items-center justify-center text-slate-400 cursor-pointer group bg-black/20 hover:bg-black/40">
+<span class="material-symbols-outlined text-4xl mb-3 text-slate-500 group-hover:text-primary transition-colors">badge</span>
+<span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">Scan Patient ID</span>
+<span class="text-xs font-light mt-1">Front and back required</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-2/3 p-8 md:p-12 flex flex-col justify-center">
+<div class="mb-8">
+<h2 class="text-3xl font-semibold text-white mb-2 tracking-tight">Patient Registration</h2>
+<p class="text-slate-400 text-sm font-light tracking-wide">Enter demographic information to create a new health record.</p>
+</div>
+<form class="flex flex-col gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="firstName">First Name</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="firstName" placeholder="e.g. Jane" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="lastName">Last Name</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="lastName" placeholder="e.g. Doe" type="text"/>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="dob">Date of Birth</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">calendar_month</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="dob" type="date"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="gender">Gender</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">wc</span>
+<select class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white transition-all outline-none font-light appearance-none" id="gender">
+<option class="text-slate-600" disabled="" selected="" value="">Select gender</option>
+<option class="text-slate-900" value="f">Female</option>
+<option class="text-slate-900" value="m">Male</option>
+<option class="text-slate-900" value="o">Other</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 text-slate-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="phone">Contact Number</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">call</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="phone" placeholder="(555) 000-0000" type="tel"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="email">Email Address</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="email" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full bg-primary hover:bg-primary/90 text-background-dark text-lg font-semibold py-4 rounded-xl shadow-[0_0_20px_rgba(37,192,244,0.4)] hover:shadow-[0_0_30px_rgba(37,192,244,0.6)] transition-all flex items-center justify-center gap-2 group" type="button">
+        Register Patient
+        <span class="material-symbols-outlined text-[24px] group-hover:translate-x-1 transition-transform">how_to_reg</span>
+</button>
+</form>
+<div class="mt-6 flex items-center justify-center gap-2 text-slate-500 text-xs font-light tracking-wide">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Encrypted &amp; HIPAA-compliant transmission</span>
+</div>
+</div>
+</div>
+</body></html>

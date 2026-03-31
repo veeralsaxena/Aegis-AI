@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medication &amp; Prescriptions - OmniCare AI Premium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "midnight": "#020617",
+                        "glass-border": "rgba(0, 229, 255, 0.2)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 229, 255, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(29, 78, 216, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(2, 6, 23, 1) 0px, transparent 100%);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .liquid-button {
+            background: linear-gradient(135deg, #00e5ff 0%, #0097a7 100%);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .liquid-button:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .interaction-glow {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.3) !important;
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-display min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-6 md:px-20 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-white/10 px-6 py-4 mb-8 glass-card rounded-2xl">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-white">
+<div class="size-8 flex items-center justify-center rounded-lg bg-primary/20 text-primary border border-primary/30">
+<span class="material-symbols-outlined text-xl">medical_services</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">OmniCare AI</h2>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Patients</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1 shadow-[0_4px_10px_rgba(0,229,255,0.2)]" href="#">Medications</a>
+</nav>
+<button class="liquid-button flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-5 text-midnight text-sm font-bold tracking-wide">
+<span class="material-symbols-outlined mr-2 text-lg">add</span>
+<span class="truncate">Order Prescription</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/30 shadow-lg shadow-primary/10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDE7F_nJYlvTdHiBkHX_nqSUXVDkqu0nA8hRrzVIAwNAEz8wTvKoO_6xTeMRsSCRAhStC2H1mKDHmXslmCfLpzTXyugNRE6cS3GHJvAWJQhgSy0wHPmm0urRm7z9Ns5tmnXZlUmg2nEFCxKTaObuLewh5TM__Ot7mIk1Y5Tbeej-Iikhebheki0p_7rLbXVM25cXgfbDkH_RSO_TT-1nEE1zyfY4CcH251FES9_mbv71rVQrNfRib8VlrrGG_8SypJxmpYh0DVl-__H");'></div>
+</div>
+</header>
+<!-- Page Header & Global Search -->
+<div class="flex flex-col gap-8 p-4 mb-4">
+<div class="flex flex-wrap justify-between items-end gap-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-white tracking-tight text-4xl font-extrabold leading-tight">Medication Management</h1>
+<p class="text-slate-400 text-base font-normal max-w-lg">Advanced real-time oversight of patient pharmacology, dosages, and contraindications.</p>
+</div>
+<div class="flex flex-col min-w-40 h-14 w-full max-w-md relative group">
+<div class="flex w-full flex-1 items-stretch rounded-2xl h-full border border-white/10 bg-white/5 backdrop-blur-md focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/50 transition-all duration-300">
+<div class="text-slate-400 flex items-center justify-center pl-5">
+<span class="material-symbols-outlined group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-2xl text-white bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-slate-500 px-4 text-sm font-medium" placeholder="Search medications, patients, or NDC codes..."/>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Layout -->
+<div class="flex flex-col lg:flex-row gap-8 p-4">
+<!-- Left Column: Active Prescriptions Grid -->
+<div class="flex-1 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="text-white text-2xl font-bold tracking-tight">Active Prescriptions</h2>
+<span class="text-slate-500 text-sm font-medium">8 Total Records</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Prescription Card 1 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:border-primary/40 transition-all duration-300 group">
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-white text-lg font-bold group-hover:text-primary transition-colors">Amoxicillin</h3>
+<p class="text-slate-400 text-sm mt-1">Patient: Jane Doe</p>
+</div>
+<span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-widest font-bold rounded-full border border-emerald-500/20">Active</span>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-1">
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Dosage</p>
+<p class="text-white font-semibold text-sm">500mg</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Route</p>
+<p class="text-white font-semibold text-sm">Oral</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Freq.</p>
+<p class="text-white font-semibold text-sm">BID</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-xs font-medium">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Refill: Oct 12, 2023</span>
+</div>
+<button class="text-primary/70 hover:text-primary transition-colors">Details</button>
+</div>
+</div>
+</div>
+<!-- Prescription Card 2 (With Interaction Warning) -->
+<div class="glass-card interaction-glow rounded-2xl overflow-hidden transition-all duration-300 relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/0 via-amber-500/60 to-amber-500/0"></div>
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-white text-lg font-bold">Lisinopril</h3>
+<p class="text-slate-400 text-sm mt-1">Patient: John Smith</p>
+</div>
+<span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-widest font-bold rounded-full border border-emerald-500/20">Active</span>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-1">
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Dosage</p>
+<p class="text-white font-semibold text-sm">10mg</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Route</p>
+<p class="text-white font-semibold text-sm">Oral</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Freq.</p>
+<p class="text-white font-semibold text-sm">Daily</p>
+</div>
+</div>
+<!-- Interaction Alert -->
+<div class="mt-1 bg-amber-500/5 border border-amber-500/20 rounded-xl p-3 flex gap-3 items-start">
+<span class="material-symbols-outlined text-amber-500 text-lg">warning</span>
+<div>
+<p class="text-amber-500 text-[11px] font-bold uppercase tracking-wider">Interaction Warning</p>
+<p class="text-amber-200/70 text-[11px] leading-relaxed mt-0.5">Moderate interaction with Ibuprofen detected.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Prescription Card 3 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:border-primary/40 transition-all duration-300 group">
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-white text-lg font-bold group-hover:text-primary transition-colors">Metformin</h3>
+<p class="text-slate-400 text-sm mt-1">Patient: Maria Garcia</p>
+</div>
+<span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-widest font-bold rounded-full border border-emerald-500/20">Active</span>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-1">
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Dosage</p>
+<p class="text-white font-semibold text-sm">850mg</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Route</p>
+<p class="text-white font-semibold text-sm">Oral</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Freq.</p>
+<p class="text-white font-semibold text-sm">BID</p>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-xs font-medium">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Refill: Nov 05, 2023</span>
+</div>
+<button class="text-primary/70 hover:text-primary transition-colors">Details</button>
+</div>
+</div>
+</div>
+<!-- Prescription Card 4 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:border-primary/40 transition-all duration-300 group">
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-white text-lg font-bold group-hover:text-primary transition-colors">Atorvastatin</h3>
+<p class="text-slate-400 text-sm mt-1">Patient: Robert Chen</p>
+</div>
+<span class="px-3 py-1 bg-slate-500/10 text-slate-400 text-[10px] uppercase tracking-widest font-bold rounded-full border border-slate-500/20">Pending Refill</span>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-1">
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Dosage</p>
+<p class="text-white font-semibold text-sm">20mg</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Route</p>
+<p class="text-white font-semibold text-sm">Oral</p>
+</div>
+<div class="bg-white/5 border border-white/5 p-3 rounded-xl">
+<p class="text-slate-500 text-[10px] uppercase font-bold">Freq.</p>
+<p class="text-white font-semibold text-sm">QHS</p>
+</div>
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-sm">pending_actions</span>
+<span class="uppercase tracking-wider">Action Required: Authorization</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: New Prescription Configurator -->
+<div class="w-full lg:w-80 xl:w-96 flex flex-col gap-6">
+<div class="glass-card rounded-3xl p-8 sticky top-6 border-primary/20 shadow-2xl shadow-primary/5">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-white text-xl font-bold tracking-tight">Prescription Builder</h2>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<form class="flex flex-col gap-6">
+<!-- Medication Select -->
+<div class="flex flex-col gap-2.5">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Medication</label>
+<div class="relative group">
+<input class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary text-white placeholder-slate-600 transition-all" placeholder="Select medication..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-3 text-slate-500 pointer-events-none group-focus-within:text-primary">expand_more</span>
+</div>
+</div>
+<!-- Dosage -->
+<div class="flex flex-col gap-2.5">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Dosage Configuration</label>
+<div class="flex gap-3">
+<input class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary text-white transition-all" placeholder="Amount" type="number"/>
+<select class="w-28 bg-midnight/50 border border-white/10 rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary text-white">
+<option>mg</option>
+<option>ml</option>
+<option>mcg</option>
+</select>
+</div>
+</div>
+<!-- Route -->
+<div class="flex flex-col gap-2.5">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Route of Administration</label>
+<select class="w-full bg-midnight/50 border border-white/10 rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary text-white appearance-none">
+<option>Oral (PO)</option>
+<option>Intravenous (IV)</option>
+<option>Intramuscular (IM)</option>
+<option>Subcutaneous (SQ)</option>
+<option>Topical</option>
+</select>
+</div>
+<!-- Frequency -->
+<div class="flex flex-col gap-2.5">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Frequency Schedule</label>
+<select class="w-full bg-midnight/50 border border-white/10 rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary text-white appearance-none">
+<option>Once Daily (QD)</option>
+<option>Twice Daily (BID)</option>
+<option>Three times daily (TID)</option>
+<option>Four times daily (QID)</option>
+<option>As needed (PRN)</option>
+</select>
+</div>
+<div class="h-px bg-white/10 my-2"></div>
+<button class="liquid-button w-full text-midnight font-extrabold py-4 px-4 rounded-2xl transition-all flex items-center justify-center gap-3" type="button">
+<span class="material-symbols-outlined text-lg">send</span>
+<span>SUBMIT ORDER</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

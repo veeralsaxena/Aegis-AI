@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lab Results &amp; Diagnostics - OmniCare AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00f2ff",
+                        "midnight": "#020617",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.75rem", "lg": "1.25rem", "xl": "1.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(200, 100%, 15%, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(200, 100%, 10%, 0.3) 0px, transparent 50%);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.15);
+        }
+        .liquid-button {
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.1) 0%, rgba(0, 242, 255, 0.2) 100%);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-button:hover {
+            background: rgba(0, 242, 255, 0.25);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(0, 242, 255, 0.15) 0%, transparent 100%);
+            border-left: 3px solid #00f2ff;
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-sans min-h-screen">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-white/10 px-10 py-4 glass-card shrink-0 z-10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">science</span>
+<h2 class="text-xl font-bold tracking-tight text-white">OmniCare AI</h2>
+</div>
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-full h-full border border-white/10 bg-white/5">
+<div class="text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-slate-500 px-4 pl-2 text-sm font-normal text-white" placeholder="Search patients or labs"/>
+</div>
+</label>
+</div>
+<div class="flex items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Patients</a>
+<a class="text-primary text-sm font-medium" href="#">Lab Results</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Appointments</a>
+</nav>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-primary/30 neon-glow" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCoFhNSEM6tQms-Eu9yJDBJuge1nC2PSuHtYyfyHw2LVs-2oSlwDrwyZA596TWzeMBa5bbzqeYy8mluoBvr0PAmPci5mW_ix-VS_a23xXd826tcBXVYkuuqq2_afYPiyF5XvqcIkOG04McTwyPcs3pILGmHzE_Wr7gckzZrvpjAqkG152Thq7gHEcMCwlxpYzAz_V3Hmhr8S01E7QUQG4Lzud4HOL2SUjRmBQmGypKTB3GlAfc7KTnpzB5-B5QgoV8gE_0hW0e-mEg");'></div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-80 flex flex-col border-r border-white/10 bg-black/20 shrink-0">
+<div class="p-8 pb-4">
+<h1 class="text-sm font-semibold text-slate-400 uppercase tracking-widest">Recent Orders</h1>
+<p class="text-slate-500 text-xs mt-1">Last 90 Days</p>
+</div>
+<div class="flex-1 overflow-y-auto p-4 pt-0 space-y-2">
+<button class="w-full flex items-center gap-4 p-4 rounded-xl sidebar-active text-left transition-all">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<div>
+<p class="text-sm font-semibold text-white">Oct 12 - Blood Panel</p>
+<p class="text-xs text-slate-500">Dr. Sarah Jenkins</p>
+</div>
+</button>
+<button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 text-left transition-all border border-transparent">
+<span class="material-symbols-outlined text-slate-500">description</span>
+<div>
+<p class="text-sm font-medium text-slate-300">Sep 28 - Urinalysis</p>
+<p class="text-xs text-slate-500">Dr. Robert Chen</p>
+</div>
+</button>
+<button class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 text-left transition-all border border-transparent">
+<span class="material-symbols-outlined text-slate-500">description</span>
+<div>
+<p class="text-sm font-medium text-slate-300">Sep 15 - Lipid Panel</p>
+<p class="text-xs text-slate-500">Dr. Sarah Jenkins</p>
+</div>
+</button>
+</div>
+<div class="p-6">
+<button class="liquid-button w-full py-3 rounded-xl text-primary font-bold text-sm tracking-wide flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                    NEW ORDER
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-10 flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 text-primary/80 text-xs font-bold tracking-widest uppercase mb-1">
+<span>Patient: John Doe (ID: 84920)</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span>DOB: 05/14/1982</span>
+</div>
+<h1 class="text-4xl font-extrabold text-white tracking-tight">Comprehensive Blood Panel</h1>
+<p class="text-slate-400 text-sm">Collected on Oct 12, 2023 • Reported on Oct 13, 2023</p>
+</div>
+<!-- Trend Graph Card -->
+<div class="glass-card rounded-2xl p-8 flex flex-col gap-8 neon-glow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-xl font-semibold text-white">Hemoglobin Trend</h3>
+<p class="text-sm text-slate-400 mt-1">3 Month Historical Analysis</p>
+</div>
+<div class="text-right">
+<p class="text-4xl font-bold text-primary">14.2 <span class="text-lg text-slate-500 font-normal">g/dL</span></p>
+<p class="text-sm text-green-400 font-bold mt-1 flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +0.5% FROM LAST
+                        </p>
+</div>
+</div>
+<div class="h-56 w-full relative mt-4">
+<!-- Liquid Neon Line Graph -->
+<div class="absolute inset-0 flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="neonGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#00f2ff" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#00f2ff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,85 Q25,82 50,65 T100,25 L100,100 L0,100 Z" fill="url(#neonGradient)"></path>
+<path d="M0,85 Q25,82 50,65 T100,25" fill="none" stroke="#00f2ff" stroke-width="3" style="filter: drop-shadow(0 0 8px rgba(0,242,255,0.8));" vector-effect="non-scaling-stroke"></path>
+<circle cx="0" cy="85" fill="#020617" r="2" stroke="#00f2ff" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+<circle cx="50" cy="65" fill="#020617" r="2" stroke="#00f2ff" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+<circle cx="100" cy="25" fill="#00f2ff" r="3" stroke="#ffffff" stroke-width="1" style="filter: drop-shadow(0 0 10px #00f2ff);" vector-effect="non-scaling-stroke"></circle>
+</svg>
+</div>
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none border-t border-white/5">
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+</div>
+<!-- X Axis Labels -->
+<div class="absolute -bottom-8 left-0 right-0 flex justify-between text-xs font-bold text-slate-500 tracking-tighter uppercase">
+<span>August</span>
+<span>September</span>
+<span>October</span>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="glass-card rounded-2xl overflow-hidden @container neon-glow">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/5 border-b border-white/10 text-xs font-bold text-slate-400 uppercase tracking-widest">
+<th class="py-5 px-8">Metric</th>
+<th class="py-5 px-8">Result</th>
+<th class="py-5 px-8 hidden @[600px]:table-cell">Normal Range</th>
+<th class="py-5 px-8 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="py-5 px-8 font-semibold text-white">Hemoglobin</td>
+<td class="py-5 px-8 font-bold text-primary">14.2 <span class="text-xs font-normal text-slate-500">g/dL</span></td>
+<td class="py-5 px-8 text-sm text-slate-400 hidden @[600px]:table-cell">13.8 - 17.2 g/dL</td>
+<td class="py-5 px-8 text-right">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/30">
+                                    NORMAL
+                                </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="py-5 px-8 font-semibold text-white">WBC</td>
+<td class="py-5 px-8 font-bold text-slate-200">7.5 <span class="text-xs font-normal text-slate-500">x10^9/L</span></td>
+<td class="py-5 px-8 text-sm text-slate-400 hidden @[600px]:table-cell">4.5 - 11.0 x10^9/L</td>
+<td class="py-5 px-8 text-right">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/30">
+                                    NORMAL
+                                </span>
+</td>
+</tr>
+<tr class="bg-red-500/10 hover:bg-red-500/15 transition-colors group">
+<td class="py-5 px-8 font-semibold text-white flex items-center gap-2">
+                                Platelets
+                                <span class="material-symbols-outlined text-[18px] text-red-400">report</span>
+</td>
+<td class="py-5 px-8 font-bold text-red-400">142 <span class="text-xs font-normal text-slate-400">x10^9/L</span></td>
+<td class="py-5 px-8 text-sm text-slate-400 hidden @[600px]:table-cell">150 - 400 x10^9/L</td>
+<td class="py-5 px-8 text-right">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                                    CRITICAL LOW
+                                </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="py-5 px-8 font-semibold text-white">Hematocrit</td>
+<td class="py-5 px-8 font-bold text-slate-200">42 <span class="text-xs font-normal text-slate-500">%</span></td>
+<td class="py-5 px-8 text-sm text-slate-400 hidden @[600px]:table-cell">41 - 50%</td>
+<td class="py-5 px-8 text-right">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/30">
+                                    NORMAL
+                                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+</div>
+</div>
+</body></html>

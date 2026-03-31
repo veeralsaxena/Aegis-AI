@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HealthHub Provider Connection | Premium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df2f2",
+                        "midnight": "#050a0a",
+                        "surface": "rgba(13, 242, 242, 0.03)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #050a0a;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(13, 242, 242, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(13, 242, 242, 0.05) 0%, transparent 40%);
+        }
+        .premium-glass {
+            background: rgba(5, 10, 10, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(13, 242, 242, 0.2);
+        }
+        .liquid-glow-button {
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(13, 242, 242, 0.5);
+            background: transparent;
+            box-shadow: 0 0 0 rgba(13, 242, 242, 0);
+        }
+        .liquid-glow-button:hover {
+            background: rgba(13, 242, 242, 0.1);
+            box-shadow: 0 0 20px rgba(13, 242, 242, 0.4), inset 0 0 10px rgba(13, 242, 242, 0.2);
+            border-color: #0df2f2;
+            transform: translateY(-1px);
+        }
+        .search-glow:focus-within {
+            box-shadow: 0 0 25px rgba(13, 242, 242, 0.15);
+            border-color: rgba(13, 242, 242, 0.6);
+        }
+        .provider-card:hover {
+            border-color: rgba(13, 242, 242, 0.4);
+            background: rgba(13, 242, 242, 0.05);
+        }
+        .elegant-spacing {
+            letter-spacing: -0.02em;
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-display min-h-screen relative overflow-x-hidden selection:bg-primary/30">
+<div class="relative z-10 flex min-h-screen w-full flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between px-10 py-6 border-b border-primary/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-2xl">health_and_safety</span>
+</div>
+<h2 class="text-white text-lg font-bold tracking-tight">OmniCare AI <span class="text-primary font-light">HealthHub</span></h2>
+</div>
+<div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="hover:text-primary transition-colors" href="#">Records</a>
+<a class="text-primary border-b border-primary/50 pb-1" href="#">Connect</a>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20">
+<div class="w-full max-w-6xl">
+<!-- Title Section -->
+<div class="text-center mb-16 space-y-4">
+<h1 class="text-white text-4xl md:text-6xl font-black elegant-spacing leading-tight">
+                    Connect your health provider
+                </h1>
+<p class="text-slate-400 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+                    Securely sync your clinical records to empower your personalized AI health insights with HIPAA-grade security.
+                </p>
+</div>
+<!-- Search Bar -->
+<div class="w-full max-w-3xl mx-auto mb-20">
+<div class="premium-glass search-glow relative flex items-center w-full h-16 rounded-2xl transition-all duration-300 px-6">
+<span class="material-symbols-outlined text-primary/60 text-2xl mr-4">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-white placeholder:text-slate-600 text-lg font-light" placeholder="Search for health providers, hospitals, or clinics..." type="text"/>
+</div>
+</div>
+<!-- Provider Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Epic MyChart -->
+<div class="premium-glass provider-card group flex flex-col p-8 rounded-2xl transition-all duration-500 cursor-pointer">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center justify-center">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 group-hover:opacity-100 transition-opacity" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDd7sxQPjmgbVlqMJQ515V0XKUcgg8rvYSlLa_BT4nhUvAU8YBzCK7IjwkjQMP-ShezH9R5-2fM68xvG0RPWJAbg8ZGkZCnOQQ4SCPU-Uzx8ZMtI6tclzGeu8K64JbpecwTWEP7dyqs84i7pFtcthuRX3YcQ2_vSIjsJUwEG7qQf81gVO-N_8a117w9oc6zm7ZF27jmz456sh987bh2GQfY2vSl-jl2nRX9jzARdppaP0QWmdLVluW6Q-aDFqCcwLaylAMbnf3eCwmC");'></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Unconnected</span>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<h3 class="text-white text-xl font-bold elegant-spacing group-hover:text-primary transition-colors">Epic MyChart</h3>
+<p class="text-slate-400 text-sm font-light leading-relaxed">Access records from major hospital networks and specialized clinics worldwide.</p>
+</div>
+<button class="liquid-glow-button mt-auto w-full h-12 rounded-xl text-primary text-sm font-bold tracking-widest uppercase">
+                        Connect
+                    </button>
+</div>
+<!-- Cerner Health -->
+<div class="premium-glass provider-card group flex flex-col p-8 rounded-2xl transition-all duration-500 cursor-pointer">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center justify-center">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 group-hover:opacity-100 transition-opacity" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1C7uAz1pVBelCE6FKCDfRC-x_35S3PvhK51z0-F_dpLIudAVg7f046vflYJOuljlh2rduaAatRgCbrMMDqNR3QijGr3DlA5jUqXlpNAJom-ZRw_bX5GKMqe26SOWHvAd4Dpr7K0WLbYnBoVuATOGz4EDqjX0EiRYojmrYsOFJQqJqo4lzJqV7AzrPau-l56lmbMPTMg3w21x-sFAwdT663-cky_i3YyiUeFQpbVjUNY5Pg5pcPyWnLfTbI44stByIVxNmR3eAPoGe");'></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Unconnected</span>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<h3 class="text-white text-xl font-bold elegant-spacing group-hover:text-primary transition-colors">Cerner Health</h3>
+<p class="text-slate-400 text-sm font-light leading-relaxed">Sync data from Cerner-affiliated healthcare providers seamlessly and securely.</p>
+</div>
+<button class="liquid-glow-button mt-auto w-full h-12 rounded-xl text-primary text-sm font-bold tracking-widest uppercase">
+                        Connect
+                    </button>
+</div>
+<!-- Quest Diagnostics -->
+<div class="premium-glass provider-card group flex flex-col p-8 rounded-2xl transition-all duration-500 cursor-pointer">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center justify-center">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 group-hover:opacity-100 transition-opacity" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBLoMt6NOuloC9tIAyyvAoIgG1AQm4MBwtQf0BuYTeOZ6cwWrC_5JSZSHWaVsfP9MmkggwhXBkMC_hU8mB_R9I6qz24aq5jojBiMWuB3SbozG7fVHtWl8S6m2loUvCvJ3afk24_OqALbMpCtFnKja90O-qEGBpDUqUgAqS2V5g0ho6GBGGY602-UIhiWAcP-VUiE4C6Qf4jBcPOd51Yld-_WLegX0PYtEvFSaPMOewfChZjB94Vn7i4BiXUNoZsLObI5zlmdNdiUfe9");'></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Unconnected</span>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<h3 class="text-white text-xl font-bold elegant-spacing group-hover:text-primary transition-colors">Quest Diagnostics</h3>
+<p class="text-slate-400 text-sm font-light leading-relaxed">Import detailed lab results and comprehensive diagnostic test history.</p>
+</div>
+<button class="liquid-glow-button mt-auto w-full h-12 rounded-xl text-primary text-sm font-bold tracking-widest uppercase">
+                        Connect
+                    </button>
+</div>
+<!-- Meditech -->
+<div class="premium-glass provider-card group flex flex-col p-8 rounded-2xl transition-all duration-500 cursor-pointer">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center justify-center">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 group-hover:opacity-100 transition-opacity" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBnCwiBn0en47oUEaid-85asTiBWla4F01ZeJdMECjImXVaWuvp7P1MU99fnKHYW405pwnxC4kcQM2cnihzb1upu5AcGIKfBIl3qlWPmUTgRa-L7YScNsaYS2E4u4sKNobDaH6HhdKtEI91nnMa25Hnvjy92HrdLU7r8pc-qsN6wTYOP6smvGIPu3KmQS90GOrMpsmuf-Qa1UhOdKz1t87VIihXqsdFMiaCoE_chrbPW1ESfTe4IFEqhX1XLkarj_dc0fRh9hKF10HF");'></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Unconnected</span>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<h3 class="text-white text-xl font-bold elegant-spacing group-hover:text-primary transition-colors">Meditech</h3>
+<p class="text-slate-400 text-sm font-light leading-relaxed">Connect with regional health systems and diverse community hospitals.</p>
+</div>
+<button class="liquid-glow-button mt-auto w-full h-12 rounded-xl text-primary text-sm font-bold tracking-widest uppercase">
+                        Connect
+                    </button>
+</div>
+<!-- Apple Health -->
+<div class="premium-glass provider-card group flex flex-col p-8 rounded-2xl transition-all duration-500 cursor-pointer">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center justify-center">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 group-hover:opacity-100 transition-opacity" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC4scl0YrKcR_uMcNclWR_ijYeC-n8mAwRrUGE7_ziOOXLylH4fdPN43emVtfJ6F_iBKboMz-K1sp_FbqAan_cejq-dX_CEIuaYXBlQAMDhbuPXgXe1SYVgSAXZsa97tLiZNteJ9LTGkEdReGN4h-EarK6aWvkygfd28ZiiOk-xHMPhS1vlmYv3Wr8fw3XkSNgFGuCdKzLCWyqgygYJfn2283of2Iy2wuTKG66SMKmOmh5dnAEypSv7WXHDerSbLhUk2W19rMjBqG6N");'></div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Unconnected</span>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<h3 class="text-white text-xl font-bold elegant-spacing group-hover:text-primary transition-colors">Apple Health</h3>
+<p class="text-slate-400 text-sm font-light leading-relaxed">Sync activity, vitals, sleep, and holistic wellness data automatically.</p>
+</div>
+<button class="liquid-glow-button mt-auto w-full h-12 rounded-xl text-primary text-sm font-bold tracking-widest uppercase">
+                        Connect
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="py-12 flex flex-col items-center gap-6">
+<div class="px-6 py-2.5 rounded-full premium-glass border-primary/20 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">verified_user</span>
+<span class="text-xs font-bold tracking-[0.2em] text-slate-400 uppercase">HIPAA Compliant &amp; End-to-End Encrypted</span>
+</div>
+<div class="text-[10px] text-slate-600 tracking-wider">
+            © 2024 OMNICARE AI HEALTHHUB. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+</div>
+</body></html>

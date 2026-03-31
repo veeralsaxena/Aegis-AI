@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clinical Patient Search &amp; Queue | HealthHub Premium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#25c0f4",
+              "midnight": "#050a0c",
+              "surface-glass": "rgba(16, 30, 34, 0.45)",
+              "surface-border": "rgba(37, 192, 244, 0.2)"
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "12px",
+              "lg": "16px",
+              "xl": "20px",
+              "2xl": "32px",
+              "full": "9999px"
+            },
+            backgroundImage: {
+              'mesh-gradient': 'radial-gradient(at 50% 0%, rgba(37, 192, 244, 0.12) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(37, 192, 244, 0.08) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(37, 192, 244, 0.05) 0px, transparent 50%)'
+            },
+            animation: {
+              'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          },
+        },
+      }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .neon-shadow {
+            box-shadow: 0 0 20px rgba(37, 192, 244, 0.15);
+        }
+        .neon-glow-text {
+            text-shadow: 0 0 10px rgba(37, 192, 244, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-midnight text-slate-100 font-display antialiased min-h-screen relative overflow-hidden">
+<!-- Mesh Gradient Background -->
+<div class="fixed inset-0 bg-mesh-gradient z-0 pointer-events-none animate-pulse-slow"></div>
+<div class="relative z-10 flex h-screen w-full">
+<!-- Sidebar -->
+<aside class="w-72 flex-shrink-0 flex flex-col glass-panel bg-surface-glass border-r border-surface-border">
+<div class="flex items-center gap-4 p-8">
+<div class="bg-center bg-no-repeat bg-cover rounded-full h-11 w-11 border border-primary/40 shadow-[0_0_15px_rgba(37,192,244,0.3)]" data-alt="HealthHub logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAN9KazQnnNUX8G2EXTH25ZW4-zg7qoKA4WVP0BIuLOAaYnDZ0UiSq7RBDr88LwcOqABDS7272Z-SU4Dj3CdBPHKSO4Yx0J9-9qtzBoHb_sikOo6nVFoYs8PEDHGgzhzgz3P9Y7BzSxV13xIh2q2vP7ZOelSsgQIS1Olj2kb9N8m14hEQTtCu4AStBp5VXeyByVh5KYyYBBvxw7QyIeTeRj3ZI5RY0SlFohEPYXDoxwQ6SGjHvHob_OxwnsegDsB-aY8VLEFA9nvjwH");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-extrabold tracking-tight leading-none">HealthHub</h1>
+<p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mt-1 neon-glow-text">Premium</p>
+</div>
+</div>
+<nav class="flex-1 px-6 py-4 space-y-3">
+<a class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[22px] group-hover:text-primary transition-colors">speed</span>
+<span class="text-sm font-semibold tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-primary bg-primary/10 border border-primary/30 rounded-xl shadow-[0_0_20px_rgba(37,192,244,0.1)] transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-[22px] neon-glow-text">search</span>
+<span class="text-sm font-bold tracking-wide">Patient Search</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[22px] group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-semibold tracking-wide">Active Queue</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[22px] group-hover:text-primary transition-colors">calendar_month</span>
+<span class="text-sm font-semibold tracking-wide">Appointments</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[22px] group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-semibold tracking-wide">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto">
+<div class="max-w-6xl mx-auto w-full px-12 py-16 flex flex-col gap-16">
+<!-- Header & Search -->
+<div class="flex flex-col items-center text-center space-y-10">
+<div class="space-y-3">
+<h2 class="text-5xl font-black tracking-tight text-white neon-glow-text">Clinical Patient Search</h2>
+<p class="text-slate-400 text-lg font-light tracking-wide max-w-2xl mx-auto">Access real-time patient analytics and streamline active queue management across the OmniCare AI network.</p>
+</div>
+<div class="w-full max-w-3xl relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/40 to-primary/10 rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition duration-700"></div>
+<div class="relative flex items-center bg-white/5 glass-panel border border-primary/20 hover:border-primary/40 rounded-2xl h-20 shadow-2xl transition-all duration-500 overflow-hidden">
+<div class="pl-8 text-primary/70 flex items-center">
+<span class="material-symbols-outlined text-[32px]">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white px-6 text-xl font-medium focus:ring-0 focus:outline-none placeholder-slate-600" placeholder="Search patients by name, clinical ID, or DOB..." type="text"/>
+<div class="pr-6">
+<button class="bg-primary/10 text-primary border border-primary/30 px-8 py-3 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-primary hover:text-midnight transition-all duration-300 shadow-[0_0_15px_rgba(37,192,244,0.2)]">
+                                    Search
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Active Queue Section -->
+<section>
+<div class="flex items-center justify-between mb-10">
+<div class="flex items-center gap-3">
+<div class="h-8 w-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,192,244,0.8)]"></div>
+<h3 class="text-2xl font-extrabold text-white tracking-tight uppercase">Active Queue</h3>
+</div>
+<a class="text-primary text-sm font-bold tracking-widest uppercase hover:text-white transition-colors flex items-center gap-2 group" href="#">
+                            Explore All <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<!-- Horizontal Scrollable Cards -->
+<div class="flex overflow-x-auto pb-10 -mx-4 px-4 gap-8 snap-x snap-mandatory hide-scrollbar">
+<!-- Card 1 -->
+<div class="snap-start flex-shrink-0 w-72 glass-panel bg-surface-glass border border-surface-border rounded-2xl p-8 flex flex-col items-center text-center shadow-xl hover:shadow-[0_0_30px_rgba(37,192,244,0.2)] hover:border-primary/40 transition-all duration-500 group transform hover:-translate-y-2">
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-full bg-cover bg-center border-2 border-primary/30 p-1.5 shadow-[0_0_15px_rgba(37,192,244,0.1)] group-hover:border-primary transition-all duration-500" data-alt="Eleanor Vance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDs2PZKWFatzYpUEuWoXs-PJ8kBp35J06j8Zl4FSrje8EekhTfmO8SrxEjmRkGzOkZP3O9F5S08CM9jrJQwD608hqqcIiiuQZPkohw6IiAYiXDYrL9jYSy2MOIfkPCZtb9K45MO8Ft4f3QFRsPRh9YZ62RzIrfLunOw-l1RSUiwrSxZpgRznd1Vi8YhReLTqhOMoD1gbyBba9k1L8U3PudmHv9tWmXoRYezBVC9yL8i3peSq1Gq5AP3LFkQQ64B9EBh1hmUHr1WC2H6");'></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-midnight border border-primary/50 text-primary text-[10px] font-black uppercase tracking-tighter px-3 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(37,192,244,0.4)]">
+                                    Room 3
+                                </div>
+</div>
+<h4 class="text-white font-extrabold text-xl mb-1 tracking-tight">Eleanor Vance</h4>
+<p class="text-slate-500 text-xs font-semibold mb-6 tracking-wide uppercase">Age: 32 • ID: 90210</p>
+<div class="w-full bg-white/5 border border-primary/10 rounded-xl py-3 px-4 flex justify-between items-center transition-all group-hover:bg-primary/5 group-hover:border-primary/30">
+<span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Wait Time</span>
+<span class="text-primary font-black text-base neon-glow-text">5m</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-start flex-shrink-0 w-72 glass-panel bg-surface-glass border border-surface-border rounded-2xl p-8 flex flex-col items-center text-center shadow-xl hover:shadow-[0_0_30px_rgba(37,192,244,0.2)] hover:border-primary/40 transition-all duration-500 group transform hover:-translate-y-2">
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-full bg-cover bg-center border-2 border-primary/30 p-1.5 shadow-[0_0_15px_rgba(37,192,244,0.1)] group-hover:border-primary transition-all duration-500" data-alt="John Markway" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDzmfzRsJRSxhOp66aKdh4uIwxfdTFrJIYcMWKOCJP48hEdloSTc6oGr7Hhbj8yBWZtHTrMSpLNaQl2vNFFZEyQs2UMU_ghHLVj8sZkjhLmqDUitZkOmj1wcVkNmw60qzLnb7V1DZzQOwpjPJyl4cOjtpjRnEiMMXunt-jfZpKDwm8BEQTYsFgvsXiYtPFTy7HoTnvJHdnEKagGh_8u06dvGLbugCGPrMZeGxeg7ca72fbcEaq47cxHYXQR8wZ5MGs5LiwoJQIdIXhS");'></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-midnight border border-primary/50 text-primary text-[10px] font-black uppercase tracking-tighter px-3 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(37,192,244,0.4)]">
+                                    Lobby
+                                </div>
+</div>
+<h4 class="text-white font-extrabold text-xl mb-1 tracking-tight">John Markway</h4>
+<p class="text-slate-500 text-xs font-semibold mb-6 tracking-wide uppercase">Age: 45 • ID: 12345</p>
+<div class="w-full bg-white/5 border border-primary/10 rounded-xl py-3 px-4 flex justify-between items-center transition-all group-hover:bg-primary/5 group-hover:border-primary/30">
+<span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Wait Time</span>
+<span class="text-primary font-black text-base neon-glow-text">12m</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="snap-start flex-shrink-0 w-72 glass-panel bg-surface-glass border border-surface-border rounded-2xl p-8 flex flex-col items-center text-center shadow-xl hover:shadow-[0_0_30px_rgba(37,192,244,0.2)] hover:border-primary/40 transition-all duration-500 group transform hover:-translate-y-2">
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-full bg-cover bg-center border-2 border-primary/30 p-1.5 shadow-[0_0_15px_rgba(37,192,244,0.1)] group-hover:border-primary transition-all duration-500" data-alt="Theodora" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAwI8seR_yGFo2rU0YjRkLe9qpYHuR8v3m4ns6Aw3dh5tSJUEEwn1m0chM20nqTUUPsiUmFbuFA4ebHr3kZ1O2I4zamAOn8sFaWmFGDAcMz2kHz-iNqo2ZzMmeL_wdN_UNd2A6-ogwXZL2yytCsdInGaFOyeg_b0L_D1s4Efl-fDFk6Sjbwoi4LDIs799wcqL2Mrcc3YW2Cd0FXnW0FnStreHFVgKleHXwIIqQi7-sMooG3o6JBW2GjJarfnu3cxDkoghS1Vcr60L31");'></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-midnight border border-primary/50 text-primary text-[10px] font-black uppercase tracking-tighter px-3 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(37,192,244,0.4)]">
+                                    Triage
+                                </div>
+</div>
+<h4 class="text-white font-extrabold text-xl mb-1 tracking-tight">Theodora</h4>
+<p class="text-slate-500 text-xs font-semibold mb-6 tracking-wide uppercase">Age: 29 • ID: 67890</p>
+<div class="w-full bg-white/5 border border-primary/10 rounded-xl py-3 px-4 flex justify-between items-center transition-all group-hover:bg-primary/5 group-hover:border-primary/30">
+<span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Wait Time</span>
+<span class="text-primary font-black text-base neon-glow-text">18m</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="snap-start flex-shrink-0 w-72 glass-panel bg-surface-glass border border-surface-border rounded-2xl p-8 flex flex-col items-center text-center shadow-xl hover:shadow-[0_0_30px_rgba(37,192,244,0.2)] hover:border-primary/40 transition-all duration-500 group transform hover:-translate-y-2">
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-full bg-cover bg-center border-2 border-primary/30 p-1.5 shadow-[0_0_15px_rgba(37,192,244,0.1)] group-hover:border-primary transition-all duration-500" data-alt="Luke Sanderson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAfuXTxtoBAmRPeEVTYAq5iGrbvgsJi0Jt7r_FetVgbCfOQb4iJQ3ctUUAjC4FpsfC3GSiLCBTNu0rrQX3g93uQkykFA3t1ai7bau0HhoxFDonunv0EK7Nbwoze0HhW79coXIQb3n1dKJ6ZGqUmp_3M7cxYT3MeRUdX6QqI-IZyEwGGv09tZPkEOOGcuw4xJFpz2LB-gKACezJqZwQCW46EoyOvlo9r_24vVcIYV0MS_syS3Nky2Hpu8mP6AzjwC3AhzQdyqLWHjd_w");'></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-midnight border border-primary/50 text-primary text-[10px] font-black uppercase tracking-tighter px-3 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(37,192,244,0.4)]">
+                                    Lobby
+                                </div>
+</div>
+<h4 class="text-white font-extrabold text-xl mb-1 tracking-tight">Luke Sanderson</h4>
+<p class="text-slate-500 text-xs font-semibold mb-6 tracking-wide uppercase">Age: 38 • ID: 54321</p>
+<div class="w-full bg-white/5 border border-primary/10 rounded-xl py-3 px-4 flex justify-between items-center transition-all group-hover:bg-primary/5 group-hover:border-primary/30">
+<span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Wait Time</span>
+<span class="text-[#f43f5e] font-black text-base drop-shadow-[0_0_10px_rgba(244,63,94,0.6)]">25m</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

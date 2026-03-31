@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a1114",
+        },
+        fontFamily: {
+          "display": ["Outfit", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex overflow-hidden">
+<div class="hidden lg:flex lg:w-1/2 relative flex-col justify-center items-start px-16 xl:px-24 overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center z-0" data-alt="Abstract midnight blue mesh pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-HaSwB-iBEftYAyerdJJhFf3jLPAwL_GDX3tbskIdeFjVXSodJ2-76kfR5FMbXKmel4xaT51ooAbgPWhk5BRaAGhhFhuNHtm2gK236-au1VoVVk4p-h1YyPsM2awpryTVI3DrxoSDx-XE-bJtIgBQwQgKYYTaVXt8nyET_0ZFzawrdPzYVIxkUYZ5ozydYBxl_8YXmrSs8dJpA2O57741XVExWumueI7NM8S6N7tbJEsQ9_7yI_kdW6vAXDus6Wmw1Qr8ygXLm8Jh');"></div>
+<div class="absolute inset-0 bg-background-dark/80 mix-blend-multiply z-0"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-background-dark/95 via-background-dark/80 to-primary/20 z-0"></div>
+<div class="relative z-10 max-w-lg flex flex-col gap-6">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-4xl" style="filter: drop-shadow(0 0 8px rgba(37,192,244,0.5));">ecg_heart</span>
+<span class="text-3xl font-bold tracking-tight text-white">OmniCare AI</span>
+</div>
+<h1 class="text-white text-6xl xl:text-7xl font-bold leading-[1.05] tracking-[-0.02em]">
+        Welcome back.
+      </h1>
+<p class="text-slate-300 text-lg xl:text-xl font-light leading-relaxed border-l-[3px] border-primary pl-5">
+        Log in to access your health dashboard and track your progress in real-time.
+      </p>
+</div>
+</div>
+<div class="w-full lg:w-1/2 flex flex-col relative h-screen overflow-y-auto bg-background-dark">
+<div class="absolute top-0 right-0 w-full p-6 md:p-8 flex justify-end z-20">
+<p class="text-sm font-light tracking-wide text-slate-400">
+        New to HealthHub? 
+        <a class="text-primary hover:text-primary/80 transition-colors ml-1 font-medium tracking-normal" href="#">Sign up</a>
+</p>
+</div>
+<div class="flex-1 flex items-center justify-center p-6 md:p-12 z-10">
+<div class="w-full max-w-[440px]">
+<div class="flex lg:hidden items-center gap-3 justify-center mb-10">
+<span class="material-symbols-outlined text-primary text-3xl" style="filter: drop-shadow(0 0 8px rgba(37,192,244,0.5));">ecg_heart</span>
+<span class="text-2xl font-bold tracking-tight text-white">OmniCare AI</span>
+</div>
+<div class="backdrop-blur-2xl bg-slate-900/50 border border-primary/30 rounded-2xl p-8 md:p-10 shadow-[0_0_40px_rgba(37,192,244,0.1)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_15px_rgba(37,192,244,0.6)]"></div>
+<div class="mb-8">
+<h2 class="text-3xl font-semibold text-white mb-2 tracking-tight">Sign in</h2>
+<p class="text-slate-400 text-sm font-light tracking-wide">Enter your credentials to access your secure portal.</p>
+</div>
+<form class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="email">Email Address</label>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="email" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="text-xs font-light tracking-[0.1em] uppercase text-slate-300" for="password">Password</label>
+<a class="text-xs font-light tracking-wide text-primary hover:text-primary/80 transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-600 transition-all outline-none font-light" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 text-slate-500 hover:text-slate-300 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<button class="mt-6 w-full bg-primary hover:bg-primary/90 text-background-dark text-base font-semibold py-4 rounded-xl shadow-[0_0_20px_rgba(37,192,244,0.4)] hover:shadow-[0_0_30px_rgba(37,192,244,0.6)] transition-all flex items-center justify-center gap-2 group" type="button">
+              Log In
+              <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 flex items-center justify-center gap-2 text-slate-500 text-xs font-light tracking-wide">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Secure, HIPAA-compliant connection</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Clinical Queue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a1114",
+        },
+        fontFamily: {
+          "display": ["Outfit", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 min-h-screen flex overflow-hidden">
+<nav class="w-24 md:w-64 border-r border-slate-800/50 flex flex-col items-center md:items-start p-4 md:p-6 bg-black/30 backdrop-blur-xl z-20 shrink-0">
+<div class="flex items-center gap-3 mb-12 w-full justify-center md:justify-start">
+<span class="material-symbols-outlined text-primary text-3xl" style="filter: drop-shadow(0 0 8px rgba(37,192,244,0.5));">ecg_heart</span>
+<span class="text-xl font-bold tracking-tight text-white hidden md:block">OmniCare AI</span>
+</div>
+<div class="flex flex-col gap-4 w-full">
+<a class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">grid_view</span>
+<span class="hidden md:block font-light tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-xl bg-primary/10 border border-primary/20 text-white transition-colors group relative overflow-hidden" href="#">
+<div class="absolute left-0 top-0 h-full w-[2px] bg-primary shadow-[0_0_10px_rgba(37,192,244,0.8)]"></div>
+<span class="material-symbols-outlined text-2xl text-primary" style="filter: drop-shadow(0 0 5px rgba(37,192,244,0.5));">group</span>
+<span class="hidden md:block font-medium tracking-wide">Clinical Queue</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">calendar_month</span>
+<span class="hidden md:block font-light tracking-wide">Schedule</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">monitoring</span>
+<span class="hidden md:block font-light tracking-wide">Analytics</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-4 w-full">
+<a class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">settings</span>
+<span class="hidden md:block font-light tracking-wide">Settings</span>
+</a>
+<div class="flex items-center gap-3 p-3 mt-4 border-t border-slate-800/50 pt-6">
+<img alt="Dr. Sarah Jenkins" class="w-10 h-10 rounded-full object-cover border border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzKkcCvAGg3sEt5cGRMz8l_V5km919fdU9W9wF_vBQxNgWqHR2zCaqC7z4BUoAHY0kqJMoE5IvEke6lBAQ_L8qbRrDeMMKuMDnSpaNWWIpXgs2v33oY4T_WuwnxLfxnpYMM3_WxfCPcThfbYrQsWr6fHlqr4BFpSZOLdAru3rMTSAZmzs99Y85VoZU8gpeRyyrEDBBwj1_NK4s_QB6cFimGaYMjA8Qa1-Ypjq0DR1d2Bvl4uRs1jEcJePewOU8rg_vdZPX44gh4ozB"/>
+<div class="hidden md:flex flex-col">
+<span class="text-sm font-medium text-white">Dr. S. Jenkins</span>
+<span class="text-xs text-slate-400 font-light">Cardiology</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="flex-1 relative flex flex-col h-screen overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center z-0 opacity-40" data-alt="Abstract midnight blue mesh pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-HaSwB-iBEftYAyerdJJhFf3jLPAwL_GDX3tbskIdeFjVXSodJ2-76kfR5FMbXKmel4xaT51ooAbgPWhk5BRaAGhhFhuNHtm2gK236-au1VoVVk4p-h1YyPsM2awpryTVI3DrxoSDx-XE-bJtIgBQwQgKYYTaVXt8nyET_0ZFzawrdPzYVIxkUYZ5ozydYBxl_8YXmrSs8dJpA2O57741XVExWumueI7NM8S6N7tbJEsQ9_7yI_kdW6vAXDus6Wmw1Qr8ygXLm8Jh');"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-background-dark via-background-dark/90 to-primary/10 z-0"></div>
+<div class="relative z-10 flex-1 flex flex-col p-8 md:p-12 lg:p-16 h-full overflow-y-auto hide-scrollbar">
+<div class="w-full max-w-4xl mx-auto mt-12 md:mt-24 mb-16 flex flex-col items-center">
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-[-0.02em] text-center">
+          Patient Search
+        </h1>
+<p class="text-slate-400 text-lg font-light tracking-wide mb-10 text-center max-w-2xl">
+          Locate records, active monitoring profiles, or upcoming appointments.
+        </p>
+<div class="w-full relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-[2rem] blur opacity-50 group-focus-within:opacity-100 transition duration-500"></div>
+<div class="relative flex items-center bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-2 shadow-2xl">
+<span class="material-symbols-outlined text-slate-400 pl-4 text-3xl group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-transparent border-none text-white text-xl md:text-2xl font-light placeholder-slate-500 py-4 px-4 focus:ring-0 outline-none" placeholder="Search by name, ID, or condition..." type="text"/>
+<button class="bg-primary hover:bg-primary/90 text-background-dark font-medium rounded-xl px-6 md:px-8 py-3 transition-colors shadow-[0_0_15px_rgba(37,192,244,0.3)]">
+              Locate
+            </button>
+</div>
+</div>
+<div class="flex gap-4 mt-6 flex-wrap justify-center">
+<span class="px-4 py-1.5 rounded-full border border-slate-700/50 bg-slate-800/30 text-slate-300 text-sm font-light backdrop-blur-md cursor-pointer hover:border-primary/50 transition-colors">Recent: E. Chen</span>
+<span class="px-4 py-1.5 rounded-full border border-slate-700/50 bg-slate-800/30 text-slate-300 text-sm font-light backdrop-blur-md cursor-pointer hover:border-primary/50 transition-colors">Recent: M. Rodriguez</span>
+<span class="px-4 py-1.5 rounded-full border border-slate-700/50 bg-slate-800/30 text-slate-300 text-sm font-light backdrop-blur-md cursor-pointer hover:border-primary/50 transition-colors">ID: 982-14B</span>
+</div>
+</div>
+<div class="w-full mt-auto">
+<div class="flex justify-between items-end mb-6">
+<div class="flex items-center gap-3">
+<h2 class="text-2xl font-semibold text-white tracking-tight">Active Queue</h2>
+<span class="bg-primary/20 text-primary border border-primary/30 px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide shadow-[0_0_10px_rgba(37,192,244,0.2)]">12 Waiting</span>
+</div>
+<button class="text-sm text-slate-400 font-light hover:text-white transition-colors flex items-center gap-1">
+            View All <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-8 pt-4 -mx-8 px-8 md:-mx-12 md:px-12 lg:-mx-16 lg:px-16 hide-scrollbar snap-x">
+<div class="min-w-[320px] shrink-0 backdrop-blur-[20px] bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 relative overflow-hidden group hover:border-primary/40 transition-colors snap-start">
+<div class="absolute top-0 right-0 p-4">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+</span>
+</div>
+<div class="flex items-center gap-4 mb-5">
+<img alt="Patient" class="w-14 h-14 rounded-full object-cover border-2 border-slate-700 group-hover:border-primary/50 transition-colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS_IiNdlB_Er-3T8m_1IANmOXqd00I9yASGH5rEjdXvdzuGd6yvOndlLQjYy2sj5GILqkXo-7AkFAXDAA0QSQTDYg3bMy4DFT9gv8ELldQ7aEqR2bqwK_NgVd8q0gvOa_teEH9GuMx_dpQeb-5e34QPog-4pFQHHq9BcBnsvMWCnn17LeRAnKvP4MGvoqjoPx2jUl_DHFc4xrhMxrcq83EP6hN4bBqDJ06ALcNw1NDV25ebFhLba4ZtwWB7UeJAetwVufLwDdZZYBT"/>
+<div>
+<h3 class="text-lg font-medium text-white">Elena Rostova</h3>
+<p class="text-xs text-slate-400 font-light tracking-wide">ID: 849-22A • 45 yrs</p>
+</div>
+</div>
+<div class="bg-black/40 rounded-xl p-3 mb-4 border border-white/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs text-slate-400 uppercase tracking-widest font-light">Status</span>
+<span class="text-xs text-red-400 font-medium">Critical Elevated</span>
+</div>
+<p class="text-sm text-white font-light">Arrhythmia alert triggered. BP 145/90.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 font-light flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 14 mins waiting
+              </span>
+<button class="text-primary text-sm font-medium hover:text-primary/80 transition-colors">Review</button>
+</div>
+</div>
+<div class="min-w-[320px] shrink-0 backdrop-blur-[20px] bg-slate-900/40 border border-primary/30 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_30px_rgba(37,192,244,0.1)] snap-start">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_15px_rgba(37,192,244,0.6)]"></div>
+<div class="absolute top-0 right-0 p-4">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary shadow-[0_0_8px_rgba(37,192,244,0.8)]"></span>
+</span>
+</div>
+<div class="flex items-center gap-4 mb-5">
+<img alt="Patient" class="w-14 h-14 rounded-full object-cover border-2 border-primary/50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFbEO8mE4l-KwG_iPYOewti13398BrrNiM5AKBk2lQyc0JU89FUWoo-obME5H6cqv5fJ6-hFMudkW23W1adqYGuvsCxoDCmw7H-y8CzSTZ5Q3oMSMqENB06dyo0WI8ovO7318C9Op5y1WEuap_pXA41lq4_IaC-yRVEQhOBcZ84aNvwhCTDPOSWsI4BWpu-ODc7DufDrb1R0SPwGhA09dIil1HRX_5bnccJNUZCEWQbFXfoCa7x3yRyJX75qz4BVDQaDzQR-DUQ9yT"/>
+<div>
+<h3 class="text-lg font-medium text-white">Marcus Chen</h3>
+<p class="text-xs text-slate-400 font-light tracking-wide">ID: 321-88C • 38 yrs</p>
+</div>
+</div>
+<div class="bg-black/40 rounded-xl p-3 mb-4 border border-white/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs text-slate-400 uppercase tracking-widest font-light">Status</span>
+<span class="text-xs text-primary font-medium">Monitoring</span>
+</div>
+<p class="text-sm text-white font-light">Post-op vitals stable. SpO2 98%.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 font-light flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Next Appt
+              </span>
+<button class="text-primary text-sm font-medium hover:text-primary/80 transition-colors">View Profile</button>
+</div>
+</div>
+<div class="min-w-[320px] shrink-0 backdrop-blur-[20px] bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 relative overflow-hidden group hover:border-primary/40 transition-colors snap-start">
+<div class="absolute top-0 right-0 p-4">
+<span class="relative flex h-3 w-3">
+<span class="relative inline-flex rounded-full h-3 w-3 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"></span>
+</span>
+</div>
+<div class="flex items-center gap-4 mb-5">
+<img alt="Patient" class="w-14 h-14 rounded-full object-cover border-2 border-slate-700 group-hover:border-primary/50 transition-colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDghhSMZMi79uKcV_sgv_qlTC5zl-87bl68SRI9eKnThbY0OU9qBdbqAEAhrWOko1i3qLKhccI5uXJWZooO5Lh49ozH-ijvfH4h53PyJNOhP3iH_zuXhLOx1iWx_FJXgOZKt4sFEwOajnARlwCagdfW-_OIbuO3yMWRgxos6rHdVtsw6RLqRBJJAucKzLqhgVzdpSsjpwULxHooTgUonPloL0ZXlVJk_sfL5ywObfdiSM7s7E1qjGtiNiO2KQrlBaw0hIBLe2QTOaeM"/>
+<div>
+<h3 class="text-lg font-medium text-white">Sarah O'Connor</h3>
+<p class="text-xs text-slate-400 font-light tracking-wide">ID: 105-99B • 29 yrs</p>
+</div>
+</div>
+<div class="bg-black/40 rounded-xl p-3 mb-4 border border-white/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs text-slate-400 uppercase tracking-widest font-light">Status</span>
+<span class="text-xs text-amber-400 font-medium">Pending Review</span>
+</div>
+<p class="text-sm text-white font-light">Lab results ready for assessment.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 font-light flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 32 mins waiting
+              </span>
+<button class="text-primary text-sm font-medium hover:text-primary/80 transition-colors">Review Labs</button>
+</div>
+</div>
+<div class="min-w-[320px] shrink-0 backdrop-blur-[20px] bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 relative overflow-hidden group hover:border-primary/40 transition-colors snap-start">
+<div class="absolute top-0 right-0 p-4">
+<span class="relative flex h-3 w-3">
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span>
+</span>
+</div>
+<div class="flex items-center gap-4 mb-5">
+<img alt="Patient" class="w-14 h-14 rounded-full object-cover border-2 border-slate-700 group-hover:border-primary/50 transition-colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgj0Hc-MXU2DqkIAXMn4XEkM-QEE2kncFcQnjn_jvJx35gqt3voV20MRSOV5ekCaz8vdZLjDprfVkQBQ7sUpUg-l9aUTxfHmRkhHGJQ8JaVocNTS4AWul9xx_lLXs5qzsmeCvsbR0kaf3CaAGl0VkXRZNyzDYvjFL1K4F8wLXA6dWeU1fYTOPGrzgu2crNQFVVb1ErbPNQ8Z6juAi6KwRjeofP65SxUuYqL7YJkUfJw7w-38wcNGHc8uvfFI2Tqyp6RZBcwvmkHKkF"/>
+<div>
+<h3 class="text-lg font-medium text-white">David Miller</h3>
+<p class="text-xs text-slate-400 font-light tracking-wide">ID: 742-11D • 62 yrs</p>
+</div>
+</div>
+<div class="bg-black/40 rounded-xl p-3 mb-4 border border-white/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs text-slate-400 uppercase tracking-widest font-light">Status</span>
+<span class="text-xs text-emerald-400 font-medium">Stable</span>
+</div>
+<p class="text-sm text-white font-light">Routine checkup. No acute issues.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 font-light flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 5 mins waiting
+              </span>
+<button class="text-primary text-sm font-medium hover:text-primary/80 transition-colors">Review</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

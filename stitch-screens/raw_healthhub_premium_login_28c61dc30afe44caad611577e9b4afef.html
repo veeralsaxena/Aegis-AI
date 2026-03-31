@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Smart Timeline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a0f12",
+        },
+        fontFamily: {
+          "display": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+</style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 h-screen flex overflow-hidden relative selection:bg-primary/30 selection:text-white">
+<div class="fixed top-0 left-1/4 w-[800px] h-[800px] bg-[#0c2a42] rounded-full mix-blend-screen filter blur-[120px] opacity-40 pointer-events-none z-0"></div>
+<div class="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full mix-blend-screen filter blur-[150px] opacity-30 pointer-events-none z-0"></div>
+<main class="flex-1 h-full overflow-y-auto relative z-10 scroll-smooth">
+<header class="sticky top-0 bg-background-dark/80 backdrop-blur-xl border-b border-white/5 px-8 py-6 z-30 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">ecg_heart</span>
+<h1 class="text-xl font-bold tracking-tight text-white">Smart Health Timeline</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-slate-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(37,192,244,0.4)]">
+          JD
+        </div>
+</div>
+</header>
+<div class="max-w-4xl mx-auto px-8 py-12">
+<div class="mb-12 relative flex items-center gap-6 group">
+<div class="w-12 text-right">
+<span class="text-primary font-bold tracking-widest text-sm shadow-[0_0_10px_rgba(37,192,244,0.5)]">NOW</span>
+</div>
+<div class="relative flex items-center justify-center w-4 h-4">
+<div class="absolute w-4 h-4 rounded-full bg-primary/30 animate-ping"></div>
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_15px_rgba(37,192,244,0.8)] z-10"></div>
+</div>
+<div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
+</div>
+<div class="relative border-l border-slate-800 ml-[4.3rem] pl-10 space-y-16 pb-20">
+<div class="relative">
+<div class="absolute -left-[45px] top-6 w-3 h-3 rounded-full bg-slate-700 border-2 border-background-dark"></div>
+<div class="absolute -left-[140px] w-20 top-5 text-right">
+<div class="text-white font-semibold text-lg">Oct 12</div>
+<div class="text-slate-500 text-xs">2023</div>
+</div>
+<div class="backdrop-blur-[20px] bg-slate-900/40 border border-primary/20 rounded-2xl p-6 shadow-[0_0_30px_rgba(37,192,244,0.05)] hover:border-primary/40 hover:shadow-[0_0_40px_rgba(37,192,244,0.1)] transition-all group">
+<div class="flex items-start gap-5">
+<div class="w-12 h-12 rounded-xl bg-blue-900/30 border border-blue-500/20 flex items-center justify-center flex-shrink-0 text-blue-400 group-hover:bg-blue-900/50 group-hover:text-blue-300 transition-colors">
+<span class="material-symbols-outlined text-2xl">science</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-white">Comprehensive Metabolic Panel</h3>
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">All Clear</span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-4">
+                  Routine blood work shows optimal levels across the board. Cholesterol has improved by 15% since your last test in March. Vitamin D levels are back in the normal range.
+                </p>
+<button class="flex items-center gap-2 text-primary text-sm font-semibold hover:text-white transition-colors">
+                  Deep Dive <span class="material-symbols-outlined text-[18px]">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -left-[45px] top-6 w-3 h-3 rounded-full bg-slate-700 border-2 border-background-dark"></div>
+<div class="absolute -left-[140px] w-20 top-5 text-right">
+<div class="text-slate-300 font-semibold text-lg">Sep 28</div>
+<div class="text-slate-500 text-xs">2023</div>
+</div>
+<div class="backdrop-blur-[20px] bg-slate-900/40 border border-white/5 rounded-2xl p-6 hover:border-primary/20 transition-all group">
+<div class="flex items-start gap-5">
+<div class="w-12 h-12 rounded-xl bg-purple-900/30 border border-purple-500/20 flex items-center justify-center flex-shrink-0 text-purple-400 group-hover:bg-purple-900/50 group-hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined text-2xl">medication</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-white">Prescription Updated</h3>
+<span class="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-medium border border-white/10">Active</span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-4">
+                  Dr. Sarah Jenkins adjusted your Melatonin dosage to 5mg to help stabilize your circadian rhythm following recent travel.
+                </p>
+<div class="flex items-center gap-3 mb-4 p-3 rounded-lg bg-black/40 border border-white/5">
+<span class="material-symbols-outlined text-slate-500 text-lg">pill</span>
+<div class="flex-1">
+<div class="text-white text-sm font-medium">Melatonin (Extended Release)</div>
+<div class="text-slate-500 text-xs">5mg • Take 1 at bedtime</div>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary text-sm font-semibold hover:text-white transition-colors">
+                  Deep Dive <span class="material-symbols-outlined text-[18px]">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -left-[45px] top-6 w-3 h-3 rounded-full bg-slate-700 border-2 border-background-dark"></div>
+<div class="absolute -left-[140px] w-20 top-5 text-right">
+<div class="text-slate-400 font-semibold text-lg">Aug 15</div>
+<div class="text-slate-600 text-xs">2023</div>
+</div>
+<div class="backdrop-blur-[20px] bg-slate-900/40 border border-white/5 rounded-2xl p-6 hover:border-primary/20 transition-all group opacity-80 hover:opacity-100">
+<div class="flex items-start gap-5">
+<div class="w-12 h-12 rounded-xl bg-orange-900/30 border border-orange-500/20 flex items-center justify-center flex-shrink-0 text-orange-400 group-hover:bg-orange-900/50 group-hover:text-orange-300 transition-colors">
+<span class="material-symbols-outlined text-2xl">monitor_heart</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-white">Annual Wellness Checkup</h3>
+<span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-medium border border-white/10">Completed</span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-4">
+                  General physical examination completed. Blood pressure at 118/75. Resting heart rate at 62 bpm. General physical condition assessed as excellent for your age group.
+                </p>
+<button class="flex items-center gap-2 text-primary text-sm font-semibold hover:text-white transition-colors">
+                  Deep Dive <span class="material-symbols-outlined text-[18px]">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<aside class="w-96 border-l border-white/5 bg-black/40 backdrop-blur-3xl flex flex-col h-full relative z-20">
+<div class="p-6 border-b border-white/5 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,192,244,0.3)]">
+<span class="material-symbols-outlined text-white text-sm">psychology</span>
+</div>
+<h2 class="text-lg font-bold text-white">AI Insights</h2>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<div class="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 text-primary transform group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl">insights</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-wider mb-2">
+<span class="material-symbols-outlined text-[16px]">flare</span>
+            Pattern Detected
+          </div>
+<h4 class="text-white font-semibold mb-2 leading-snug">Sleep quality improved after medication change</h4>
+<p class="text-slate-400 text-sm leading-relaxed">
+            Since your prescription update on Sep 28, your wearable data shows a 24% increase in deep sleep phases and fewer nighttime awakenings.
+          </p>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-slate-900/50 border border-white/5 hover:border-white/10 transition-colors">
+<div class="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+          Positive Trend
+        </div>
+<h4 class="text-white font-semibold mb-2 leading-snug">Cholesterol markers down 15%</h4>
+<p class="text-slate-400 text-sm leading-relaxed mb-3">
+          Your recent CMP indicates that your dietary adjustments over the last 6 months are effectively lowering LDL cholesterol.
+        </p>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-white text-xs font-medium transition-colors">
+          View Trend Graph
+        </button>
+</div>
+<div class="p-5 rounded-xl bg-slate-900/50 border border-white/5">
+<div class="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+<span class="material-symbols-outlined text-[16px]">notifications_active</span>
+          Upcoming Action
+        </div>
+<h4 class="text-white font-semibold mb-2 leading-snug">Flu Vaccine Due</h4>
+<p class="text-slate-400 text-sm leading-relaxed mb-3">
+          It's that time of year. Based on your timeline, you haven't received your seasonal flu shot yet.
+        </p>
+<button class="w-full py-2 bg-primary/20 hover:bg-primary/30 border border-primary/30 rounded-lg text-primary text-xs font-bold transition-colors">
+          Schedule Now
+        </button>
+</div>
+</div>
+</aside>
+
+</body></html>

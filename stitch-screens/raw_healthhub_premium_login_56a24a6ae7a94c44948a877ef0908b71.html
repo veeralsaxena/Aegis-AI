@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Lab Results Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a1114",
+          "surface-dark": "#132126",
+        },
+        fontFamily: {
+          "display": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(19, 33, 38, 0.5); 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(37, 192, 244, 0.2); 
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(37, 192, 244, 0.4); 
+  }
+</style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 min-h-screen flex flex-col overflow-x-hidden relative">
+<div class="fixed inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1538370965046-79c0d6907d47?q=80&amp;w=2669&amp;auto=format&amp;fit=crop')] bg-cover bg-center opacity-20 mix-blend-screen pointer-events-none"></div>
+<div class="fixed inset-0 z-0 bg-gradient-to-b from-transparent via-background-dark/80 to-background-dark pointer-events-none"></div>
+<div class="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none"></div>
+<header class="relative z-20 w-full px-6 py-5 flex items-center justify-between border-b border-primary/10 bg-background-dark/50 backdrop-blur-md">
+<div class="flex items-center gap-3 cursor-pointer">
+<span class="material-symbols-outlined text-primary text-3xl drop-shadow-[0_0_8px_rgba(37,192,244,0.5)]">ecg_heart</span>
+<span class="text-xl font-bold tracking-tight text-white">OmniCare AI</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            Back to Dashboard
+        </button>
+</div>
+</header>
+<main class="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-semibold uppercase tracking-wider">Routine Panel</span>
+<span class="text-slate-500 text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                    Collected: Oct 24, 2023 at 08:30 AM
+                </span>
+</div>
+<h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">Lipid (Cholesterol) Panel</h1>
+</div>
+<div class="flex items-center gap-3">
+<button aria-label="Download PDF" class="p-2 rounded-xl bg-surface-dark border border-white/5 text-slate-400 hover:text-white hover:border-primary/50 transition-all flex items-center justify-center">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button aria-label="Share" class="p-2 rounded-xl bg-surface-dark border border-white/5 text-slate-400 hover:text-white hover:border-primary/50 transition-all flex items-center justify-center">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<section class="w-full backdrop-blur-[30px] bg-slate-900/40 border border-primary/20 rounded-3xl p-6 md:p-8 shadow-[0_0_40px_rgba(37,192,244,0.05)] relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[60px] pointer-events-none"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 relative z-10">
+<div>
+<h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    Total Cholesterol Over Time
+                    <span class="material-symbols-outlined text-primary text-[20px] cursor-help" title="Combined measure of LDL, HDL, and VLDL">info</span>
+</h2>
+<p class="text-slate-400 text-sm mt-1">Tracking your levels relative to the optimal healthy range (&lt; 200 mg/dL).</p>
+</div>
+<div class="flex items-center gap-4 bg-black/40 p-1.5 rounded-xl border border-white/5">
+<button class="px-4 py-2 rounded-lg bg-primary/20 text-primary text-sm font-semibold border border-primary/30 shadow-[0_0_15px_rgba(37,192,244,0.2)]">Total</button>
+<button class="px-4 py-2 rounded-lg text-slate-400 hover:text-white text-sm font-medium transition-colors">LDL</button>
+<button class="px-4 py-2 rounded-lg text-slate-400 hover:text-white text-sm font-medium transition-colors">HDL</button>
+<button class="px-4 py-2 rounded-lg text-slate-400 hover:text-white text-sm font-medium transition-colors">Triglycerides</button>
+</div>
+</div>
+<div class="relative w-full h-[350px] bg-black/20 rounded-2xl border border-white/5 p-4 flex items-end">
+<div class="absolute left-4 top-4 bottom-8 flex flex-col justify-between text-xs text-slate-500 font-medium">
+<span>240</span>
+<span>220</span>
+<span class="text-emerald-400/70">200 (Target)</span>
+<span>180</span>
+<span>160</span>
+</div>
+<div class="absolute left-14 right-4 top-4 bottom-8 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] border-t border-dashed border-emerald-500/30"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+</div>
+<div class="absolute left-14 right-4 bottom-8 h-[50%] bg-emerald-500/5 pointer-events-none rounded-b-lg border-t border-emerald-500/20"></div>
+<svg class="absolute left-14 right-4 top-4 bottom-8 h-full w-[calc(100%-4rem)] drop-shadow-[0_0_10px_rgba(37,192,244,0.8)]" preserveAspectRatio="none" viewBox="0 0 1000 300">
+<path d="M 0 50 Q 150 70 250 150 T 500 120 T 750 180 T 1000 210" fill="none" stroke="#25c0f4" stroke-width="4"></path>
+<circle cx="0" cy="50" fill="#0a1114" r="6" stroke="#25c0f4" stroke-width="3"></circle>
+<circle cx="250" cy="150" fill="#0a1114" r="6" stroke="#25c0f4" stroke-width="3"></circle>
+<circle cx="500" cy="120" fill="#0a1114" r="6" stroke="#25c0f4" stroke-width="3"></circle>
+<circle cx="750" cy="180" fill="#0a1114" r="6" stroke="#25c0f4" stroke-width="3"></circle>
+<circle cx="1000" cy="210" fill="#25c0f4" r="8"></circle>
+<circle cx="1000" cy="210" fill="none" r="16" stroke="#25c0f4" stroke-opacity="0.3" stroke-width="2"></circle>
+</svg>
+<div class="absolute left-14 right-4 bottom-1 flex justify-between text-xs text-slate-500 font-medium">
+<span>Jan '22</span>
+<span>Jul '22</span>
+<span>Jan '23</span>
+<span>Jul '23</span>
+<span class="text-primary">Oct '23 (Now)</span>
+</div>
+<div class="absolute right-4 top-[50%] -translate-y-[calc(100%+20px)] bg-surface-dark border border-primary/40 rounded-lg p-3 shadow-lg flex flex-col items-center z-20">
+<span class="text-2xl font-black text-white">185 <span class="text-xs font-normal text-slate-400">mg/dL</span></span>
+<span class="text-xs text-emerald-400 font-medium flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                    -12% vs last
+                </span>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-surface-dark border-b border-r border-primary/40 rotate-45"></div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="text-xl font-bold text-white">AI Analysis: What this means for you</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="backdrop-blur-[20px] bg-surface-dark/80 border border-emerald-500/20 rounded-2xl p-6 relative flex flex-col gap-4">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-emerald-400 text-3xl opacity-20">check_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+<h4 class="text-lg font-bold text-white">Target Reached</h4>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">Your total cholesterol has dropped below the 200 mg/dL threshold for the first time in 18 months. The dietary changes you logged seem to be highly effective.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300">
+<span class="material-symbols-outlined text-[14px] text-blue-400">verified</span>
+                        Verify with MD
+                    </span>
+</div>
+</div>
+<div class="backdrop-blur-[20px] bg-surface-dark/80 border border-primary/20 rounded-2xl p-6 relative flex flex-col gap-4">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary text-3xl opacity-20">science</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(37,192,244,0.8)]"></div>
+<h4 class="text-lg font-bold text-white">HDL Ratio Improved</h4>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">Your "good" cholesterol (HDL) increased by 5 points. A higher HDL level helps carry LDL cholesterol away from the arteries, reducing cardiovascular risk.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300">
+<span class="material-symbols-outlined text-[14px] text-blue-400">verified</span>
+                        Verify with MD
+                    </span>
+</div>
+</div>
+<div class="backdrop-blur-[20px] bg-surface-dark/80 border border-amber-500/20 rounded-2xl p-6 relative flex flex-col gap-4">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-amber-400 text-3xl opacity-20">monitoring</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+<h4 class="text-lg font-bold text-white">Maintain Routine</h4>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">While total levels are great, your Triglycerides remain slightly elevated at 155 mg/dL (target &lt;150). Consider maintaining your current aerobic exercise routine.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-300">
+<span class="material-symbols-outlined text-[14px] text-blue-400">verified</span>
+                        Verify with MD
+                    </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+</body></html>

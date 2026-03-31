@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inpatient Ward Map - OmniCare AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00f2ff",
+                        "midnight": "#050a10",
+                        "deep-blue": "#0a192f",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+        
+        body {
+            background-color: #050a10;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(210,100%,15%,0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(180,100%,10%,0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(210,100%,15%,0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(180,100%,10%,0.1) 0px, transparent 50%);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.8) 0%, rgba(5, 10, 16, 0.9) 100%);
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mission-card:hover {
+            border-color: rgba(0, 242, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .mission-card:hover::before {
+            opacity: 1;
+        }
+
+        .liquid-button {
+            background: linear-gradient(180deg, #00f2ff 0%, #00d4df 100%);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .liquid-button:hover {
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        .liquid-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .liquid-button:hover::after {
+            opacity: 1;
+        }
+
+        .status-dot {
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .scanning-line {
+            height: 1px;
+            width: 100%;
+            background: rgba(0, 242, 255, 0.2);
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            5% { opacity: 0.5; }
+            95% { opacity: 0.5; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050a10; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 242, 255, 0.2); 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 242, 255, 0.4); 
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-sans min-h-screen antialiased selection:bg-primary/30 selection:text-primary">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+<!-- Top Navbar -->
+<header class="flex items-center justify-between whitespace-nowrap border border-primary/20 px-6 py-4 rounded-xl glass-panel mb-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-white">
+<div class="size-9 text-primary flex items-center justify-center bg-primary/10 rounded-lg border border-primary/30">
+<span class="material-symbols-outlined text-[22px]">medical_services</span>
+</div>
+<h2 class="text-xl font-black leading-tight tracking-[0.1em] uppercase italic">OmniCare <span class="text-primary">AI</span></h2>
+</div>
+<nav class="hidden md:flex items-center gap-8 ml-8">
+<a class="text-slate-400 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest" href="#">Patients</a>
+<a class="text-primary text-xs font-bold uppercase tracking-widest relative after:absolute after:bottom-[-23px] after:left-0 after:w-full after:h-0.5 after:bg-primary after:shadow-[0_0_8px_rgba(0,242,255,0.8)]" href="#">Ward Map</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest" href="#">Staff</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="flex flex-col min-w-40 !h-10 max-w-64 hidden sm:flex">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-white/5 border border-primary/20 overflow-hidden focus-within:border-primary/60 transition-all">
+<div class="text-slate-400 flex items-center justify-center pl-3 pr-2">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 bg-transparent text-white focus:outline-0 focus:ring-0 border-none h-full placeholder:text-slate-500 px-2 text-xs font-medium uppercase tracking-wider" placeholder="Search system..." value=""/>
+</div>
+</label>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-5 liquid-button text-midnight text-xs font-black uppercase tracking-wider">
+<span class="material-symbols-outlined mr-2 text-[18px]">person_add</span>
+<span class="truncate">Add Patient</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-10 border border-primary/30 shadow-[0_0_10px_rgba(0,242,255,0.2)]" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKzde6RRA7UHvQ71kNGcStWiRFRF3BoTSBdhXGD6ODEbYVKxtoBWEZDrJuJVvSrIvyK9I5XlBbAGIIV44Ymup9TunJ20w2NVSXpjmRZrP_vzfO67Y8bPAozhQjYlScS4law6yHusLcbaGwxnAbretHnZh7wRaxtvqBmHMfTyncPjXvqZurJ-QiTD8xI1EVTKoBGEhpJB4mlfUITg9DUXRWGSvWMqWtVHGwXETZ0DHUTXmXDYPA28_-ZyoXH11JSCGPgVZyfETb4O0-");'></div>
+</div>
+</header>
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 mb-1">
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] rounded border border-primary/30">Live Nexus</span>
+<span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-2 animate-pulse status-dot text-emerald-400"></span>Operational</span>
+</div>
+<h1 class="text-white tracking-tight text-3xl md:text-5xl font-black uppercase italic">Ward <span class="text-primary">Control</span> Center</h1>
+<p class="text-slate-400 text-sm font-medium leading-relaxed max-w-2xl uppercase tracking-wide opacity-80">Sector monitoring: Real-time neural link to facility logistics and clinical deployment protocols.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-white/5 rounded-lg border border-primary/20 p-1">
+<button class="px-4 py-1.5 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/30">Grid</button>
+<button class="px-4 py-1.5 rounded-md text-slate-500 hover:text-primary text-[10px] font-black uppercase tracking-widest transition-colors">List</button>
+</div>
+<button class="flex items-center justify-center rounded-lg h-9 w-9 bg-white/5 border border-primary/20 text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Ward Navigation -->
+<div class="mb-10 border-b border-primary/10 overflow-x-auto">
+<div class="flex gap-10 min-w-max px-2">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-4" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+<p class="text-[11px] font-black uppercase tracking-[0.2em]">Global</p>
+<span class="bg-primary/20 text-primary text-[9px] px-1.5 py-0.5 rounded font-bold ml-1 border border-primary/30">42</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent hover:border-primary/40 text-slate-500 hover:text-slate-200 transition-all pb-4" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">monitor_heart</span>
+<p class="text-[11px] font-black uppercase tracking-[0.2em]">ICU-Sector</p>
+<span class="bg-white/5 text-slate-500 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1 border border-white/10">12</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent hover:border-primary/40 text-slate-500 hover:text-slate-200 transition-all pb-4" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">child_care</span>
+<p class="text-[11px] font-black uppercase tracking-[0.2em]">Peds-Unit</p>
+<span class="bg-white/5 text-slate-500 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1 border border-white/10">15</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent hover:border-primary/40 text-slate-500 hover:text-slate-200 transition-all pb-4" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">biotech</span>
+<p class="text-[11px] font-black uppercase tracking-[0.2em]">Lab-West</p>
+<span class="bg-white/5 text-slate-500 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1 border border-white/10">08</span>
+</div>
+</a>
+</div>
+</div>
+<!-- Stats Summary -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 border-l-4 border-l-primary/40">
+<div class="w-11 h-11 rounded-lg bg-primary/5 flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div>
+<p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Total Capacity</p>
+<p class="text-white text-2xl font-black italic">42</p>
+</div>
+</div>
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 border-l-4 border-l-emerald-500/40">
+<div class="w-11 h-11 rounded-lg bg-emerald-500/5 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+<span class="material-symbols-outlined">sensors</span>
+</div>
+<div>
+<p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Vacant Nodes</p>
+<div class="flex items-baseline gap-2">
+<p class="text-white text-2xl font-black italic">14</p>
+<p class="text-emerald-400 text-[10px] font-bold">33%</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 border-l-4 border-l-amber-500/40">
+<div class="w-11 h-11 rounded-lg bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/20">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Active Links</p>
+<div class="flex items-baseline gap-2">
+<p class="text-white text-2xl font-black italic">28</p>
+<p class="text-amber-400 text-[10px] font-bold">67%</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 border-l-4 border-l-rose-500/40">
+<div class="w-11 h-11 rounded-lg bg-rose-500/5 flex items-center justify-center text-rose-400 border border-rose-500/20">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Alert Matrix</p>
+<div class="flex items-baseline gap-2">
+<p class="text-white text-2xl font-black italic text-rose-400">00</p>
+<p class="text-slate-500 text-[10px] font-bold">NOMINAL</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bed Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-16">
+<!-- Occupied Bed -->
+<div class="mission-card rounded-xl p-5 flex flex-col">
+<div class="scanning-line"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-500 text-[20px] drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">settings_input_component</span>
+<h3 class="text-white text-base font-black uppercase tracking-wider italic">Node <span class="text-primary">101</span></h3>
+</div>
+<span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-[9px] font-black uppercase tracking-widest rounded border border-amber-500/30">
+Linked
+</span>
+</div>
+<div class="flex items-center gap-4 mb-6 bg-primary/5 p-4 rounded-lg border border-primary/10">
+<div class="relative">
+<div class="w-14 h-14 rounded-lg bg-cover bg-center border border-amber-500/50 grayscale hover:grayscale-0 transition-all duration-500" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAgfWERbmqAmXfZDnnRL2yNwr9MVHgc_fGzk8iQu5m9pXBnCTp-fukM-eYnDn6HlwmQsaiaeijAjarNq5x0s_bVZd3WmXymj157BJDeYElZwQJchnUVNHIcxaaNvHFfr0a5jQ0YNiT3wVMLjVj29BihtAbQaLwATb6IKuwpqu4t2EBMexZ1j-JQ24SCMjvYqp6T4J8sDyq8uuGS0NqgM-Au3M9_Tgl4HofnmxNOxoGpFff0R_fUx-vhjSZOpFFer7TU4tNFbov-6RvV");'></div>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-midnight status-dot text-emerald-400"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-black uppercase tracking-wider truncate">John Doe</p>
+<p class="text-slate-500 text-[10px] font-bold tracking-widest uppercase">ID: 4509-M • Stable</p>
+</div>
+</div>
+<div class="space-y-2 mb-6 text-[10px] font-bold uppercase tracking-[0.1em]">
+<div class="flex justify-between text-slate-500">
+<span>Pathology</span>
+<span class="text-slate-200">Pneumonia-X</span>
+</div>
+<div class="flex justify-between text-slate-500">
+<span>Uptime</span>
+<span class="text-slate-200">12D 08:30H</span>
+</div>
+<div class="flex justify-between text-slate-500">
+<span>Tier</span>
+<span class="text-primary/70">Standard</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-primary/10 flex gap-2">
+<button class="flex-1 py-2 px-3 bg-white/5 hover:bg-primary/10 border border-primary/20 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+Telemetry
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-white/5 border border-primary/10 text-slate-400 rounded-lg hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Available Bed -->
+<div class="mission-card rounded-xl p-5 flex flex-col border-dashed border-primary/20">
+<div class="flex justify-between items-start mb-8">
+<div class="flex items-center gap-2 opacity-50">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">settings_input_component</span>
+<h3 class="text-white text-base font-black uppercase tracking-wider italic">Node <span class="text-primary">102</span></h3>
+</div>
+<span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded border border-emerald-500/30">
+Ready
+</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center text-center p-4 mb-6 opacity-40 group-hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-slate-600 border border-white/10 group-hover:border-primary/50 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined text-3xl">add_link</span>
+</div>
+<p class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Awaiting protocol</p>
+</div>
+<div class="space-y-2 mb-6 text-[10px] font-bold uppercase tracking-[0.1em] opacity-50">
+<div class="flex justify-between text-slate-500">
+<span>Sterilization</span>
+<span class="text-emerald-400">Verified</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-primary/10">
+<button class="w-full py-2 px-3 liquid-button text-midnight rounded-lg text-[10px] font-black uppercase tracking-widest">
+Establish Link
+</button>
+</div>
+</div>
+<!-- Occupied Bed (ICU) -->
+<div class="mission-card rounded-xl p-5 flex flex-col border-rose-500/30">
+<div class="scanning-line" style="background: rgba(244, 63, 94, 0.3); animation-duration: 2s;"></div>
+<div class="absolute top-0 left-0 w-1 h-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
+<div class="flex justify-between items-start mb-6 pl-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-500 text-[20px] drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]">emergency</span>
+<h3 class="text-white text-base font-black uppercase tracking-wider italic">Node <span class="text-primary">103</span></h3>
+<span class="bg-rose-500/20 text-rose-400 text-[8px] px-1.5 py-0.5 rounded font-black tracking-tighter border border-rose-500/30">ICU-S</span>
+</div>
+<span class="px-2 py-0.5 bg-rose-500/20 text-rose-400 text-[9px] font-black uppercase tracking-widest rounded border border-rose-500/30 animate-pulse">
+Critical
+</span>
+</div>
+<div class="flex items-center gap-4 mb-6 bg-rose-500/5 p-4 rounded-lg border border-rose-500/20 pl-4">
+<div class="relative">
+<div class="w-14 h-14 rounded-lg bg-cover bg-center border border-rose-500/50" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvNGwcfz17VS67-KpLS7VyVcXbcz7Cm-8fBvsSpEsYfSXGUJpww54uw4xWkWPpXXKb_9S_infEDZ8xxYDEpY1FoLaKLnrXfzaGaloJu9xlupzEnyhwI7fe7r0y_eb7hKdnJ_U5orrImsyMEk2n80tzeBMiWsjAkLzZ-7h1NgPyOVvV_Rx7ha8ZD3My1-BUr2ypxxX5qPP5c8ZH-3m_iziSfMP-6H2CQ9ubi6Wy0welkAcwZsob-ue-mfbIZQvYswSCIxhxSDb0hEYw");'></div>
+<div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-500 border-2 border-midnight status-dot text-rose-500 animate-ping"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-black uppercase tracking-wider truncate">Alice Smith</p>
+<p class="text-rose-400 text-[10px] font-bold tracking-widest uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">vital_signs</span> Vital Low
+</p>
+</div>
+</div>
+<div class="space-y-2 mb-6 text-[10px] font-bold uppercase tracking-[0.1em] pl-2">
+<div class="flex justify-between text-slate-500">
+<span>Event</span>
+<span class="text-rose-400 font-black">Cardiac_Arrest</span>
+</div>
+<div class="flex justify-between text-slate-500">
+<span>Operator</span>
+<span class="text-slate-200">Dr. Reynolds</span>
+</div>
+<div class="flex justify-between text-slate-500">
+<span>Priority</span>
+<span>Level_01</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-primary/10 flex gap-2 pl-2">
+<button class="flex-1 py-2 px-3 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-400 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+Emergency_Log
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-white/5 border border-primary/10 text-slate-400 rounded-lg">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Available Bed (ICU) -->
+<div class="mission-card rounded-xl p-5 flex flex-col border-dashed border-primary/20 opacity-80">
+<div class="absolute top-0 left-0 w-1 h-full bg-white/10"></div>
+<div class="flex justify-between items-start mb-8 pl-2">
+<div class="flex items-center gap-2 opacity-50">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">emergency</span>
+<h3 class="text-white text-base font-black uppercase tracking-wider italic">Node <span class="text-primary">104</span></h3>
+</div>
+<span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded border border-emerald-500/30">
+Standby
+</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center text-center p-4 mb-6 opacity-40">
+<div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-slate-600 border border-white/10">
+<span class="material-symbols-outlined text-3xl">add_link</span>
+</div>
+<p class="text-slate-500 text-[10px] font-black uppercase tracking-widest">ICU Node Open</p>
+</div>
+<div class="space-y-2 mb-6 text-[10px] font-bold uppercase tracking-[0.1em] pl-2">
+<div class="flex justify-between text-slate-500">
+<span>Status</span>
+<span class="text-emerald-400">Calibrated</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-primary/10 pl-2">
+<button class="w-full py-2 px-3 bg-white/5 border border-primary/20 hover:bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+Reserve Slot
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

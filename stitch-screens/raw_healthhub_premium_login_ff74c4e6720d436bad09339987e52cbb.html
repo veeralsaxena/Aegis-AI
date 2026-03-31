@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniCare AI HealthHub - Vitals Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#25c0f4",
+          "background-light": "#f5f8f8",
+          "background-dark": "#0a1114",
+          "glass": "rgba(15, 23, 42, 0.6)",
+          "glass-border": "rgba(37, 192, 244, 0.2)",
+        },
+        fontFamily: {
+          "sans": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .glass-panel {
+    background: var(--tw-colors-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--tw-colors-glass-border);
+    box-shadow: 0 0 40px rgba(37, 192, 244, 0.05);
+  }
+  .glow-text {
+    text-shadow: 0 0 10px rgba(37, 192, 244, 0.4);
+  }
+  .glow-icon {
+    filter: drop-shadow(0 0 8px rgba(37, 192, 244, 0.5));
+  }
+</style>
+</head>
+<body class="bg-background-dark font-sans text-slate-100 min-h-screen relative overflow-x-hidden">
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-screen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-HaSwB-iBEftYAyerdJJhFf3jLPAwL_GDX3tbskIdeFjVXSodJ2-76kfR5FMbXKmel4xaT51ooAbgPWhk5BRaAGhhFhuNHtm2gK236-au1VoVVk4p-h1YyPsM2awpryTVI3DrxoSDx-XE-bJtIgBQwQgKYYTaVXt8nyET_0ZFzawrdPzYVIxkUYZ5ozydYBxl_8YXmrSs8dJpA2O57741XVExWumueI7NM8S6N7tbJEsQ9_7yI_kdW6vAXDus6Wmw1Qr8ygXLm8Jh');"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-background-dark/95 via-background-dark/80 to-primary/10"></div>
+</div>
+<header class="relative z-20 w-full px-8 py-6 flex items-center justify-between border-b border-white/5 bg-background-dark/50 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl glow-icon">ecg_heart</span>
+<span class="text-2xl font-bold tracking-tight text-white">OmniCare AI</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-sm text-slate-400 font-light">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+        System Online
+      </div>
+<div class="w-10 h-10 rounded-full border border-primary/30 overflow-hidden shadow-[0_0_15px_rgba(37,192,244,0.2)]">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQRVGAwIVSaiE3Brn0ym2vIDdHBOX9cVKHJzlHp-mxCw9y4E_ZZ5Rw-PZsetQtKWj5A0JFZEMXc-5WI7HQ1t6HS2cdvHm5YiZDOqzzYv6V7zehPHKBlO_gdRTDFIZJ1_l2RqwDmvoq0P24XfPZ0mYLq_tLxaNOIE2QPNqHvSI25RNCV-FpKMxDyGP1rlR3gSeMFB6AZUyEKu-TKZzrW46N8qNPq_GK1uupKNknzVfqZ4wXsQWEAeNIYEVqIJgqleusUg_7ORDFNMJH"/>
+</div>
+</div>
+</header>
+<main class="relative z-10 container mx-auto px-6 py-12 max-w-5xl">
+<div class="mb-10 text-center lg:text-left">
+<h1 class="text-4xl md:text-5xl font-semibold text-white mb-3 tracking-tight">Vitals Capture</h1>
+<p class="text-slate-400 text-base md:text-lg font-light tracking-wide max-w-2xl">Log physiological data for patient <span class="text-white font-medium">#8472-A</span>. Secure HIPAA-compliant session.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">favorite</span>
+<h3 class="font-medium tracking-wide">Heart Rate</h3>
+</div>
+<span class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 rounded-md">BPM</span>
+</div>
+<div class="flex items-end gap-3 mt-4">
+<input class="w-full bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-2 py-2 text-4xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="--" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">Normal range: 60-100</p>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">blood_pressure</span>
+<h3 class="font-medium tracking-wide">Blood Pressure</h3>
+</div>
+<span class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 rounded-md">mmHg</span>
+</div>
+<div class="flex items-center justify-center gap-2 mt-4">
+<input class="w-24 bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-1 py-2 text-3xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="120" type="number"/>
+<span class="text-2xl text-slate-600 font-light">/</span>
+<input class="w-24 bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-1 py-2 text-3xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="80" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">SYS / DIA</p>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">air</span>
+<h3 class="font-medium tracking-wide">Oxygen (SpO2)</h3>
+</div>
+<span class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 rounded-md">%</span>
+</div>
+<div class="flex items-end gap-3 mt-4">
+<input class="w-full bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-2 py-2 text-4xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="--" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">Normal: ≥ 95%</p>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">device_thermostat</span>
+<h3 class="font-medium tracking-wide">Temperature</h3>
+</div>
+<div class="flex gap-1">
+<button class="text-xs text-white font-medium px-2 py-1 bg-primary/20 rounded-md">°F</button>
+<button class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 hover:bg-white/10 rounded-md transition-colors">°C</button>
+</div>
+</div>
+<div class="flex items-end gap-3 mt-4">
+<input class="w-full bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-2 py-2 text-4xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="--" step="0.1" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">Baseline: 98.6°F</p>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">pulmonology</span>
+<h3 class="font-medium tracking-wide">Respiration</h3>
+</div>
+<span class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 rounded-md">Breaths/min</span>
+</div>
+<div class="flex items-end gap-3 mt-4">
+<input class="w-full bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-2 py-2 text-4xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="--" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">Normal range: 12-20</p>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(37,192,244,0.4)]"></div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined glow-icon">monitor_weight</span>
+<h3 class="font-medium tracking-wide">Weight</h3>
+</div>
+<div class="flex gap-1">
+<button class="text-xs text-white font-medium px-2 py-1 bg-primary/20 rounded-md">lbs</button>
+<button class="text-xs text-slate-500 font-light px-2 py-1 bg-white/5 hover:bg-white/10 rounded-md transition-colors">kg</button>
+</div>
+</div>
+<div class="flex items-end gap-3 mt-4">
+<input class="w-full bg-black/30 border-b border-slate-700/50 focus:border-primary border-t-0 border-x-0 rounded-none px-2 py-2 text-4xl text-white font-semibold placeholder-slate-700 transition-all outline-none text-center" placeholder="--" step="0.1" type="number"/>
+</div>
+<p class="text-xs text-slate-500 mt-3 font-light text-center">Previous: 165.4 lbs</p>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 mb-10 relative overflow-hidden">
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined glow-icon">edit_note</span>
+<h3 class="font-medium tracking-wide">Clinical Notes</h3>
+</div>
+<textarea class="w-full bg-black/30 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-white placeholder-slate-600 transition-all outline-none font-light resize-none" placeholder="Add any relevant observations or patient comments..." rows="3"></textarea>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-end gap-4">
+<button class="px-6 py-4 text-slate-400 hover:text-white font-light transition-colors w-full sm:w-auto">
+        Clear All
+      </button>
+<button class="bg-primary hover:bg-primary/90 text-background-dark text-lg font-semibold py-4 px-10 rounded-xl shadow-[0_0_20px_rgba(37,192,244,0.4)] hover:shadow-[0_0_30px_rgba(37,192,244,0.7)] transition-all flex items-center justify-center gap-3 group w-full sm:w-auto relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+<span class="material-symbols-outlined text-[24px] relative z-10">save</span>
+<span class="relative z-10">Save Vitals</span>
+</button>
+</div>
+</main>
+
+</body></html>
