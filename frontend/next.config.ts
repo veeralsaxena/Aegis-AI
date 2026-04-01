@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://localhost';
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dirgelike-superartificially-rachelle.ngrok-free.dev';
 
 const nextConfig: NextConfig = {
   async rewrites() {
