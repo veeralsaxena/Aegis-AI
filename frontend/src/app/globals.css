@@ -72,17 +72,8 @@ html, body {
   }
   /* Hide sidebar, navbar, background overlays */
   nav, aside, header,
-  .print\\:hidden,
   [class*="sidebar"],
   [class*="fixed"] {
     display: none !important;
-  }
-  /* The print card block */
-  .print\\:block {
-    display: block !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 9999 !important;
-    background: white !important;
   }
 }
