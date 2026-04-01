@@ -64,7 +64,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (creds) {
       // Verify session is still valid
       fetch("/openmrs/ws/rest/v1/session", {
-        headers: { Authorization: "Basic " + creds },
+        headers: { 
+          Authorization: "Basic " + creds,
+          "ngrok-skip-browser-warning": "true"
+        },
         credentials: "omit",
         cache: "no-store",
       })
@@ -118,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           Authorization: "Basic " + creds,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
         },
         credentials: "omit",
         cache: "no-store",
@@ -164,7 +168,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await fetch("/openmrs/ws/rest/v1/session", {
         method: "DELETE",
-        headers: state.credentials ? { Authorization: "Basic " + state.credentials } : {},
+        headers: {
+          ...(state.credentials ? { Authorization: "Basic " + state.credentials } : {}),
+          "ngrok-skip-browser-warning": "true"
+        },
         credentials: "omit",
         cache: "no-store",
       }).catch(() => {});
@@ -207,6 +214,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (state.credentials) {
         headers.set("Authorization", "Basic " + state.credentials);
       }
+      headers.set("ngrok-skip-browser-warning", "true");
+      
       if (!headers.has("Content-Type") && options.method && options.method !== "GET") {
         headers.set("Content-Type", "application/json");
       }
