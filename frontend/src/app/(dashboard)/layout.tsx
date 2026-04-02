@@ -7,6 +7,7 @@ import Link from "next/link";
 
 const NAV_ITEMS = [
   { label: "Register Patient", href: "/patients", icon: "person_add", exact: false },
+  { label: "Clinical", href: "/clinical", icon: "stethoscope", exact: false },
   { label: "Timeline", href: "/timeline", icon: "timeline", exact: true },
   { label: "Vitals", href: "/vitals", icon: "monitor_heart", exact: true },
   { label: "Medications", href: "/medications", icon: "medication", exact: true },

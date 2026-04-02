@@ -86,29 +86,7 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
     <div>
   
   <div className="relative z-10 flex min-h-screen">
-    {/* Sidebar */}
-    <aside className="hidden lg:flex w-64 border-r border-white/5 bg-background-dark/70 backdrop-blur-xl flex-col">
-      <div className="p-6 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-primary text-2xl" style={{filter: 'drop-shadow(0 0 8px rgba(37,192,244,0.5))'}}>ecg_heart</span>
-          <span className="text-xl font-bold tracking-tight text-white">Aegis AI</span>
-        </div>
-      </div>
-      <nav className="p-4 flex-1">
-        {[
-          { icon: "dashboard", label: "Dashboard", href: "/patients" },
-          { icon: "group", label: "Patients", href: "/patients" },
-          { icon: "medication", label: "Medications", href: "/medications", active: true },
-          { icon: "biotech", label: "Lab Results", href: "/lab-results" },
-        ].map(item => (
-          <div key={item.label} onClick={() => router.push(item.href)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm cursor-pointer transition-all mb-1 ${item.active ? "bg-primary/10 text-primary" : "text-slate-400 hover:text-white hover:bg-white/5"}`}>
-            <span className="material-symbols-outlined text-lg">{item.icon}</span>
-            {item.label}
-          </div>
-        ))}
-      </nav>
-    </aside>
+
 
     {/* Main Content */}
     <main className="flex-1 overflow-y-auto p-6 lg:p-10">
