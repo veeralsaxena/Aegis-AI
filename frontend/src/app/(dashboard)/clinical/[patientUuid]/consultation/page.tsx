@@ -14,6 +14,7 @@ interface DiagnosisEntry {
   order: "PRIMARY" | "SECONDARY";
   certainty: "CONFIRMED" | "PRESUMED";
   isNew?: boolean;
+  existingObs?: string | null;
 }
 
 interface DrugOrderEntry {
@@ -95,17 +96,16 @@ export default function ConsultationPage() {
       .finally(() => setLoading(false));
   }, [patientUuid, authFetch]);
 
-  // --- Diagnosis Search (using Bahmni-specific diagnosis endpoint) ---
+  // --- Diagnosis Search ---
   const searchDiagnosisConcepts = useCallback(async (q: string) => {
     if (q.length < 2) { setDiagSearchResults([]); return; }
     setDiagSearching(true);
     try {
-      const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/search/diagnosis?q=${encodeURIComponent(q)}&limit=15`);
+      const res = await authFetch(`/openmrs/ws/rest/v1/concept?q=${encodeURIComponent(q)}&limit=15&v=custom:(uuid,name,display)&class=Diagnosis`);
       const data = await res.json();
-      // bahmnicore/search/diagnosis returns an array of {conceptName, conceptUuid, matchedName}
-      const results = (Array.isArray(data) ? data : data.results || []).map((d: any) => ({
-        uuid: d.conceptUuid || d.uuid,
-        display: d.conceptName || d.matchedName || d.display,
+      const results = (data.results || []).map((d: any) => ({
+        uuid: d.uuid,
+        display: d.display || d.name?.display,
       }));
       setDiagSearchResults(results);
     } catch { setDiagSearchResults([]); }
@@ -116,6 +116,27 @@ export default function ConsultationPage() {
     const timer = setTimeout(() => searchDiagnosisConcepts(diagSearchQuery), 300);
     return () => clearTimeout(timer);
   }, [diagSearchQuery, searchDiagnosisConcepts]);
+
+  // Load existing diagnoses
+  useEffect(() => {
+    if (!patientUuid) return;
+    authFetch(`/openmrs/ws/rest/v1/bahmnicore/diagnosis/search?patientUuid=${patientUuid}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          const loaded = data.map((d: any) => ({
+            codedAnswer: d.codedAnswer ? { uuid: d.codedAnswer.uuid, name: d.codedAnswer.display || d.codedAnswer.name?.name || "" } : null,
+            freeTextAnswer: d.freeTextAnswer || "",
+            order: d.order || "PRIMARY",
+            certainty: d.certainty || "CONFIRMED",
+            existingObs: d.existingObs || null,
+            isNew: false
+          }));
+          setDiagnoses(loaded);
+        }
+      })
+      .catch(console.error);
+  }, [patientUuid, authFetch]);
 
   const addDiagnosis = (concept: { uuid: string; display: string }) => {
     setDiagnoses((prev) => [
@@ -210,12 +231,12 @@ export default function ConsultationPage() {
       }
 
       // Build diagnoses array (Bahmni-compatible format)
-      const diagPayload = diagnoses.map((d) => ({
+      const diagPayload = diagnoses.map((d: any) => ({
         codedAnswer: d.codedAnswer ? { uuid: d.codedAnswer.uuid } : undefined,
         freeTextAnswer: d.freeTextAnswer || undefined,
         order: d.order,
         certainty: d.certainty,
-        existingObs: null,
+        existingObs: d.existingObs || null,
         diagnosisStatusConcept: null,
         diagnosisDateTime: new Date().toISOString(),
       }));
@@ -356,7 +377,7 @@ export default function ConsultationPage() {
       )}
 
       {/* Tabs */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+      <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl">
         <div className="flex overflow-x-auto border-b border-white/5 scrollbar-hide">
           {TABS.map((tab) => (
             <button

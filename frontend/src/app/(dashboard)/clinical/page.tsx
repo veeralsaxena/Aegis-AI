@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import PatientAvatar from "@/components/clinical/PatientAvatar";
 
 interface ActivePatient {
   uuid: string;
@@ -52,7 +53,36 @@ export default function ClinicalPage() {
       );
       if (res.ok) {
         const data = await res.json();
-        setActivePatients(data || []);
+        const patientsPromise = (data || []).map(async (v: any) => {
+          try {
+            const pRes = await authFetch(`/openmrs/ws/rest/v1/patient/${v.uuid}?v=full`);
+            if (pRes.ok) {
+              const fullP = await pRes.json();
+              return {
+                uuid: v.uuid,
+                identifier: v.identifier,
+                name: v.name,
+                givenName: fullP.person?.preferredName?.givenName || fullP.person?.display?.split(" ")[0] || v.name,
+                familyName: fullP.person?.preferredName?.familyName || fullP.person?.display?.split(" ")?.slice(1)?.join(" ") || "",
+                gender: fullP.person?.gender || "",
+                age: fullP.person?.age || 0,
+                activeVisitUuid: v.activeVisitUuid,
+              };
+            }
+          } catch(e) {}
+          return {
+            uuid: v.uuid,
+            identifier: v.identifier,
+            name: v.name,
+            givenName: v.name?.split(" ")[0] || "",
+            familyName: v.name?.split(" ").slice(1).join(" ") || "",
+            gender: "",
+            age: 0,
+            activeVisitUuid: v.activeVisitUuid,
+          };
+        });
+        const patients = await Promise.all(patientsPromise);
+        setActivePatients(patients);
       } else {
         // Fallback: fetch active visits and extract patients
         const visitRes = await authFetch(`/openmrs/ws/rest/v1/visit?includeInactive=false&v=default&limit=50`);
@@ -155,8 +185,11 @@ export default function ClinicalPage() {
     router.push(`/clinical/${patientUuid}`);
   };
 
-  const displayName = (p: { givenName: string; middleName?: string; familyName: string }) =>
-    [p.givenName, p.middleName, p.familyName].filter(Boolean).join(" ");
+  const displayName = (p: { givenName?: string; middleName?: string; familyName?: string; name?: string }) => {
+    const parts = [p.givenName, p.middleName, p.familyName].filter(Boolean);
+    if (parts.length > 0) return parts.join(" ");
+    return p.name || "Unknown Patient";
+  };
 
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
@@ -277,9 +310,7 @@ export default function ClinicalPage() {
                       <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 items-center">
                         <div className="col-span-2 text-primary text-sm font-mono">{p.identifier || "—"}</div>
                         <div className="col-span-4 flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-primary text-sm">person</span>
-                          </div>
+                          <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} />
                           <span className="text-white text-sm font-medium truncate">{displayName(p)}</span>
                         </div>
                         <div className="col-span-2 text-slate-400 text-sm">
@@ -299,9 +330,7 @@ export default function ClinicalPage() {
                       </div>
                       {/* Mobile card */}
                       <div className="md:hidden px-4 py-4 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-primary text-lg">person</span>
-                        </div>
+                        <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden" iconClassName="text-primary text-lg" />
                         <div className="flex-1 min-w-0">
                           <p className="text-white text-sm font-medium truncate">{displayName(p)}</p>
                           <p className="text-slate-500 text-xs mt-0.5">

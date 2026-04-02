@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { label: "Timeline", href: "/timeline", icon: "timeline", exact: true },
   { label: "Vitals", href: "/vitals", icon: "monitor_heart", exact: true },
   { label: "Medications", href: "/medications", icon: "medication", exact: true },
-  { label: "Prescriptions", href: "/prescriptions", icon: "pill", exact: true },
   { label: "Lab Results", href: "/lab-results", icon: "biotech", exact: true },
   { label: "Routine Panel", href: "/routine-panel", icon: "labs", exact: true },
   { label: "Ward Map", href: "/ward-map", icon: "bed", exact: true },
