@@ -5,6 +5,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import ObservationForms, { type ObservationFormsHandle } from "@/components/clinical/ObservationForms";
+import AmbientScribeWidget from "@/components/agents/AmbientScribeWidget";
+import CDSAlerts from "@/components/agents/CDSAlerts";
 
 type ConsultationTab = "observations" | "diagnoses" | "medications" | "orders" | "disposition" | "notes";
 
@@ -84,6 +86,50 @@ export default function ConsultationPage() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   });
+
+  // Handle AI Scribe Auto-Fill
+  const handleSOAPGenerated = (soap: any, extractions: any) => {
+    // 1. Fill Notes with SOAP
+    setConsultationNotes(
+      `SUBJECTIVE:\n${soap.subjective}\n\nOBJECTIVE:\n${soap.objective}\n\nASSESSMENT:\n${soap.assessment}\n\nPLAN:\n${soap.plan}`
+    );
+
+    // 2. Pre-fill Diagnoses
+    if (extractions?.diagnoses && Array.isArray(extractions.diagnoses)) {
+      setDiagnoses(prev => [
+        ...prev,
+        ...extractions.diagnoses.map((d: any) => ({
+          codedAnswer: d.icd10 ? null : null, // Would map to actual OpenMRS concepts if we had a full dictionary
+          freeTextAnswer: d.display,
+          order: "PRIMARY" as "PRIMARY" | "SECONDARY",
+          certainty: "PRESUMED" as "CONFIRMED" | "PRESUMED",
+          isNew: true
+        }))
+      ]);
+    }
+
+    // 3. Pre-fill Medications
+    if (extractions?.medications_planned && Array.isArray(extractions.medications_planned)) {
+      setDrugOrders(prev => [
+        ...prev,
+        ...extractions.medications_planned.map((m: any) => ({
+          drug: null, 
+          dose: m.dosage || "",
+          doseUnits: "mg",
+          route: m.route || "Oral",
+          frequency: m.frequency || "Once a day",
+          duration: "",
+          durationUnits: "Day(s)",
+          asNeeded: false,
+          instructions: m.instructions || m.name // fallback name to instructions until matched
+        }))
+      ]);
+    }
+
+    // Switch to notes tab so provider can review
+    setActiveTab("notes");
+    setNotification({ type: "success", message: "AI Scribe successfully drafted the SOAP note and pre-filled clinical entities." });
+  };
 
   // Load patient info
   useEffect(() => {
@@ -376,35 +422,54 @@ export default function ConsultationPage() {
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl">
-        <div className="flex overflow-x-auto border-b border-white/5 scrollbar-hide">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-all whitespace-nowrap ${
-                activeTab === tab.key
-                  ? "text-primary border-b-2 border-primary bg-primary/5"
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <span className="material-symbols-outlined text-lg">{tab.icon}</span>
-              {tab.label}
-              {tab.key === "diagnoses" && diagnoses.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{diagnoses.length}</span>
-              )}
-              {tab.key === "medications" && drugOrders.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{drugOrders.length}</span>
-              )}
-              {tab.key === "orders" && labOrders.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{labOrders.length}</span>
-              )}
-            </button>
-          ))}
+      {/* Main Grid: Ambient Scribe Side-by-side with Clinical Forms */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* Left Column: Ambient Scribe */}
+        <div className="lg:col-span-1">
+          <div className="flex flex-col gap-6">
+            <AmbientScribeWidget 
+              encounterId={"draft-encounter"} 
+              onSOAPGenerated={handleSOAPGenerated} 
+            />
+            <CDSAlerts
+              patientUuid={patientUuid}
+              encounterId={"draft-encounter"}
+              soapNote={consultationNotes}
+              medicationsPlanned={drugOrders}
+            />
+          </div>
         </div>
 
-        <div className="p-6">
+        {/* Right Column: Tabs */}
+        <div className="lg:col-span-3 bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl">
+          <div className="flex overflow-x-auto border-b border-white/5 scrollbar-hide">
+            {TABS.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === tab.key
+                    ? "text-primary border-b-2 border-primary bg-primary/5"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">{tab.icon}</span>
+                {tab.label}
+                {tab.key === "diagnoses" && diagnoses.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{diagnoses.length}</span>
+                )}
+                {tab.key === "medications" && drugOrders.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{drugOrders.length}</span>
+                )}
+                {tab.key === "orders" && labOrders.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{labOrders.length}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="p-6">
           {/* ===== OBSERVATIONS TAB ===== */}
           {activeTab === "observations" && (
             <ObservationForms ref={obsFormsRef} authFetch={authFetch} />
@@ -729,7 +794,7 @@ export default function ConsultationPage() {
             <div className="space-y-6">
               <h3 className="text-white font-semibold text-lg flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">edit_note</span>
-                Consultation Notes
+                Consultation Notes (SOAP)
               </h3>
               <textarea
                 value={consultationNotes}
@@ -744,6 +809,7 @@ export default function ConsultationPage() {
             </div>
           )}
         </div>
+      </div>
       </div>
 
       {/* Floating Save Bar */}

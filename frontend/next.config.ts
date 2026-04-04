@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dirgelike-superartificially-rachelle.ngrok-free.dev';
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://localhost';
+console.log('Proxying to backend:', backendUrl);
 
 const nextConfig: NextConfig = {
   async rewrites() {

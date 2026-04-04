@@ -63,10 +63,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (creds) {
       // Verify session is still valid
-      fetch("/openmrs/ws/rest/v1/session", {
+      fetch("/openmrs/ws/rest/v1/session?v=default", {
         headers: { 
           Authorization: "Basic " + creds,
-          "ngrok-skip-browser-warning": "true"
+          "Accept": "application/json"
         },
         credentials: "omit",
         cache: "no-store",
@@ -117,11 +117,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
 
       // Authenticate with Basic auth
-      const response = await fetch("/openmrs/ws/rest/v1/session", {
+      const response = await fetch("/openmrs/ws/rest/v1/session?v=default", {
         headers: {
           Authorization: "Basic " + creds,
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true"
+          "Accept": "application/json"
         },
         credentials: "omit",
         cache: "no-store",
@@ -166,11 +165,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await fetch("/openmrs/ws/rest/v1/session", {
+      await fetch("/openmrs/ws/rest/v1/session?v=default", {
         method: "DELETE",
         headers: {
           ...(state.credentials ? { Authorization: "Basic " + state.credentials } : {}),
-          "ngrok-skip-browser-warning": "true"
+          "Accept": "application/json"
         },
         credentials: "omit",
         cache: "no-store",
@@ -214,7 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (state.credentials) {
         headers.set("Authorization", "Basic " + state.credentials);
       }
-      headers.set("ngrok-skip-browser-warning", "true");
+      headers.set("Accept", "application/json");
       
       if (!headers.has("Content-Type") && options.method && options.method !== "GET") {
         headers.set("Content-Type", "application/json");

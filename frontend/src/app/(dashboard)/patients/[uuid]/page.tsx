@@ -4,6 +4,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import ChartPrepPanel from "@/components/agents/ChartPrepPanel";
+import { buildBahmniPersonAttributes, buildBahmniAddresses } from "@/lib/bahmniPatientPayload";
 
 interface Visit {
   uuid: string;
@@ -224,33 +226,34 @@ export default function PatientDetailPage() {
   const updatePatient = async (): Promise<any> => {
     const address1 = [houseNo, locality].filter(Boolean).join(", ");
     
-    // Construct person payload
-    const personPayload: any = {
-      names: [{
-        ...(originalNameUuid ? { uuid: originalNameUuid } : {}),
-        givenName,
-        middleName,
-        familyName,
-        preferred: true
-      }],
-      gender,
-      birthdate,
-      birthdateEstimated: estimated,
-      addresses: [{
-        ...(originalAddressUuid ? { uuid: originalAddressUuid } : {}),
+    const nameRow: Record<string, unknown> = {
+      ...(originalNameUuid ? { uuid: originalNameUuid } : {}),
+      givenName,
+      familyName,
+      preferred: true,
+    };
+    if (middleName.trim()) nameRow.middleName = middleName;
+
+    const addresses = buildBahmniAddresses(
+      {
         address1: address1 || undefined,
         cityVillage: cityVillage || undefined,
         countyDistrict: district || undefined,
         stateProvince: stateVal || undefined,
         postalCode: pinCode || undefined,
-      }],
-      attributes: [
-        ...(phone ? [{ attributeType: "c1f4239f-3f10-11e4-adec-0800271c1b75", value: phone }] : []),
-        ...(email ? [{ attributeType: "email", value: email }] : []),
-        // Ideally we should map existing attribute UUIDs so we don't duplicate them,
-        // but for simplicity we rely on Bahmni's attribute handling or assume it overwrites by type.
-      ].filter(a => a.value),
+      },
+      originalAddressUuid || undefined
+    );
+    const attributes = buildBahmniPersonAttributes(phone, email);
+
+    const personPayload: Record<string, unknown> = {
+      names: [nameRow],
+      gender,
+      birthdate,
+      birthdateEstimated: estimated,
     };
+    if (addresses) personPayload.addresses = addresses;
+    if (attributes.length) personPayload.attributes = attributes;
 
     // Update person
     const personRes = await authFetch(`/openmrs/ws/rest/v1/person/${personUuid}`, {
@@ -438,6 +441,11 @@ export default function PatientDetailPage() {
             <p className="text-sm font-medium text-amber-400">{cameraError}</p>
           </div>
         )}
+
+        {/* AI Agent: Chart Prep */}
+        <section className="mb-6">
+          <ChartPrepPanel patientUuid={uuid} />
+        </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Photo Section */}

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { buildBahmniPersonAttributes, buildBahmniAddresses } from "@/lib/bahmniPatientPayload";
 
 export default function NewPatientPage() {
   const { authFetch } = useAuth();
@@ -119,25 +120,29 @@ export default function NewPatientPage() {
 
   const createPatient = async (): Promise<any> => {
     const address1 = [houseNo, locality].filter(Boolean).join(", ");
+    const addresses = buildBahmniAddresses({
+      address1: address1 || undefined,
+      cityVillage: cityVillage || undefined,
+      countyDistrict: district || undefined,
+      stateProvince: state || undefined,
+      postalCode: pinCode || undefined,
+    });
+    const attributes = buildBahmniPersonAttributes(phone, email);
+    const nameRow: Record<string, unknown> = { givenName, familyName, preferred: true };
+    if (middleName.trim()) nameRow.middleName = middleName;
+
+    const person: Record<string, unknown> = {
+      names: [nameRow],
+      gender,
+      birthdate,
+      birthdateEstimated: estimated,
+    };
+    if (addresses) person.addresses = addresses;
+    if (attributes.length) person.attributes = attributes;
+
     const patientPayload = {
       patient: {
-        person: {
-          names: [{ givenName, middleName, familyName, preferred: true }],
-          gender,
-          birthdate,
-          birthdateEstimated: estimated,
-          addresses: [{
-            address1: address1 || undefined,
-            cityVillage: cityVillage || undefined,
-            countyDistrict: district || undefined,
-            stateProvince: state || undefined,
-            postalCode: pinCode || undefined,
-          }],
-          attributes: [
-            ...(phone ? [{ attributeType: "c1f4239f-3f10-11e4-adec-0800271c1b75", value: phone }] : []),
-            ...(email ? [{ attributeType: "email", value: email }] : []),
-          ].filter(a => a.value),
-        },
+        person,
         identifiers: [
           {
             identifierSourceUuid: "c5cf4b68-6529-43fc-a644-c775ae73745e",
@@ -151,6 +156,7 @@ export default function NewPatientPage() {
       relationships: [],
     };
 
+    // Do not use ?v=full on POST — Bahmni often returns 400; response still includes patient.
     const patientRes = await authFetch("/openmrs/ws/rest/v1/bahmnicore/patientprofile", {
       method: "POST",
       body: JSON.stringify(patientPayload),
@@ -158,7 +164,12 @@ export default function NewPatientPage() {
 
     if (!patientRes.ok) {
       const errData = await patientRes.json().catch(() => ({}));
-      throw new Error(errData.error?.message || "Failed to create patient");
+      const detail =
+        typeof errData === "object" && errData && "error" in errData
+          ? (errData as { error?: { message?: string; detail?: string } }).error?.message ||
+            (errData as { error?: { message?: string; detail?: string } }).error?.detail
+          : undefined;
+      throw new Error(detail || patientRes.statusText || "Failed to create patient");
     }
 
     const responseData = await patientRes.json();
