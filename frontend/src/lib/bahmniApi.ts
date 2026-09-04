@@ -20,6 +20,8 @@ export interface BahmniPatientSearchResult {
   birthDate: string;
   deathDate?: string;
   personId: number;
+  /** Present on some Lucene rows; OpenMRS fallback sets from `person.uuid` */
+  personUuid?: string;
   addressFieldValue?: string;
   extraIdentifiers?: Record<string, string>;
 }
@@ -96,7 +98,25 @@ export interface BahmniEncounterPayload {
 
 // ─── Patient Search ─────────────────────────────────────────────────────────
 
-/** Search patients using Bahmni Lucene search (faster, more flexible than OpenMRS default) */
+function mapOpenmrsPatientToBahmniSearch(p: any): BahmniPatientSearchResult {
+  const pref = p.person?.preferredName;
+  return {
+    uuid: p.uuid,
+    givenName: pref?.givenName || p.person?.display?.split(" ")?.[0] || "",
+    middleName: pref?.middleName,
+    familyName: pref?.familyName || "",
+    identifier: p.identifiers?.[0]?.display?.replace(/^.*=\s*/, "") || "",
+    gender: p.person?.gender || "",
+    dateCreated: p.auditInfo?.dateCreated || "",
+    age: p.person?.age ?? 0,
+    birthDate: p.person?.birthdate || "",
+    personId: p.person?.id ?? 0,
+    personUuid: p.person?.uuid,
+    activeVisitUuid: undefined,
+  };
+}
+
+/** Search patients — tries Bahmni Lucene paths, then OpenMRS patient search. */
 export async function searchPatientsBahmni(
   authFetch: AuthFetchFn,
   query: string,
@@ -118,20 +138,150 @@ export async function searchPatientsBahmni(
   if (options?.loginLocationUuid) {
     params.set("loginLocationUuid", options.loginLocationUuid);
   }
-  const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene?${params}`);
-  const data = await res.json();
-  return data.pageOfResults || [];
+  const qs = params.toString();
+  const lucenePaths = [
+    `/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene?${qs}`,
+    `/openmrs/ws/rest/v1/bahmni/search/patient/lucene?${qs}`,
+  ];
+  for (const url of lucenePaths) {
+    try {
+      const res = await authFetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        const rows = data.pageOfResults ?? data.results;
+        if (Array.isArray(rows)) {
+          return (rows as Record<string, unknown>[]).map((raw) => {
+            const r = raw as unknown as BahmniPatientSearchResult;
+            const personUuid =
+              r.personUuid ||
+              (raw.personUuid as string | undefined) ||
+              (raw as { person?: { uuid?: string } }).person?.uuid;
+            return { ...r, personUuid: personUuid || r.personUuid };
+          });
+        }
+      }
+    } catch {
+      /* try next */
+    }
+  }
+  const fr = await authFetch(
+    `/openmrs/ws/rest/v1/patient?q=${encodeURIComponent(query)}&v=full&limit=20`
+  );
+  if (!fr.ok) return [];
+  const fd = await fr.json();
+  return (fd.results || []).map(mapOpenmrsPatientToBahmniSearch);
 }
 
 // ─── Patient Profile ────────────────────────────────────────────────────────
 
 /** Get a full patient profile (patient + relationships + visits) in one call */
 export async function getPatientProfile(authFetch: AuthFetchFn, uuid: string): Promise<any> {
-  const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/patientprofile/${uuid}?v=full`);
+  const res = await authFetch(`/openmrs/ws/rest/v1/patient/${uuid}?v=full`);
   return res.json();
 }
 
 // ─── Clinical Observations ──────────────────────────────────────────────────
+
+function extractOpenmrsObsValue(o: Record<string, unknown>): unknown {
+  if (o.value !== undefined && o.value !== null) return o.value;
+  if (o.valueNumeric !== undefined && o.valueNumeric !== null) return o.valueNumeric;
+  if (o.valueText !== undefined && o.valueText !== null) return o.valueText;
+  const coded = o.valueCoded as { display?: string } | undefined;
+  if (coded?.display) return coded.display;
+  return null;
+}
+
+function mapOpenmrsObsToBahmni(o: any): BahmniObservation {
+  const concept = o.concept || {};
+  return {
+    uuid: o.uuid,
+    concept: {
+      uuid: concept.uuid,
+      name: concept.display || concept.name?.display || "Observation",
+      shortName: concept.name?.display || concept.display,
+    },
+    value: extractOpenmrsObsValue(o),
+    observationDateTime: o.obsDatetime || o.observationDateTime || "",
+  };
+}
+
+/**
+ * Bahmni coarse observations, with fallbacks when `scope=latest` returns 500
+ * — ends with standard OpenMRS `obs` API.
+ */
+export async function getObservationsWithFallback(
+  authFetch: AuthFetchFn,
+  patientUuid: string,
+  conceptNames?: string[],
+  options?: { numberOfVisits?: number; scope?: string }
+): Promise<BahmniObservation[]> {
+  const pid = encodeURIComponent(patientUuid);
+  const nv = String(options?.numberOfVisits ?? 10);
+  const fetchOpenmrsObsFirst = async (): Promise<BahmniObservation[] | null> => {
+    try {
+      const params = new URLSearchParams({ patient: patientUuid, v: "full", limit: "200" });
+      if (conceptNames?.length) {
+        conceptNames.forEach((cn) => params.append("concept", cn));
+      }
+      const obsRes = await authFetch(`/openmrs/ws/rest/v1/obs?${params}`);
+      if (!obsRes.ok) return null;
+      const obsData = await obsRes.json();
+      const results = obsData.results || [];
+      const mapped = results.map(mapOpenmrsObsToBahmni);
+      mapped.sort(
+        (a, b) =>
+          new Date(b.observationDateTime).getTime() -
+          new Date(a.observationDateTime).getTime()
+      );
+      return mapped;
+    } catch {
+      return null;
+    }
+  };
+
+  const openmrsFirst = await fetchOpenmrsObsFirst();
+  if (openmrsFirst && openmrsFirst.length > 0) {
+    return openmrsFirst;
+  }
+
+  const appendConcepts = (base: URLSearchParams) => {
+    if (conceptNames?.length) {
+      conceptNames.forEach((cn) => base.append("concept", cn));
+    }
+  };
+
+  const build = (extra: Record<string, string>) => {
+    const p = new URLSearchParams({ patientUuid, ...extra });
+    if (!p.has("numberOfVisits")) p.set("numberOfVisits", nv);
+    appendConcepts(p);
+    return `/openmrs/ws/rest/v1/bahmnicore/observations?${p}`;
+  };
+
+  const attempts: string[] = [];
+  if (options?.scope) {
+    attempts.push(build({ numberOfVisits: nv, scope: options.scope }));
+  }
+  attempts.push(build({ numberOfVisits: nv, scope: "latest" }));
+  attempts.push(build({ numberOfVisits: nv }));
+  attempts.push(`/openmrs/ws/rest/v1/bahmnicore/observations?patientUuid=${pid}`);
+
+  const seen = new Set<string>();
+  for (const url of attempts) {
+    if (seen.has(url)) continue;
+    seen.add(url);
+    try {
+      const res = await authFetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) return data as BahmniObservation[];
+      }
+    } catch {
+      /* next */
+    }
+  }
+
+  return openmrsFirst || [];
+}
 
 /** Get observations for a patient, optionally filtered by concept names */
 export async function getObservations(
@@ -140,14 +290,7 @@ export async function getObservations(
   conceptNames?: string[],
   options?: { numberOfVisits?: number; scope?: string }
 ): Promise<BahmniObservation[]> {
-  const params = new URLSearchParams({ patientUuid });
-  if (conceptNames && conceptNames.length > 0) {
-    conceptNames.forEach(cn => params.append("concept", cn));
-  }
-  if (options?.numberOfVisits) params.set("numberOfVisits", String(options.numberOfVisits));
-  if (options?.scope) params.set("scope", options.scope);
-  const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/observations?${params}`);
-  return res.json();
+  return getObservationsWithFallback(authFetch, patientUuid, conceptNames, options);
 }
 
 // ─── Drug Orders ────────────────────────────────────────────────────────────

@@ -3,14 +3,36 @@
 import React, { useEffect, useState } from "react";
 
 interface PatientAvatarProps {
+  /** OpenMRS patient UUID */
   patientUuid: string;
-  authFetch: (url: string, options?: any) => Promise<Response>;
+  /** If known, OpenMRS person UUID (image APIs often use this) */
+  personUuid?: string | null;
+  authFetch: (url: string, options?: RequestInit) => Promise<Response>;
   className?: string;
   iconClassName?: string;
 }
 
+async function resolvePersonUuid(
+  authFetch: PatientAvatarProps["authFetch"],
+  patientUuid: string
+): Promise<string> {
+  try {
+    const r = await authFetch(
+      `/openmrs/ws/rest/v1/patient/${patientUuid}?v=custom:(uuid,person:(uuid))`
+    );
+    if (r.ok) {
+      const j = await r.json();
+      if (j.person?.uuid) return j.person.uuid as string;
+    }
+  } catch {
+    /* ignore */
+  }
+  return patientUuid;
+}
+
 export default function PatientAvatar({
   patientUuid,
+  personUuid: personUuidProp,
   authFetch,
   className = "w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden",
   iconClassName = "text-primary text-sm",
@@ -22,49 +44,66 @@ export default function PatientAvatar({
     let objectUrl: string | null = null;
     let mounted = true;
 
-    async function fetchImage() {
+    async function loadImage() {
       try {
-        // Bahmni usually stores images under personimage endpoints
-        // Try the common Bahmni format
-        const res = await authFetch(`/openmrs/ws/rest/v1/personimage/${patientUuid}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch");
+        if (mounted) {
+          setError(false);
+          setImgSrc(null);
         }
-        
-        // Wait, normally Bahmni's personimage endpoint returns `{ "base64EncodedImage": "..." }`
-        // Or it returns the binary data directly. Let's handle both.
-        const contentType = res.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
+        const personUuid =
+          personUuidProp && personUuidProp.length > 0
+            ? personUuidProp
+            : await resolvePersonUuid(authFetch, patientUuid);
+
+        // Bahmni/OpenMRS: registration uses `patientImage?patientUuid=` (camelCase), not `patientimage/{uuid}`.
+        const tryUrls = [
+          `/openmrs/ws/rest/v1/personimage/${personUuid}`,
+          `/openmrs/ws/rest/v1/personimage/${patientUuid}`,
+          `/openmrs/ws/rest/v1/patientImage?patientUuid=${encodeURIComponent(patientUuid)}&q=${Date.now()}`,
+        ];
+
+        for (const url of tryUrls) {
+          const res = await authFetch(url);
+          if (!res.ok) continue;
+
+          const ct = res.headers.get("content-type") || "";
+          if (ct.includes("application/json")) {
             const data = await res.json();
-            if (data && data.base64EncodedImage) {
-                if (mounted) setImgSrc(`data:image/jpeg;base64,${data.base64EncodedImage}`);
-                return;
-            } else if (data && data.personimage) {
-                // some versions
-                if (mounted) setImgSrc(`data:image/jpeg;base64,${data.personimage}`);
-                return;
+            const b64 =
+              data?.base64EncodedImage ||
+              data?.personimage ||
+              data?.image ||
+              data?.results?.[0]?.base64EncodedImage;
+            if (b64 && mounted) {
+              setImgSrc(`data:image/jpeg;base64,${b64}`);
+              return;
             }
+            continue;
+          }
+
+          const blob = await res.blob();
+          if (blob.size > 0) {
+            objectUrl = URL.createObjectURL(blob);
+            if (mounted) setImgSrc(objectUrl);
+            return;
+          }
         }
-        
-        const blob = await res.blob();
-        if (blob.size > 0 && blob.type.startsWith("image/")) {
-          objectUrl = URL.createObjectURL(blob);
-          if (mounted) setImgSrc(objectUrl);
-        } else {
-          throw new Error("Invalid image");
-        }
-      } catch (err) {
+
+        if (mounted) setError(true);
+      } catch {
         if (mounted) setError(true);
       }
     }
 
-    if (patientUuid) fetchImage();
+    if (patientUuid) {
+      loadImage();
+    }
 
     return () => {
       mounted = false;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [patientUuid, authFetch]);
+  }, [patientUuid, personUuidProp, authFetch]);
 
   if (error || !imgSrc) {
     return (
@@ -76,7 +115,7 @@ export default function PatientAvatar({
 
   return (
     <div className={className}>
-      <img src={imgSrc} alt="Patient Avatar" className="w-full h-full object-cover" />
+      <img src={imgSrc} alt="" className="h-full w-full object-cover" />
     </div>
   );
 }

@@ -117,19 +117,22 @@ export default function Screen_patient_registration() {
       const responseData = await patientRes.json();
       const patient = responseData.patient || responseData; // Handling wrapper nuances
 
-      // Step 2: Upload WebRTC Captured Photo if exists
-      if (photoBlob) {
-        // Must convert blob to base64 for openmrs text payload or use multipart
+      if (photoBlob && patient?.uuid) {
         const reader = new FileReader();
-        reader.readAsDataURL(photoBlob);
-        reader.onloadend = async () => {
-          const b64 = (reader.result as string).split(',')[1];
-          await authFetch(`/openmrs/ws/rest/v1/patientImage?patientUuid=${patient.uuid}`, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: b64
-          });
-        };
+        const b64 = await new Promise<string>((resolve, reject) => {
+          reader.onloadend = () => resolve((reader.result as string).split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(photoBlob);
+        });
+        await authFetch(`/openmrs/ws/rest/v1/bahmnicore/patientprofile/${patient.uuid}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patient,
+            image: b64,
+            relationships: Array.isArray(responseData.relationships) ? responseData.relationships : [],
+          }),
+        });
       }
 
       setRegisteredPatient(patient);

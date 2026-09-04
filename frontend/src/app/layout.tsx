@@ -26,17 +26,8 @@ export default function RootLayout({
       </head>
       <body
         className={`${inter.variable} antialiased text-white relative min-h-screen`}
+        style={{ background: "#050B10" }}
       >
-        {/* Global background image */}
-        <div 
-          className="fixed inset-0 z-[-1] pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(rgba(5, 11, 16, 0.4), rgba(5, 11, 16, 0.4)), url('/bg-hero.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundAttachment: "fixed"
-          }}
-        />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

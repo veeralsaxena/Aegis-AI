@@ -174,16 +174,15 @@ export default function NewPatientPage() {
           reader.readAsDataURL(photoBlob);
         });
 
+        // Bahmni saves photos to disk using the patient identifier as filename; the full
+        // patient from create (including identifiers[]) must be sent or the image write is skipped silently.
         await authFetch(`/openmrs/ws/rest/v1/bahmnicore/patientprofile/${patient.uuid}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            patient: {
-              uuid: patient.uuid,
-              person: { uuid: patient.person.uuid },
-            },
+            patient,
             image: b64,
-            relationships: [],
+            relationships: Array.isArray(responseData.relationships) ? responseData.relationships : [],
           }),
         });
       } catch (e) {
@@ -294,7 +293,7 @@ export default function NewPatientPage() {
                   autoPlay
                   playsInline
                   muted
-                  className={`w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-primary/50 shadow-[0_0_20px_rgba(37,192,244,0.2)] bg-black ${isCameraOpen ? 'block' : 'hidden'}`}
+                  className={`w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-white/20 bg-black ${isCameraOpen ? 'block' : 'hidden'}`}
                 />
                 
                 {/* Photo Preview img replaces video when captured */}

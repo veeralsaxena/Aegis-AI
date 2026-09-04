@@ -4,6 +4,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import PatientAvatar from "@/components/clinical/PatientAvatar";
+import CDSAgentAlerts from "@/components/clinical/CDSAgentAlerts";
+import { searchPatientsBahmni } from "@/lib/bahmniApi";
 
 interface ActivePatient {
   uuid: string;
@@ -30,6 +32,7 @@ interface SearchPatient {
   activeVisitUuid?: string;
   birthDate?: string;
   addressFieldValue?: string;
+  personUuid?: string;
 }
 
 export default function ClinicalPage() {
@@ -126,53 +129,41 @@ export default function ClinicalPage() {
     fetchActivePatients();
   }, [fetchActivePatients]);
 
-  // Lucene patient search
-  const searchPatients = useCallback(async (q: string) => {
-    if (!q.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    setSearching(true);
-    try {
-      const params = new URLSearchParams({
-        q,
-        s: "byIdOrNameOrVillage",
-        startIndex: "0",
-        patientAttributes: "",
-        programAttributeFieldName: "",
-        programAttributeFieldValue: "",
-        addressFieldName: "city_village",
-        addressFieldValue: "",
-        addressSearchResultsConfig: "",
-        patientSearchResultsConfig: "",
-        filterOnAllIdentifiers: "false",
-      });
-      const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setSearchResults(data.pageOfResults || []);
-      } else {
-        // Fallback to standard OpenMRS search
-        const fallbackRes = await authFetch(`/openmrs/ws/rest/v1/patient?q=${encodeURIComponent(q)}&v=default&limit=20`);
-        const fallbackData = await fallbackRes.json();
-        const mapped: SearchPatient[] = (fallbackData.results || []).map((p: any) => ({
-          uuid: p.uuid,
-          givenName: p.person?.preferredName?.givenName || p.person?.display?.split(" ")?.[0] || "",
-          familyName: p.person?.preferredName?.familyName || p.person?.display?.split(" ")?.slice(1)?.join(" ") || "",
-          identifier: p.identifiers?.[0]?.display?.replace(/^.*=\s*/, "") || "",
-          gender: p.person?.gender || "",
-          age: p.person?.age || 0,
-          dateCreated: p.auditInfo?.dateCreated || "",
-          activeVisitUuid: undefined,
+  const searchPatients = useCallback(
+    async (q: string) => {
+      if (!q.trim()) {
+        setSearchResults([]);
+        return;
+      }
+      setSearching(true);
+      try {
+        const rows = await searchPatientsBahmni(authFetch, q.trim(), {
+          loginLocationUuid: locationUuid || undefined,
+        });
+        const mapped: SearchPatient[] = rows.map((r) => ({
+          uuid: r.uuid,
+          givenName: r.givenName,
+          middleName: r.middleName,
+          familyName: r.familyName,
+          identifier: r.identifier,
+          gender: r.gender,
+          age: r.age,
+          dateCreated: r.dateCreated,
+          activeVisitUuid: r.activeVisitUuid,
+          birthDate: r.birthDate,
+          addressFieldValue: r.addressFieldValue,
+          personUuid: r.personUuid,
         }));
         setSearchResults(mapped);
+      } catch (err) {
+        console.error("Search error:", err);
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
       }
-    } catch (err) {
-      console.error("Search error:", err);
-    } finally {
-      setSearching(false);
-    }
-  }, [authFetch]);
+    },
+    [authFetch, locationUuid]
+  );
 
   // Debounced search
   useEffect(() => {
@@ -212,6 +203,9 @@ export default function ClinicalPage() {
           Refresh
         </button>
       </div>
+
+      {/* AI Governance Banner (ArmorIQ) */}
+      <CDSAgentAlerts patientUuid="DEMO-UUID-FOR-SECURITY-LAYER" />
 
       {/* Tabs */}
       <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
@@ -388,9 +382,12 @@ export default function ClinicalPage() {
                       <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 items-center">
                         <div className="col-span-2 text-primary text-sm font-mono">{p.identifier || "—"}</div>
                         <div className="col-span-4 flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-primary text-sm">person</span>
-                          </div>
+                          <PatientAvatar
+                            authFetch={authFetch}
+                            patientUuid={p.uuid}
+                            personUuid={p.personUuid}
+                            className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden"
+                          />
                           <span className="text-white text-sm font-medium truncate">{displayName(p)}</span>
                         </div>
                         <div className="col-span-2 text-slate-400 text-sm">
@@ -410,9 +407,13 @@ export default function ClinicalPage() {
                       </div>
                       {/* Mobile */}
                       <div className="md:hidden px-4 py-4 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-primary text-lg">person</span>
-                        </div>
+                        <PatientAvatar
+                          authFetch={authFetch}
+                          patientUuid={p.uuid}
+                          personUuid={p.personUuid}
+                          className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden"
+                          iconClassName="text-primary text-lg"
+                        />
                         <div className="flex-1 min-w-0">
                           <p className="text-white text-sm font-medium truncate">{displayName(p)}</p>
                           <p className="text-slate-500 text-xs mt-0.5">

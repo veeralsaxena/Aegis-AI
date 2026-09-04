@@ -4,10 +4,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import PatientAvatar from "@/components/clinical/PatientAvatar";
+import { getObservationsWithFallback, type BahmniObservation } from "@/lib/bahmniApi";
 
 interface VitalObs {
   concept: { name: string; shortName?: string };
-  value: any;
+  value: unknown;
   observationDateTime: string;
 }
 interface Diagnosis {
@@ -29,10 +31,51 @@ interface DrugOrder {
 }
 interface LabResult {
   testName?: string;
-  result?: any;
+  result?: unknown;
   minNormal?: number;
   maxNormal?: number;
   testDate?: string;
+}
+
+interface PatientName {
+  givenName?: string;
+  middleName?: string;
+  familyName?: string;
+}
+
+interface PatientIdentifier {
+  display?: string;
+  identifier?: string;
+  identifierType?: { display?: string };
+}
+
+interface PatientAddress {
+  address1?: string;
+  cityVillage?: string;
+  stateProvince?: string;
+  postalCode?: string;
+}
+
+interface PatientAttribute {
+  attributeType?: { display?: string };
+  value?: string;
+}
+
+interface PatientPerson {
+  uuid?: string;
+  preferredName?: PatientName;
+  names?: PatientName[];
+  preferredAddress?: PatientAddress;
+  addresses?: PatientAddress[];
+  attributes?: PatientAttribute[];
+  gender?: string;
+  age?: number;
+}
+
+interface PatientRecord {
+  person?: PatientPerson;
+  identifiers?: PatientIdentifier[];
+  allergies?: { display?: string }[];
 }
 interface Visit {
   uuid: string;
@@ -42,6 +85,67 @@ interface Visit {
   visitType: { display: string };
 }
 
+interface RecentOrder {
+  uuid: string;
+  urgency?: string;
+  encounterDatetime?: string;
+  concept?: { uuid?: string; display?: string };
+}
+
+interface PatientAppointment {
+  id: string;
+  patientUuid: string;
+  patientName: string;
+  providerName: string;
+  service: string;
+  date: string;
+  time: string;
+  status: string;
+  source: string;
+  reason: string;
+}
+
+function formatObsValue(v: unknown): string {
+  if (v == null) return "—";
+  if (typeof v === "object" && v !== null && "display" in v) {
+    return String((v as { display: string }).display);
+  }
+  return String(v);
+}
+
+function flattenLeafObservations(rows: BahmniObservation[]): VitalObs[] {
+  const out: VitalObs[] = [];
+  const walk = (o: BahmniObservation) => {
+    if (o.groupMembers && o.groupMembers.length > 0) {
+      o.groupMembers.forEach(walk);
+      return;
+    }
+    out.push({
+      concept: o.concept,
+      value: o.value,
+      observationDateTime: o.observationDateTime,
+    });
+  };
+  rows.forEach(walk);
+  return out;
+}
+
+function extractAllergiesFromPatient(p: Record<string, unknown> | null | undefined): string[] {
+  if (!p) return [];
+  const person = p.person as Record<string, unknown> | undefined;
+  const attrs = (person?.attributes as { attributeType?: { display?: string }; value?: string }[]) || [];
+  const fromAttrs = attrs
+    .filter((a) => (a.attributeType?.display || "").toLowerCase().includes("allerg"))
+    .map((a) => String(a.value || "").trim())
+    .filter(Boolean);
+  const coded = (p as { allergies?: { display?: string }[] }).allergies;
+  if (coded?.length) {
+    return [...new Set([...fromAttrs, ...coded.map((x) => x.display || "").filter(Boolean)])];
+  }
+  return fromAttrs;
+}
+
+
 export default function PatientDashboardPage() {
   const { authFetch } = useAuth();
   const router = useRouter();
@@ -49,27 +153,32 @@ export default function PatientDashboardPage() {
   const patientUuid = params.patientUuid as string;
 
   const [loading, setLoading] = useState(true);
-  const [patient, setPatient] = useState<any>(null);
+  const [patient, setPatient] = useState<PatientRecord | null>(null);
   const [vitals, setVitals] = useState<VitalObs[]>([]);
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
   const [drugOrders, setDrugOrders] = useState<DrugOrder[]>([]);
   const [labResults, setLabResults] = useState<LabResult[]>([]);
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [appointments, setAppointments] = useState<PatientAppointment[]>([]);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [activeVisit, setActiveVisit] = useState<Visit | null>(null);
+  const [patientProfile, setPatientProfile] = useState<Record<string, unknown> | null>(null);
 
   const loadDashboard = useCallback(async () => {
     if (!patientUuid) return;
     setLoading(true);
 
     try {
-      // Parallel fetch all dashboard data
-      const [patientRes, vitalsRes, diagRes, drugRes, labRes, visitRes] = await Promise.all([
+      const [patientRes, diagRes, drugRes, labRes, visitRes, encounterRes, appointmentRes] = await Promise.all([
         authFetch(`/openmrs/ws/rest/v1/patient/${patientUuid}?v=full`),
-        authFetch(`/openmrs/ws/rest/v1/bahmnicore/observations?patientUuid=${patientUuid}&numberOfVisits=1&scope=latest`).catch(() => null),
         authFetch(`/openmrs/ws/rest/v1/bahmnicore/diagnosis/search?patientUuid=${patientUuid}`).catch(() => null),
         authFetch(`/openmrs/ws/rest/v1/bahmnicore/drugOrders/prescribedAndActive?patientUuid=${patientUuid}`).catch(() => null),
         authFetch(`/openmrs/ws/rest/v1/bahmnicore/labOrderResults?patientUuid=${patientUuid}&numberOfVisits=3`).catch(() => null),
         authFetch(`/openmrs/ws/rest/v1/visit?patient=${patientUuid}&v=default`),
+        authFetch(
+          `/openmrs/ws/rest/v1/encounter?patient=${patientUuid}&v=custom:(uuid,display,encounterDatetime,orders:(uuid,urgency,concept:(uuid,display)))&limit=10`
+        ).catch(() => null),
+        fetch(`/api/appointments?patientUuid=${patientUuid}`, { cache: "no-store" }).catch(() => null),
       ]);
 
       // Patient
@@ -77,12 +186,16 @@ export default function PatientDashboardPage() {
         setPatient(await patientRes.json());
       }
 
-      // Vitals
-      if (vitalsRes?.ok) {
-        try {
-          const vitalsData = await vitalsRes.json();
-          setVitals(Array.isArray(vitalsData) ? vitalsData : []);
-        } catch { setVitals([]); }
+      setPatientProfile(null);
+
+      try {
+        const obs = await getObservationsWithFallback(authFetch, patientUuid, undefined, {
+          numberOfVisits: 5,
+          scope: "latest",
+        });
+        setVitals(flattenLeafObservations(obs));
+      } catch {
+        setVitals([]);
       }
 
       // Diagnoses
@@ -109,6 +222,35 @@ export default function PatientDashboardPage() {
         } catch { setLabResults([]); }
       }
 
+      if (encounterRes?.ok) {
+        try {
+          const encounterData = await encounterRes.json();
+          const encounters = Array.isArray(encounterData?.results) ? encounterData.results : [];
+          const collected = encounters.flatMap((enc: { encounterDatetime?: string; orders?: RecentOrder[] }) =>
+            (enc.orders || []).map((order) => ({
+              ...order,
+              encounterDatetime: enc.encounterDatetime,
+            }))
+          );
+          setRecentOrders(collected.slice(0, 12));
+        } catch {
+          setRecentOrders([]);
+        }
+      } else {
+        setRecentOrders([]);
+      }
+
+      if (appointmentRes?.ok) {
+        try {
+          const appointmentData = await appointmentRes.json();
+          setAppointments(Array.isArray(appointmentData?.results) ? appointmentData.results : []);
+        } catch {
+          setAppointments([]);
+        }
+      } else {
+        setAppointments([]);
+      }
+
       // Visits
       if (visitRes.ok) {
         const visitData = await visitRes.json();
@@ -128,7 +270,7 @@ export default function PatientDashboardPage() {
     loadDashboard();
   }, [loadDashboard]);
 
-  const startVisit = async (visitTypeUuid: string, visitTypeName: string) => {
+  const startVisit = async (visitTypeUuid: string) => {
     try {
       const res = await authFetch("/openmrs/ws/rest/v1/visit", {
         method: "POST",
@@ -176,14 +318,40 @@ export default function PatientDashboardPage() {
   const fullName = pName ? [pName.givenName, pName.middleName, pName.familyName].filter(Boolean).join(" ") : "Unknown";
   const patientId = patient?.identifiers?.[0]?.display?.replace(/^.*=\s*/, "") || "N/A";
 
+  const addr = person?.preferredAddress || person?.addresses?.[0];
+  const addressLine = [addr?.address1, addr?.cityVillage, addr?.stateProvince, addr?.postalCode]
+    .filter(Boolean)
+    .join(", ");
+
+  const allergies = extractAllergiesFromPatient(patient);
+  const allIdentifiers =
+    (patient?.identifiers as { display?: string; identifier?: string; identifierType?: { display?: string } }[]) || [];
+  const programs = (patientProfile?.activePrograms as { display?: string; dateEnrolled?: string }[]) || [];
+  const relationships = (patientProfile?.relationships as { personA?: { display?: string }; personB?: { display?: string }; relationshipType?: { display?: string } }[]) || [];
+  const phoneAttr =
+    person?.attributes?.find(
+      (a: { attributeType?: { display?: string } }) =>
+        (a.attributeType?.display || "").toLowerCase().includes("phone")
+    )?.value || "";
+
+  const facilityName = process.env.NEXT_PUBLIC_CLINIC_NAME || "Outpatient clinic (OPD)";
+
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <>
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 print:hidden">
       {/* Back + Patient Header */}
       <div className="flex items-center gap-4">
         <Link href="/clinical" className="text-slate-400 hover:text-white transition-colors">
           <span className="material-symbols-outlined text-xl">arrow_back</span>
         </Link>
-        <div className="flex-1">
+        <PatientAvatar
+          authFetch={authFetch}
+          patientUuid={patientUuid}
+          personUuid={person?.uuid}
+          className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden"
+          iconClassName="text-primary text-2xl"
+        />
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl md:text-3xl font-bold text-white">{fullName}</h1>
             {activeVisit && (
@@ -223,14 +391,14 @@ export default function PatientDashboardPage() {
         ) : (
           <>
             <button
-              onClick={() => startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+              onClick={() => startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5")}
               className="liquid-button text-background-dark font-bold px-6 py-3 rounded-xl flex items-center gap-2 text-sm"
             >
               <span className="material-symbols-outlined text-lg">personal_injury</span>
               Start OPD Visit
             </button>
             <button
-              onClick={() => startVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10", "Emergency")}
+              onClick={() => startVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10")}
               className="bg-red-500/10 text-red-400 border border-red-500/20 font-medium rounded-xl px-5 py-3 hover:bg-red-500/20 transition-colors text-sm flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-lg">local_hospital</span>
@@ -238,12 +406,26 @@ export default function PatientDashboardPage() {
             </button>
           </>
         )}
+        <Link
+          href={`/patients/${patientUuid}`}
+          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
+        >
+          <span className="material-symbols-outlined text-lg">badge</span>
+          Registration / demographics
+        </Link>
+        <Link
+          href={`/appointments?patientUuid=${patientUuid}`}
+          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
+        >
+          <span className="material-symbols-outlined text-lg">calendar_month</span>
+          View Appointments
+        </Link>
         <button
           onClick={() => window.print()}
           className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
         >
           <span className="material-symbols-outlined text-lg">print</span>
-          Print Summary
+          Print OPD summary
         </button>
         <button
           onClick={loadDashboard}
@@ -253,6 +435,75 @@ export default function PatientDashboardPage() {
           Refresh
         </button>
       </div>
+
+      {/* Bahmni-style identifier & allergy strip */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 backdrop-blur-xl">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Patient identifiers</h3>
+          {allIdentifiers.length === 0 ? (
+            <p className="text-slate-500 text-sm">No identifiers</p>
+          ) : (
+            <ul className="space-y-1.5 text-sm">
+              {allIdentifiers.slice(0, 8).map((row, i) => (
+                <li key={i} className="flex justify-between gap-2 text-slate-300">
+                  <span className="text-slate-500 truncate">{row.identifierType?.display || "ID"}</span>
+                  <span className="font-mono text-primary shrink-0">{row.identifier || row.display?.replace(/^.*=\s*/, "")}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 backdrop-blur-xl">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Allergies &amp; contact</h3>
+          <p className="text-sm text-white">
+            <span className="text-slate-500">Allergies: </span>
+            {allergies.length ? allergies.join(", ") : "None recorded"}
+          </p>
+          {phoneAttr ? (
+            <p className="text-sm text-slate-400 mt-2">
+              <span className="text-slate-500">Phone: </span>
+              {String(phoneAttr)}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      {(programs.length > 0 || relationships.length > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {programs.length > 0 && (
+            <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+              <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">assignment</span>
+                <h3 className="text-white font-semibold text-sm">Programs</h3>
+              </div>
+              <div className="p-6 space-y-2 max-h-48 overflow-y-auto">
+                {programs.map((pr, i) => (
+                  <div key={i} className="text-sm text-slate-300 flex justify-between gap-2">
+                    <span>{pr.display || "Program"}</span>
+                    {pr.dateEnrolled && <span className="text-slate-500 text-xs">{pr.dateEnrolled}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {relationships.length > 0 && (
+            <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+              <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">family_restroom</span>
+                <h3 className="text-white font-semibold text-sm">Relationships</h3>
+              </div>
+              <div className="p-6 space-y-2 max-h-48 overflow-y-auto">
+                {relationships.map((rel, i) => (
+                  <div key={i} className="text-sm text-slate-300">
+                    <span className="text-slate-500">{rel.relationshipType?.display || "Related"}: </span>
+                    {rel.personA?.display || rel.personB?.display || "—"}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Dashboard Widgets Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -268,11 +519,9 @@ export default function PatientDashboardPage() {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {vitals.slice(0, 9).map((v, i) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/5">
+                  <div key={`${v.concept?.name}-${v.observationDateTime}-${i}`} className="bg-white/5 rounded-xl p-3 border border-white/5">
                     <p className="text-slate-400 text-xs mb-1 truncate">{v.concept?.shortName || v.concept?.name || "—"}</p>
-                    <p className="text-white font-semibold text-lg">
-                      {typeof v.value === "object" ? v.value?.display || JSON.stringify(v.value) : v.value ?? "—"}
-                    </p>
+                    <p className="text-white font-semibold text-lg">{formatObsValue(v.value)}</p>
                   </div>
                 ))}
               </div>
@@ -405,7 +654,352 @@ export default function PatientDashboardPage() {
             )}
           </div>
         </div>
+
+        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-lg">assignment_add</span>
+            <h3 className="text-white font-semibold text-sm">Recent Orders</h3>
+          </div>
+          <div className="p-6">
+            {recentOrders.length === 0 ? (
+              <p className="text-slate-500 text-sm text-center py-4">No saved investigations visible yet</p>
+            ) : (
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {recentOrders.map((order, i) => (
+                  <div key={`${order.uuid}-${i}`} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-white text-sm font-medium">{order.concept?.display || "Order"}</p>
+                    <p className="text-slate-400 text-xs mt-1">
+                      {order.urgency || "ROUTINE"}
+                      {order.encounterDatetime ? ` • ${new Date(order.encounterDatetime).toLocaleString()}` : ""}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-lg">calendar_month</span>
+              <h3 className="text-white font-semibold text-sm">Appointments</h3>
+            </div>
+            <Link
+              href={`/appointments?patientUuid=${patientUuid}`}
+              className="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+            >
+              Open all
+            </Link>
+          </div>
+          <div className="p-6">
+            {appointments.length === 0 ? (
+              <p className="text-slate-500 text-sm text-center py-4">No appointments booked for this patient</p>
+            ) : (
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {appointments.map((appointment) => (
+                  <div key={appointment.id} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-white text-sm font-medium">{appointment.service}</p>
+                        <p className="text-slate-400 text-xs mt-1">
+                          {appointment.date} • {appointment.time} • {appointment.providerName}
+                        </p>
+                        {appointment.reason ? (
+                          <p className="text-slate-500 text-xs mt-1">{appointment.reason}</p>
+                        ) : null}
+                      </div>
+                      <div className="text-right">
+                        <span
+                          className={`text-xs font-medium px-2.5 py-1 rounded ${
+                            appointment.status === "Cancelled"
+                              ? "bg-red-500/20 text-red-400"
+                              : appointment.status === "Completed"
+                                ? "bg-blue-500/20 text-blue-400"
+                                : appointment.status === "Checked In"
+                                  ? "bg-green-500/20 text-green-400"
+                                  : "bg-primary/20 text-primary"
+                          }`}
+                        >
+                          {appointment.status}
+                        </span>
+                        <p className="text-[11px] text-slate-500 mt-2">{appointment.source.replace("_", " ")}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
+
+    {/* OPD-style printable chart (layout aligned with typical Bahmni print; see /OPD.pdf reference) */}
+    <div className="opd-print-document hidden print:block max-w-4xl mx-auto bg-white p-6 text-black text-[11px] leading-snug">
+      <table className="opd-grid w-full mb-4">
+        <tbody>
+          <tr>
+            <td colSpan={4} className="text-center font-bold text-sm py-2">
+              {facilityName}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4} className="text-center font-bold text-xs py-1">
+              Outpatient (OPD) — Patient chart / visit summary
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4} className="text-center text-[10px] text-neutral-700 py-1">
+              Printed: {new Date().toLocaleString()} • Patient UUID: {patientUuid}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className="opd-grid w-full mb-4">
+        <tbody>
+          <tr>
+            <td className="w-[100px] font-bold bg-neutral-100">Patient name</td>
+            <td colSpan={3}>{fullName}</td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-neutral-100">Primary ID</td>
+            <td>{patientId}</td>
+            <td className="w-[90px] font-bold bg-neutral-100">Gender</td>
+            <td>{person?.gender === "M" ? "Male" : person?.gender === "F" ? "Female" : person?.gender || "—"}</td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-neutral-100">Age</td>
+            <td>{person?.age != null ? `${person.age} yrs` : "—"}</td>
+            <td className="font-bold bg-neutral-100">DOB</td>
+            <td>{person?.birthdate ? person.birthdate.split("T")[0] : "—"}</td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-neutral-100">Address</td>
+            <td colSpan={3}>{addressLine || "—"}</td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-neutral-100">Phone</td>
+            <td>{phoneAttr ? String(phoneAttr) : "—"}</td>
+            <td className="font-bold bg-neutral-100">Allergies</td>
+            <td>{allergies.length ? allergies.join(", ") : "None recorded"}</td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-neutral-100">Visit</td>
+            <td colSpan={3}>
+              {activeVisit
+                ? `${activeVisit.visitType?.display} — started ${new Date(activeVisit.startDatetime).toLocaleString()}`
+                : "No active visit at time of print"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div className="mb-2 flex gap-4 items-start">
+        <PatientAvatar
+          authFetch={authFetch}
+          patientUuid={patientUuid}
+          personUuid={person?.uuid}
+          className="w-28 h-28 shrink-0 border border-black overflow-hidden flex items-center justify-center bg-neutral-100"
+          iconClassName="text-neutral-500 text-4xl"
+        />
+        <p className="text-[10px] text-neutral-600 pt-1">
+          Photo as on file. If no image appears, capture is not stored in OpenMRS for this patient.
+        </p>
+      </div>
+
+      {allIdentifiers.length > 0 && (
+        <section className="mb-4">
+          <p className="font-bold mb-1">Patient identifiers</p>
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allIdentifiers.map((row, i) => (
+                <tr key={i}>
+                  <td>{row.identifierType?.display || "—"}</td>
+                  <td className="font-mono">{row.identifier || row.display?.replace(/^.*=\s*/, "") || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      <section className="mb-4">
+        <p className="font-bold mb-1">Observations / vitals</p>
+        {vitals.length === 0 ? (
+          <p className="text-neutral-600">None recorded.</p>
+        ) : (
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Value</th>
+                <th>Date / time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vitals.map((v, i) => (
+                <tr key={`p-${v.concept?.name}-${i}`}>
+                  <td>{v.concept?.shortName || v.concept?.name || "—"}</td>
+                  <td>{formatObsValue(v.value)}</td>
+                  <td>
+                    {v.observationDateTime ? new Date(v.observationDateTime).toLocaleString() : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section className="mb-4">
+        <p className="font-bold mb-1">Diagnoses</p>
+        {diagnoses.length === 0 ? (
+          <p className="text-neutral-600">None recorded.</p>
+        ) : (
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Diagnosis</th>
+                <th>Order</th>
+                <th>Certainty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {diagnoses.map((d, i) => (
+                <tr key={i}>
+                  <td>{d.codedAnswer?.name || d.freeTextAnswer || "—"}</td>
+                  <td>{d.order}</td>
+                  <td>{d.certainty}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section className="mb-4">
+        <p className="font-bold mb-1">Medications</p>
+        {drugOrders.length === 0 ? (
+          <p className="text-neutral-600">None active.</p>
+        ) : (
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Drug</th>
+                <th>Dose / route / frequency</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {drugOrders.map((d, i) => (
+                <tr key={i}>
+                  <td>{d.drug?.name || "—"}</td>
+                  <td>
+                    {d.dosingInstructions
+                      ? `${d.dosingInstructions.dose} ${d.dosingInstructions.doseUnits}, ${d.dosingInstructions.route}, ${d.dosingInstructions.frequency}`
+                      : "—"}
+                  </td>
+                  <td>
+                    {d.duration != null ? `${d.duration} ${d.durationUnits || ""}` : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section className="mb-4">
+        <p className="font-bold mb-1">Lab results</p>
+        {labResults.length === 0 ? (
+          <p className="text-neutral-600">None available.</p>
+        ) : (
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Test</th>
+                <th>Result</th>
+                <th>Reference range</th>
+              </tr>
+            </thead>
+            <tbody>
+              {labResults.map((l, i) => (
+                <tr key={i}>
+                  <td>{l.testName || "—"}</td>
+                  <td>{l.result != null ? String(l.result) : "—"}</td>
+                  <td>
+                    {l.minNormal != null && l.maxNormal != null ? `${l.minNormal}–${l.maxNormal}` : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      {programs.length > 0 && (
+        <section className="mb-4">
+          <p className="font-bold mb-1">Programs</p>
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Program</th>
+                <th>Date enrolled</th>
+              </tr>
+            </thead>
+            <tbody>
+              {programs.map((pr, i) => (
+                <tr key={i}>
+                  <td>{pr.display || "Program"}</td>
+                  <td>{pr.dateEnrolled || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      <section className="mb-8">
+        <p className="font-bold mb-1">Visit history</p>
+        {visits.length === 0 ? (
+          <p className="text-neutral-600">No visits.</p>
+        ) : (
+          <table className="opd-grid w-full">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visits.map((v) => (
+                <tr key={v.uuid}>
+                  <td>{v.visitType?.display || "Visit"}</td>
+                  <td>{new Date(v.startDatetime).toLocaleString()}</td>
+                  <td>{v.stopDatetime ? new Date(v.stopDatetime).toLocaleString() : "—"}</td>
+                  <td>{v.stopDatetime ? "Closed" : "Active"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <div className="mt-12 border-t border-neutral-400 pt-4 text-xs text-neutral-600">
+        <p className="font-semibold text-black">Provider signature: _________________________________</p>
+        <p className="mt-2">This summary is generated for clinical reference. Verify all data in the EHR.</p>
+      </div>
+    </div>
+    </>
   );
 }

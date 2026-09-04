@@ -1,0 +1,8 @@
+Drug Name,Risk Category,Condition for Risk
+# Download the AZCERT / CredibleMeds drug list CSV and replace this file contents.
+# Steps:
+# 1. Go to https://crediblemeds.org/
+# 2. Register or sign in.
+# 3. Download the AZCERT Drug List as CSV.
+# 4. Save the downloaded file over this file at ai-agents/data/crediblemeds.csv
+# The QTc tool already falls back to a built-in subset if this file is left as-is.

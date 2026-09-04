@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0EA5E9; /* Matte Cyan/Sky */
-  --color-midnight: #050B10;
-  --color-deep-blue: #0A192F;
+  --color-primary: #94A3B8; /* Professional steel/slate — no neon */
+  --color-accent: #60A5FA; /* Subtle blue accent for interactive elements */
+  --color-midnight: #09090B; /* True black-ish */
+  --color-deep-blue: #0C0C10;
   
   --font-sans: "Inter", sans-serif;
   --font-display: "Inter", sans-serif;
@@ -15,12 +16,12 @@
 }
 
 :root {
-  --background: transparent;
-  --foreground: #ededed;
+  --background: #09090B;
+  --foreground: #E4E4E7;
 }
 
 html, body {
-  background: transparent !important;
+  background: var(--background) !important;
   color: var(--foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
@@ -28,39 +29,43 @@ html, body {
   padding: 0;
 }
 
-/* Custom Stitch Utility Classes */
+/* ── Glass panels — darker, more opaque, no neon ── */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.85); /* Significantly more opaque */
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  background: rgba(12, 12, 16, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.5);
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.9) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+  background: rgba(12, 12, 16, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.5) !important;
 }
 
 .border-border-dark {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
+/* ── Buttons — matte, professional, no glow ── */
 .liquid-button {
-  background: linear-gradient(135deg, var(--color-primary), #0284C7); /* Duller matte buttons */
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.2);
-  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
 }
 .liquid-button:hover {
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   transform: translateY(-1px);
 }
 
 /* Print styles — hide UI chrome and show only registration card */
 @media print {
+  html {
+    background: white !important;
+  }
   body {
     background: white !important;
     color: black !important;
@@ -70,10 +75,42 @@ html, body {
   body > div:first-child > div:first-child {
     background: none !important;
   }
-  /* Hide sidebar, navbar, background overlays */
+  /* Hide common chrome (sidebars also use print:hidden on the layout) */
   nav, aside, header,
-  [class*="sidebar"],
-  [class*="fixed"] {
+  [style*="bg-dashboard.png"],
+  [class*="sidebar"] {
     display: none !important;
+  }
+
+  .opd-print-document {
+    display: block !important;
+    min-height: 100vh;
+    background: white !important;
+    color: black !important;
+    position: relative;
+    z-index: 9999;
+    box-shadow: none !important;
+  }
+
+  .opd-print-document * {
+    color: black !important;
+  }
+
+  /* Bahmni-style OPD form: full rules around cells (matches typical printed chart) */
+  .opd-print-document table.opd-grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 11px;
+  }
+  .opd-print-document table.opd-grid th,
+  .opd-print-document table.opd-grid td {
+    border: 1px solid #000;
+    padding: 5px 8px;
+    vertical-align: top;
+  }
+  .opd-print-document table.opd-grid thead th {
+    background: #f0f0f0 !important;
+    font-weight: 700;
   }
 }

@@ -208,9 +208,24 @@ export async function registerPatient(
 
 /** Search drugs */
 export async function searchDrugs(authFetch: AuthFetchFn, query: string, limit = 10): Promise<Drug[]> {
-  const res = await authFetch(`/openmrs/ws/rest/v1/drug?q=${encodeURIComponent(query)}&v=default&limit=${limit}`);
-  const data = await res.json();
-  return data.results || [];
+  const res = await authFetch(
+    `/openmrs/ws/rest/v1/drug?s=default&q=${encodeURIComponent(query)}&v=default&limit=${limit}`
+  );
+  if (res.ok) {
+    const data = await res.json();
+    return data.results || [];
+  }
+
+  const conceptRes = await authFetch(
+    `/openmrs/ws/rest/v1/concept?q=${encodeURIComponent(query)}&v=custom:(uuid,display,name)&limit=${limit}&class=Drug`
+  );
+  if (!conceptRes.ok) return [];
+  const conceptData = await conceptRes.json();
+  return (conceptData.results || []).map((item: any) => ({
+    uuid: item.uuid,
+    display: item.display || item.name?.display || "",
+    name: item.name?.display || item.display || "",
+  }));
 }
 
 /** Get orders for a patient */

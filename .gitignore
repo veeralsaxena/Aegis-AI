@@ -1,0 +1,43 @@
+# Dependencies & Virtual environments
+node_modules/
+.pnp
+.pnp.js
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Next.js & build outputs
+.next/
+out/
+build/
+dist/
+*.log
+*.log.*
+.next_dev.log
+ngrok.log
+
+# Environment files & secrets
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary media/documents
+dummy.webm

@@ -28,6 +28,10 @@ export default function PatientDetailPage() {
   const [identifier, setIdentifier] = useState<string>("");
   const [originalNameUuid, setOriginalNameUuid] = useState<string>("");
   const [originalAddressUuid, setOriginalAddressUuid] = useState<string>("");
+  /** OpenMRS identifiers (with type UUID) — required by Bahmni patientprofile image save */
+  const [profileIdentifiers, setProfileIdentifiers] = useState<
+    { uuid?: string; identifier: string; identifierType: { uuid: string }; preferred: boolean }[]
+  >([]);
 
   // Form fields
   const [givenName, setGivenName] = useState("");
@@ -65,6 +69,7 @@ export default function PatientDetailPage() {
   const loadData = useCallback(async () => {
     if (!uuid) return;
     setLoading(true);
+    setProfileIdentifiers([]);
     try {
       const [patientRes, visitRes, photoRes] = await Promise.all([
         authFetch(`/openmrs/ws/rest/v1/patient/${uuid}?v=full`),
@@ -79,6 +84,34 @@ export default function PatientDetailPage() {
 
         setIdentifier(pIdentifier);
         setPersonUuid(person.uuid);
+
+        const idRows = (pData.identifiers || [])
+          .filter((pi: any) => pi.identifier && !pi.voided)
+          .map((pi: any) => ({
+            ...(pi.uuid ? { uuid: pi.uuid } : {}),
+            identifier: pi.identifier as string,
+            identifierType: {
+              uuid:
+                typeof pi.identifierType === "object" && pi.identifierType?.uuid
+                  ? pi.identifierType.uuid
+                  : (pi.identifierType as string),
+            },
+            preferred: Boolean(pi.preferred),
+          }))
+          .filter((row: { identifier: string; identifierType: { uuid: string } }) => row.identifier && row.identifierType?.uuid);
+        if (idRows.length > 0) {
+          setProfileIdentifiers(idRows);
+        } else if (pIdentifier) {
+          setProfileIdentifiers([
+            {
+              identifier: pIdentifier,
+              identifierType: { uuid: "b9a9e100-f496-11ed-b02c-0242ac150003" },
+              preferred: true,
+            },
+          ]);
+        } else {
+          setProfileIdentifiers([]);
+        }
 
         // Pre-fill names
         const prefName = person.preferredName || person.names?.[0] || {};
@@ -273,15 +306,18 @@ export default function PatientDetailPage() {
           reader.readAsDataURL(photoBlob);
         });
         
+        const personForProfile = {
+          uuid: personUuid,
+          ...personPayload,
+        };
         await authFetch(`/openmrs/ws/rest/v1/bahmnicore/patientprofile/${uuid}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             patient: {
               uuid,
-              person: {
-                uuid: personUuid,
-              },
+              person: personForProfile,
+              identifiers: profileIdentifiers,
             },
             image: b64,
             relationships: [],
@@ -459,7 +495,7 @@ export default function PatientDetailPage() {
                     autoPlay
                     playsInline
                     muted
-                    className={`w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-primary/50 shadow-[0_0_20px_rgba(37,192,244,0.2)] bg-black ${isCameraOpen ? 'block' : 'hidden'}`}
+                    className={`w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-white/20 bg-black ${isCameraOpen ? 'block' : 'hidden'}`}
                   />
                   
                   {/* Photo Preview img replaces video when captured (either existing or new) */}

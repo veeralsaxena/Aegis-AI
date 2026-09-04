@@ -36,38 +36,30 @@ export default function Screen_healthhub_premium_login_234cd9955ab841bc9a9ffb566
   return (
     <>
       <div className="flex min-h-screen w-full font-sans relative overflow-hidden bg-slate-900/40 backdrop-blur-md">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/40 to-primary/10 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-white/3 z-0 pointer-events-none" />
         
   <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center items-start px-16 xl:px-24 z-10">
     <div className="relative z-10 max-w-lg flex flex-col gap-6">
       <div className="flex items-center gap-3 mb-4">
-        <span className="material-symbols-outlined text-primary text-4xl" style={{filter: 'drop-shadow(0 0 8px rgba(37,192,244,0.5))'}}>ecg_heart</span>
         <span className="text-3xl font-bold tracking-tight text-white">Aegis AI</span>
       </div>
       <h1 className="text-white text-6xl xl:text-7xl font-bold leading-[1.05] tracking-[-0.02em]">
         Welcome back.
       </h1>
-      <p className="text-slate-300 text-lg xl:text-xl font-light leading-relaxed border-l-[3px] border-primary pl-5">
+      <p className="text-slate-300 text-lg xl:text-xl font-light leading-relaxed border-l-[3px] border-white/20 pl-5">
         Log in to access your health dashboard and track your progress in real-time.
       </p>
     </div>
   </div>
   <div className="w-full lg:w-1/2 flex flex-col relative h-screen overflow-y-auto z-10">
-    <div className="absolute top-0 right-0 w-full p-6 md:p-8 flex justify-end z-20">
-      <p className="text-sm font-light tracking-wide text-slate-400">
-        Powered by 
-        <span className="text-primary ml-1 font-medium tracking-normal">Bahmni + OpenMRS</span>
-      </p>
-    </div>
     <div className="flex-1 flex items-center justify-center p-6 md:p-12 z-10">
       <div className="w-full max-w-[440px]">
         <div className="flex lg:hidden items-center gap-3 justify-center mb-10">
-          <span className="material-symbols-outlined text-primary text-3xl" style={{filter: 'drop-shadow(0 0 8px rgba(37,192,244,0.5))'}}>ecg_heart</span>
           <span className="text-2xl font-bold tracking-tight text-white">Aegis AI</span>
         </div>
         <div className="relative p-8 md:p-12 group">
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          <div className="absolute -inset-24 bg-primary/20 rounded-full blur-[120px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" />
+          <div className="absolute -inset-24 bg-white/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" />
           <div className="mb-8">
             {error && (
               <div className="mb-4 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-2">
@@ -82,9 +74,9 @@ export default function Screen_healthhub_premium_login_234cd9955ab841bc9a9ffb566
             <div className="flex flex-col gap-2">
               <label className="text-xs font-light tracking-[0.1em] uppercase text-slate-300" htmlFor="username">Username</label>
               <div className="relative flex items-center group">
-                <span className="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">person</span>
+                <span className="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-white transition-colors">person</span>
                 <input
-                  className="w-full bg-black/30 backdrop-blur-md border border-white/10 hover:border-white/20 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-500 transition-all outline-none font-light shadow-inner"
+                  className="w-full bg-black/30 backdrop-blur-md border border-white/10 hover:border-white/20 focus:border-white/40 focus:ring-1 focus:ring-white/20 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-500 transition-all outline-none font-light shadow-inner"
                   id="username"
                   name="username"
                   placeholder="e.g. superman"
@@ -101,9 +93,9 @@ export default function Screen_healthhub_premium_login_234cd9955ab841bc9a9ffb566
                 <label className="text-xs font-light tracking-[0.1em] uppercase text-slate-300" htmlFor="password">Password</label>
               </div>
               <div className="relative flex items-center group">
-                <span className="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors">lock</span>
+                <span className="material-symbols-outlined absolute left-4 text-slate-500 group-focus-within:text-white transition-colors">lock</span>
                 <input
-                  className="w-full bg-black/30 backdrop-blur-md border border-white/10 hover:border-white/20 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-500 transition-all outline-none font-light shadow-inner"
+                  className="w-full bg-black/30 backdrop-blur-md border border-white/10 hover:border-white/20 focus:border-white/40 focus:ring-1 focus:ring-white/20 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-slate-500 transition-all outline-none font-light shadow-inner"
                   id="password"
                   name="password"
                   placeholder="••••••••"
@@ -116,7 +108,7 @@ export default function Screen_healthhub_premium_login_234cd9955ab841bc9a9ffb566
               </div>
             </div>
             <button
-              className="mt-6 w-full bg-primary hover:bg-primary/90 text-background-dark text-base font-semibold py-4 rounded-xl shadow-lg hover:shadow-lg transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-6 w-full bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold py-4 rounded-xl shadow-lg hover:shadow-lg transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
               disabled={isLoading}
             >
