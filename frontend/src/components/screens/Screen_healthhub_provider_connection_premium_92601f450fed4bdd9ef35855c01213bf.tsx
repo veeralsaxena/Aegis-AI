@@ -52,122 +52,104 @@ export default function Screen_healthhub_provider_connection_premium_92601f450fe
 
   return (
     <div>
-  
-  <div className="relative z-10 flex flex-col min-h-screen">
-    <header className="w-full px-8 py-5 flex items-center justify-between border-b border-white/5 bg-background-dark/50 backdrop-blur-md">
-      <div className="flex items-center gap-3">
-        <span className="material-symbols-outlined text-primary text-3xl" style={{filter: 'drop-shadow(0 0 8px rgba(37,192,244,0.5))'}}>ecg_heart</span>
-        <span className="text-2xl font-bold tracking-tight text-white">Aegis AI HealthHub</span>
-      </div>
-      <div className="flex items-center gap-6">
-        {[
-          { label: "Dashboard", icon: "dashboard" },
-          { label: "Records", icon: "folder_shared" },
-          { label: "Connect", icon: "link", active: true },
-        ].map(item => (
-          <button key={item.label} className={`flex items-center gap-1.5 text-sm font-medium transition-all ${item.active ? "text-primary" : "text-slate-400 hover:text-white"}`}>
-            <span className="material-symbols-outlined text-lg">{item.icon}</span>
-            {item.label}
-          </button>
-        ))}
-      </div>
-    </header>
 
-    <main className="flex-1 container mx-auto px-6 py-10 max-w-5xl">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-semibold text-white tracking-tight mb-3">Connect your health provider</h1>
-        <p className="text-slate-400 text-base font-light max-w-2xl mx-auto">
-          Securely sync your clinical records to empower your personalized AI health insights with HIPAA-grade security.
-        </p>
-      </div>
-
-      {/* External Integrations */}
-      <div className="mb-12">
-        <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">integration_instructions</span>
-          Health System Integrations
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {integrations.map(item => (
-            <div key={item.name} className="glass-panel rounded-2xl p-6 relative overflow-hidden group hover:border-primary/20 transition-all">
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-primary text-xl">{item.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-medium text-sm mb-1">{item.name}</h3>
-                  <p className="text-xs text-slate-400 font-light leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
-              <button className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                item.connected
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-400/30"
-                  : "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20"
-              }`}>
-                <span className="material-symbols-outlined text-sm">{item.connected ? "check_circle" : "add_link"}</span>
-                {item.connected ? "Connected" : "Connect"}
-              </button>
+      <div className="bg-[#fafafa] flex flex-col min-h-screen pb-20">
+        <main className="flex-1 container mx-auto px-6 py-12 max-w-6xl">
+          <div className="flex flex-col items-center text-center mb-16 bg-white border border-black/5 shadow-sm rounded-3xl p-10 max-w-4xl mx-auto">
+            <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-3xl">cast_connected</span>
             </div>
-          ))}
-        </div>
-      </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-black tracking-tight mb-4">Connect your health providers</h1>
+            <p className="text-black/50 text-base font-medium max-w-2xl mx-auto">
+              Securely sync your clinical records to empower your personalized AI health insights with HIPAA-grade security.
+            </p>
+          </div>
 
-      {/* Bahmni Providers */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">group</span>
-            Clinical Providers ({providers.length})
-          </h2>
-          <div className="relative">
-            <input className="bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-2 pl-9 pr-4 text-sm text-white placeholder-slate-600 outline-none w-60"
-              placeholder="Search providers..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <span className="material-symbols-outlined text-primary text-4xl animate-spin">progress_activity</span>
-          </div>
-        ) : filteredProviders.length === 0 ? (
-          <div className="glass-panel rounded-2xl p-12 text-center">
-            <span className="material-symbols-outlined text-slate-600 text-5xl mb-3">person_off</span>
-            <p className="text-slate-400 text-sm font-light">No providers found</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredProviders.map((provider, idx) => (
-              <div key={provider.uuid} className={`glass-panel rounded-xl p-5 group hover:border-primary/20 transition-all relative overflow-hidden`}>
-                <div className={`absolute inset-0 bg-gradient-to-br ${providerColors[idx % providerColors.length]} opacity-30`} />
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-primary text-lg">{providerIcons[idx % providerIcons.length]}</span>
+          {/* External Integrations */}
+          <div className="mb-12">
+            <h2 className="text-lg font-bold text-black mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-600">integration_instructions</span>
+              Health System Integrations
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {integrations.map(item => (
+                <div key={item.name} className="bg-white border border-black/5 shadow-sm rounded-2xl p-6 relative overflow-hidden group hover:border-blue-600/30 transition-all">
+                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-blue-600 text-xl">{item.icon}</span>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white font-medium text-sm truncate">{provider.display}</p>
-                      <p className="text-xs text-slate-500 font-light">{provider.identifier || "Provider"}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-black font-bold text-sm mb-1">{item.name}</h3>
+                      <p className="text-xs text-black/50 font-medium leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
-                  <button onClick={() => handleConnect(provider.uuid)}
-                    className={`w-full py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
-                      connectedIds.has(provider.uuid)
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-400/30"
-                        : "bg-white/5 text-slate-300 border border-white/10 hover:border-primary/30 hover:text-primary"
+                  <button className={`w-full py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${item.connected
+                    ? "bg-emerald-50 text-emerald-600 border border-emerald-600/20"
+                    : "bg-blue-50/50 text-blue-600 border border-blue-600/20 hover:bg-blue-50"
                     }`}>
-                    <span className="material-symbols-outlined text-sm">{connectedIds.has(provider.uuid) ? "check_circle" : "person_add"}</span>
-                    {connectedIds.has(provider.uuid) ? "Connected" : "Connect"}
+                    <span className="material-symbols-outlined text-sm">{item.connected ? "check_circle" : "add_link"}</span>
+                    {item.connected ? "Connected" : "Connect"}
                   </button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        )}
+
+          {/* Bahmni Providers */}
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold text-black flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600">group</span>
+                Clinical Providers ({providers.length})
+              </h2>
+              <div className="relative">
+                <input className="bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-2 pl-9 pr-4 text-sm text-black placeholder-black/30 outline-none w-60 font-medium transition-all"
+                  placeholder="Search providers..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black/40 text-sm">search</span>
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <span className="material-symbols-outlined text-blue-600 text-4xl animate-spin">progress_activity</span>
+              </div>
+            ) : filteredProviders.length === 0 ? (
+              <div className="bg-white border border-black/5 shadow-sm rounded-2xl p-12 text-center">
+                <span className="material-symbols-outlined text-black/20 text-5xl mb-3">person_off</span>
+                <p className="text-black/50 text-sm font-medium">No providers found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredProviders.map((provider, idx) => (
+                  <div key={provider.uuid} className={`bg-white border border-black/5 shadow-sm rounded-xl p-5 group hover:border-blue-600/30 transition-all relative overflow-hidden`}>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${providerColors[idx % providerColors.length]} opacity-5`} />
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-600/10 flex items-center justify-center">
+                          <span className="material-symbols-outlined text-blue-600 text-lg">{providerIcons[idx % providerIcons.length]}</span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-black font-bold text-sm truncate">{provider.display}</p>
+                          <p className="text-xs text-black/50 font-medium">{provider.identifier || "Provider"}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => handleConnect(provider.uuid)}
+                        className={`w-full py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${connectedIds.has(provider.uuid)
+                          ? "bg-emerald-50 text-emerald-600 border border-emerald-600/20"
+                          : "bg-white border border-black/10 text-black/60 hover:text-blue-600 hover:border-blue-600/30 hover:bg-blue-50"
+                          }`}>
+                        <span className="material-symbols-outlined text-sm">{connectedIds.has(provider.uuid) ? "check_circle" : "person_add"}</span>
+                        {connectedIds.has(provider.uuid) ? "Connected" : "Connect"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </main>
       </div>
-    </main>
-  </div>
-</div>
+    </div>
   );
 }

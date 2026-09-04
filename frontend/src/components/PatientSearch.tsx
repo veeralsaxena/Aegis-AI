@@ -94,9 +94,9 @@ export default function PatientSearch({ onSelect, label = "Patient" }: PatientSe
 
   return (
     <div ref={wrapperRef} className="relative">
-      <label className="text-xs font-light tracking-[0.1em] uppercase text-slate-300 mb-2 block">{label}</label>
+      <label className="text-xs font-bold tracking-[0.1em] uppercase text-black/60 mb-2 block">{label}</label>
       <div className="relative flex items-center">
-        <span className="material-symbols-outlined absolute left-3 text-slate-500 text-lg">person_search</span>
+        <span className="material-symbols-outlined absolute left-3 text-black/40 text-lg">person_search</span>
         <input
           type="text"
           placeholder="Search by patient name..."
@@ -106,13 +106,13 @@ export default function PatientSearch({ onSelect, label = "Patient" }: PatientSe
             setSelected(null);
           }}
           onFocus={() => results.length > 0 && setShowDropdown(true)}
-          className="w-full bg-black/50 border border-slate-700/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-3 pl-10 pr-10 text-white placeholder-slate-600 transition-all outline-none text-sm"
+          className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-3 pl-10 pr-10 text-black placeholder-black/30 transition-all outline-none text-sm font-medium"
         />
         {searching && (
-          <span className="material-symbols-outlined absolute right-3 text-primary text-lg animate-spin">progress_activity</span>
+          <span className="material-symbols-outlined absolute right-3 text-blue-600 text-lg animate-spin">progress_activity</span>
         )}
         {selected && (
-          <button onClick={clearSelection} className="absolute right-3 text-slate-500 hover:text-white transition-colors">
+          <button onClick={clearSelection} className="absolute right-3 text-black/40 hover:text-black transition-colors">
             <span className="material-symbols-outlined text-lg">close</span>
           </button>
         )}
@@ -120,30 +120,30 @@ export default function PatientSearch({ onSelect, label = "Patient" }: PatientSe
 
       {/* Selected indicator */}
       {selected && (
-        <div className="mt-2 flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
-          <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-          <span className="text-primary text-xs font-medium">{selected.person?.display || selected.display}</span>
-          <span className="text-slate-500 text-xs">• {selected.identifiers?.[0]?.display?.split("= ")?.[1] || selected.uuid.slice(0, 8)}</span>
+        <div className="mt-2 flex items-center gap-2 bg-blue-50 border border-blue-600/20 rounded-lg px-3 py-2">
+          <span className="material-symbols-outlined text-blue-600 text-sm">check_circle</span>
+          <span className="text-blue-600 text-xs font-bold">{selected.person?.display || selected.display}</span>
+          <span className="text-black/50 text-xs font-medium">• {selected.identifiers?.[0]?.display?.split("= ")?.[1] || selected.uuid.slice(0, 8)}</span>
         </div>
       )}
 
       {/* Dropdown */}
       {showDropdown && results.length > 0 && !selected && (
-        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-black/10 rounded-xl shadow-lg max-h-60 overflow-y-auto">
           {results.map(p => {
             const id = p.identifiers?.[0]?.display?.split("= ")?.[1] || "N/A";
             return (
               <button
                 key={p.uuid}
                 onClick={() => handleSelect(p)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-primary/5 transition-colors text-left border-b border-white/5 last:border-0"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors text-left border-b border-black/5 last:border-0"
               >
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-primary text-sm">person</span>
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-blue-600 text-sm">person</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{p.person?.display || p.display}</p>
-                  <p className="text-slate-500 text-xs">{id} • {p.person?.gender === "M" ? "Male" : "Female"} • {p.person?.age} yrs</p>
+                  <p className="text-black text-sm font-bold truncate">{p.person?.display || p.display}</p>
+                  <p className="text-black/50 text-xs font-medium">{id} • {p.person?.gender === "M" ? "Male" : "Female"} • {p.person?.age} yrs</p>
                 </div>
               </button>
             );

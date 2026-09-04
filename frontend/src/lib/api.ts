@@ -208,7 +208,7 @@ export async function registerPatient(
 
 /** Search drugs */
 export async function searchDrugs(authFetch: AuthFetchFn, query: string, limit = 10): Promise<Drug[]> {
-  const res = await authFetch(`/openmrs/ws/rest/v1/drug?q=${encodeURIComponent(query)}&v=default&limit=${limit}`);
+  const res = await authFetch(`/openmrs/ws/rest/v1/drug?q=${encodeURIComponent(query)}&v=default&s=default&limit=${limit}`);
   const data = await res.json();
   return data.results || [];
 }

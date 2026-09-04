@@ -156,7 +156,7 @@ export default function ConsultationPage() {
     if (q.length < 2) { setDrugSearchResults([]); return; }
     setDrugSearching(true);
     try {
-      const res = await authFetch(`/openmrs/ws/rest/v1/drug?q=${encodeURIComponent(q)}&v=default&limit=15`);
+      const res = await authFetch(`/openmrs/ws/rest/v1/drug?q=${encodeURIComponent(q)}&s=default&v=default&limit=15`);
       const data = await res.json();
       setDrugSearchResults(data.results || []);
     } catch { setDrugSearchResults([]); }
@@ -272,7 +272,7 @@ export default function ConsultationPage() {
 
       // Build disposition
       const dispositionPayload = dispositionAction
-        ? { code: dispositionAction, additionalObs: dispositionNote ? [{ value: dispositionNote }] : [] }
+        ? { code: dispositionAction, additionalObs: dispositionNote ? [{ value: dispositionNote, concept: { name: "Disposition Note" } }] : [] }
         : undefined;
 
       // The big JSON — Bahmni coarse-grained save
@@ -312,8 +312,8 @@ export default function ConsultationPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
-          <span className="material-symbols-outlined text-primary text-5xl animate-spin">progress_activity</span>
-          <p className="text-slate-400 text-sm">Loading consultation...</p>
+          <span className="material-symbols-outlined text-blue-600 text-5xl animate-spin">progress_activity</span>
+          <p className="text-black/50 font-bold text-sm">Loading consultation...</p>
         </div>
       </div>
     );
@@ -338,15 +338,15 @@ export default function ConsultationPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
-          <Link href={`/clinical/${patientUuid}`} className="text-slate-400 hover:text-white transition-colors">
+          <Link href={`/clinical/${patientUuid}`} className="text-black/40 hover:text-black transition-colors font-bold">
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </Link>
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+            <h1 className="text-xl md:text-2xl font-black text-black flex items-center gap-2 tracking-tight">
               Consultation — {fullName}
             </h1>
-            <p className="text-slate-400 text-xs mt-0.5">
-              ID: <span className="text-primary font-mono">{patientId}</span>
+            <p className="text-black/50 text-xs mt-1 font-bold uppercase tracking-wider">
+              ID: <span className="text-blue-600 font-mono">{patientId}</span>
               {person?.gender && <> • {person.gender === "M" ? "Male" : "Female"}</>}
               {person?.age != null && <> • {person.age} yrs</>}
             </p>
@@ -355,7 +355,7 @@ export default function ConsultationPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="liquid-button text-background-dark font-bold px-6 py-3 rounded-xl flex items-center gap-2 text-sm disabled:opacity-50"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] font-bold px-6 py-3 rounded-2xl flex items-center gap-2 text-sm disabled:opacity-50 transition-all"
           title="Alt+S"
         >
           {saving ? (
@@ -368,43 +368,42 @@ export default function ConsultationPage() {
 
       {/* Notification */}
       {notification && (
-        <div className={`px-4 py-3 rounded-xl flex items-center gap-2 ${notification.type === "success" ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
-          <span className={`material-symbols-outlined text-lg ${notification.type === "success" ? "text-green-400" : "text-red-400"}`}>
+        <div className={`px-4 py-3 rounded-2xl flex items-center gap-2 ${notification.type === "success" ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+          <span className={`material-symbols-outlined text-lg ${notification.type === "success" ? "text-green-600" : "text-red-600"}`}>
             {notification.type === "success" ? "check_circle" : "error"}
           </span>
-          <p className={`text-sm font-medium ${notification.type === "success" ? "text-green-400" : "text-red-400"}`}>{notification.message}</p>
+          <p className={`text-sm font-bold ${notification.type === "success" ? "text-green-700" : "text-red-700"}`}>{notification.message}</p>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl">
-        <div className="flex overflow-x-auto border-b border-white/5 scrollbar-hide">
+      <div className="bg-white border border-black/5 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 overflow-hidden">
+        <div className="flex overflow-x-auto border-b border-black/5 scrollbar-hide">
           {TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-all whitespace-nowrap ${
-                activeTab === tab.key
-                  ? "text-primary border-b-2 border-primary bg-primary/5"
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 text-sm font-bold transition-all whitespace-nowrap ${activeTab === tab.key
+                ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
+                : "text-black/40 hover:text-black hover:bg-black/5"
+                }`}
             >
               <span className="material-symbols-outlined text-lg">{tab.icon}</span>
               {tab.label}
               {tab.key === "diagnoses" && diagnoses.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{diagnoses.length}</span>
+                <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-full font-black">{diagnoses.length}</span>
               )}
               {tab.key === "medications" && drugOrders.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{drugOrders.length}</span>
+                <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-full font-black">{drugOrders.length}</span>
               )}
               {tab.key === "orders" && labOrders.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">{labOrders.length}</span>
+                <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-full font-black">{labOrders.length}</span>
               )}
             </button>
           ))}
         </div>
 
-        <div className="p-6">
+        <div className="p-6 md:p-8">
           {/* ===== OBSERVATIONS TAB ===== */}
           {activeTab === "observations" && (
             <ObservationForms ref={obsFormsRef} authFetch={authFetch} />
@@ -413,31 +412,31 @@ export default function ConsultationPage() {
           {/* ===== DIAGNOSES TAB ===== */}
           {activeTab === "diagnoses" && (
             <div className="space-y-6">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">diagnosis</span>
+              <h3 className="text-black font-black text-sm uppercase tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600 text-xl">diagnosis</span>
                 Diagnoses
               </h3>
 
               {/* Search */}
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-black/40 text-lg">search</span>
                 <input
                   type="text"
                   value={diagSearchQuery}
                   onChange={(e) => setDiagSearchQuery(e.target.value)}
                   placeholder="Search diagnosis (e.g., Malaria, Diabetes, Hypertension)..."
-                  className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 pl-10 rounded-xl outline-none text-sm"
+                  className="w-full bg-black/[0.02] border border-black/5 focus:border-blue-500 text-black p-4 pl-12 rounded-2xl outline-none text-sm font-medium transition-colors"
                 />
                 {diagSearching && (
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary text-lg animate-spin">progress_activity</span>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 text-lg animate-spin">progress_activity</span>
                 )}
                 {diagSearchResults.length > 0 && (
-                  <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 top-full left-0 right-0 mt-2 bg-white border border-black/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
                     {diagSearchResults.map((c) => (
                       <button
                         key={c.uuid}
                         onClick={() => addDiagnosis(c)}
-                        className="w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors border-b border-white/5 last:border-0"
+                        className="w-full text-left px-5 py-3.5 text-sm font-bold text-black/70 hover:bg-blue-50 hover:text-blue-700 transition-colors border-b border-black/5 last:border-0"
                       >
                         {c.display}
                       </button>
@@ -448,14 +447,14 @@ export default function ConsultationPage() {
 
               {/* Added diagnoses */}
               {diagnoses.length === 0 ? (
-                <p className="text-slate-500 text-sm text-center py-6">No diagnoses added yet. Use the search above to add one.</p>
+                <p className="text-black/40 text-sm font-bold text-center py-8">No diagnoses added yet. Use the search above to add one.</p>
               ) : (
                 <div className="space-y-3">
                   {diagnoses.map((d, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5">
+                    <div key={i} className="flex items-center gap-4 p-5 bg-black/[0.02] rounded-2xl border border-black/5 shadow-sm">
                       <div className="flex-1">
-                        <p className="text-white text-sm font-medium">{d.codedAnswer?.name || d.freeTextAnswer}</p>
-                        <div className="flex items-center gap-3 mt-2">
+                        <p className="text-black text-sm font-bold">{d.codedAnswer?.name || d.freeTextAnswer}</p>
+                        <div className="flex items-center gap-3 mt-3">
                           <select
                             value={d.order}
                             onChange={(e) => {
@@ -463,7 +462,7 @@ export default function ConsultationPage() {
                               updated[i].order = e.target.value as "PRIMARY" | "SECONDARY";
                               setDiagnoses(updated);
                             }}
-                            className="bg-black/50 border border-slate-700/50 text-white text-xs px-3 py-1.5 rounded-lg outline-none"
+                            className="bg-white border border-black/10 text-black font-bold text-xs px-3 py-2 rounded-xl outline-none shadow-sm"
                           >
                             <option value="PRIMARY">Primary</option>
                             <option value="SECONDARY">Secondary</option>
@@ -475,15 +474,15 @@ export default function ConsultationPage() {
                               updated[i].certainty = e.target.value as "CONFIRMED" | "PRESUMED";
                               setDiagnoses(updated);
                             }}
-                            className="bg-black/50 border border-slate-700/50 text-white text-xs px-3 py-1.5 rounded-lg outline-none"
+                            className="bg-white border border-black/10 text-black font-bold text-xs px-3 py-2 rounded-xl outline-none shadow-sm"
                           >
                             <option value="CONFIRMED">Confirmed</option>
                             <option value="PRESUMED">Presumed</option>
                           </select>
                         </div>
                       </div>
-                      <button onClick={() => removeDiagnosis(i)} className="text-slate-500 hover:text-red-400 transition-colors">
-                        <span className="material-symbols-outlined text-lg">close</span>
+                      <button onClick={() => removeDiagnosis(i)} className="text-black/40 hover:text-red-500 transition-colors w-10 h-10 flex items-center justify-center rounded-xl hover:bg-red-50">
+                        <span className="material-symbols-outlined text-xl">close</span>
                       </button>
                     </div>
                   ))}
@@ -495,31 +494,31 @@ export default function ConsultationPage() {
           {/* ===== MEDICATIONS TAB ===== */}
           {activeTab === "medications" && (
             <div className="space-y-6">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">medication</span>
+              <h3 className="text-black font-black text-sm uppercase tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600 text-xl">medication</span>
                 Medications
               </h3>
 
               {/* Drug Search */}
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-black/40 text-lg">search</span>
                 <input
                   type="text"
                   value={drugSearchQuery}
                   onChange={(e) => setDrugSearchQuery(e.target.value)}
                   placeholder="Search for a medication (e.g., Paracetamol, Amoxicillin)..."
-                  className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 pl-10 rounded-xl outline-none text-sm"
+                  className="w-full bg-black/[0.02] border border-black/5 focus:border-blue-500 text-black p-4 pl-12 rounded-2xl outline-none text-sm font-medium transition-colors"
                 />
                 {drugSearching && (
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary text-lg animate-spin">progress_activity</span>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 text-lg animate-spin">progress_activity</span>
                 )}
                 {drugSearchResults.length > 0 && (
-                  <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 top-full left-0 right-0 mt-2 bg-white border border-black/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
                     {drugSearchResults.map((d) => (
                       <button
                         key={d.uuid}
                         onClick={() => addDrugOrder(d)}
-                        className="w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors border-b border-white/5 last:border-0"
+                        className="w-full text-left px-5 py-3.5 text-sm font-bold text-black/70 hover:bg-blue-50 hover:text-blue-700 transition-colors border-b border-black/5 last:border-0"
                       >
                         {d.display || d.name}
                       </button>
@@ -530,73 +529,73 @@ export default function ConsultationPage() {
 
               {/* Drug Order Forms */}
               {drugOrders.length === 0 ? (
-                <p className="text-slate-500 text-sm text-center py-6">No medications added yet. Search and add a drug above.</p>
+                <p className="text-black/40 text-sm font-bold text-center py-8">No medications added yet. Search and add a drug above.</p>
               ) : (
                 <div className="space-y-4">
                   {drugOrders.map((d, i) => (
-                    <div key={i} className="p-5 bg-white/5 rounded-xl border border-white/5 space-y-4">
+                    <div key={i} className="p-6 bg-black/[0.02] rounded-2xl border border-black/5 shadow-sm space-y-5">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-white font-medium text-sm flex items-center gap-2">
-                          <span className="material-symbols-outlined text-primary text-lg">pill</span>
+                        <h4 className="text-black font-black text-sm flex items-center gap-2 uppercase tracking-wide">
+                          <span className="material-symbols-outlined text-blue-600 text-xl">pill</span>
                           {d.drug?.name}
                         </h4>
-                        <button onClick={() => removeDrugOrder(i)} className="text-slate-500 hover:text-red-400 transition-colors">
-                          <span className="material-symbols-outlined text-lg">close</span>
+                        <button onClick={() => removeDrugOrder(i)} className="text-black/40 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-xl hover:bg-red-50">
+                          <span className="material-symbols-outlined text-xl">close</span>
                         </button>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Dose</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Dose</label>
                           <input type="number" value={d.dose} onChange={(e) => updateDrugOrder(i, "dose", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-2.5 rounded-lg outline-none text-sm" placeholder="e.g., 500" />
+                            className="w-full bg-white border border-black/10 focus:border-blue-500 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm" placeholder="e.g., 500" />
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Units</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Units</label>
                           <select value={d.doseUnits} onChange={(e) => updateDrugOrder(i, "doseUnits", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 text-white p-2.5 rounded-lg outline-none text-sm">
+                            className="w-full bg-white border border-black/10 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm">
                             <option>mg</option><option>ml</option><option>g</option><option>mcg</option><option>IU</option><option>Tablet(s)</option><option>Capsule(s)</option>
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Route</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Route</label>
                           <select value={d.route} onChange={(e) => updateDrugOrder(i, "route", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 text-white p-2.5 rounded-lg outline-none text-sm">
+                            className="w-full bg-white border border-black/10 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm">
                             <option>Oral</option><option>Intravenous</option><option>Intramuscular</option><option>Subcutaneous</option><option>Topical</option><option>Inhalation</option><option>Rectal</option>
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Frequency</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Frequency</label>
                           <select value={d.frequency} onChange={(e) => updateDrugOrder(i, "frequency", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 text-white p-2.5 rounded-lg outline-none text-sm">
+                            className="w-full bg-white border border-black/10 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm">
                             <option>Once a day</option><option>Twice a day</option><option>Thrice a day</option><option>Four times a day</option><option>Every 6 hours</option><option>Every 8 hours</option><option>Every 12 hours</option><option>Immediately</option>
                           </select>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Duration</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Duration</label>
                           <input type="number" value={d.duration} onChange={(e) => updateDrugOrder(i, "duration", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-2.5 rounded-lg outline-none text-sm" placeholder="e.g., 5" />
+                            className="w-full bg-white border border-black/10 focus:border-blue-500 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm" placeholder="e.g., 5" />
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1 block">Duration Unit</label>
+                          <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Duration Unit</label>
                           <select value={d.durationUnits} onChange={(e) => updateDrugOrder(i, "durationUnits", e.target.value)}
-                            className="w-full bg-black/50 border border-slate-700/50 text-white p-2.5 rounded-lg outline-none text-sm">
+                            className="w-full bg-white border border-black/10 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm">
                             <option>Day(s)</option><option>Week(s)</option><option>Month(s)</option>
                           </select>
                         </div>
-                        <div className="col-span-2 flex items-center gap-3 pt-5">
-                          <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+                        <div className="col-span-2 flex items-center gap-3 pt-6">
+                          <label className="flex items-center gap-3 cursor-pointer text-sm font-bold text-black/70">
                             <input type="checkbox" checked={d.asNeeded} onChange={(e) => updateDrugOrder(i, "asNeeded", e.target.checked)}
-                              className="rounded border-slate-600 bg-black/50 text-primary w-4 h-4" />
+                              className="rounded border-black/20 bg-white text-blue-600 focus:ring-blue-500 w-5 h-5 transition-all" />
                             SOS / As Needed
                           </label>
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs text-slate-400 mb-1 block">Additional Instructions</label>
+                        <label className="text-xs text-black/50 font-bold mb-1.5 block uppercase tracking-wider">Additional Instructions</label>
                         <input type="text" value={d.instructions} onChange={(e) => updateDrugOrder(i, "instructions", e.target.value)}
-                          className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-2.5 rounded-lg outline-none text-sm" placeholder="e.g., After food, with water..." />
+                          className="w-full bg-white border border-black/10 focus:border-blue-500 text-black font-medium p-3 rounded-xl outline-none text-sm shadow-sm" placeholder="e.g., After food, with water..." />
                       </div>
                     </div>
                   ))}
@@ -608,14 +607,14 @@ export default function ConsultationPage() {
           {/* ===== LAB ORDERS TAB ===== */}
           {activeTab === "orders" && (
             <div className="space-y-6">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">biotech</span>
+              <h3 className="text-black font-black text-sm uppercase tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600 text-xl">biotech</span>
                 Lab Orders
               </h3>
 
               {labLoading ? (
                 <div className="flex items-center justify-center py-8">
-                  <span className="material-symbols-outlined text-primary text-3xl animate-spin">progress_activity</span>
+                  <span className="material-symbols-outlined text-blue-600 text-3xl animate-spin">progress_activity</span>
                 </div>
               ) : labPanels.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -625,14 +624,13 @@ export default function ConsultationPage() {
                       <button
                         key={panel.uuid}
                         onClick={() => isOrdered ? removeLabOrder(labOrders.findIndex(l => l.concept.uuid === panel.uuid)) : addLabOrder(panel)}
-                        className={`p-4 rounded-xl text-left text-sm transition-all border ${
-                          isOrdered
-                            ? "bg-primary/10 border-primary/30 text-primary"
-                            : "bg-white/5 border-white/5 text-slate-300 hover:bg-white/10 hover:border-white/10"
-                        }`}
+                        className={`p-4 rounded-2xl text-left text-sm font-bold transition-all border ${isOrdered
+                          ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm"
+                          : "bg-black/[0.02] border-black/5 text-black/60 hover:bg-black/[0.04] hover:text-black/80"
+                          }`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-lg">{isOrdered ? "check_circle" : "add_circle_outline"}</span>
+                          <span className={`material-symbols-outlined text-xl ${isOrdered ? "text-blue-600" : "text-black/40"}`}>{isOrdered ? "check_circle" : "add_circle_outline"}</span>
                           <span className="truncate">{panel.display}</span>
                         </div>
                       </button>
@@ -640,23 +638,23 @@ export default function ConsultationPage() {
                   })}
                 </div>
               ) : (
-                <p className="text-slate-500 text-sm text-center py-6">
+                <p className="text-black/50 font-bold text-sm text-center py-8">
                   Lab test panels could not be loaded from the server. Tests will still be saved if you add them manually.
                 </p>
               )}
 
               {/* Ordered lab tests */}
               {labOrders.length > 0 && (
-                <div>
-                  <h4 className="text-white font-medium text-sm mb-3">Ordered Tests ({labOrders.length})</h4>
-                  <div className="space-y-2">
+                <div className="mt-8 pt-8 border-t border-black/5">
+                  <h4 className="text-black font-black text-sm uppercase tracking-wider mb-4">Ordered Tests ({labOrders.length})</h4>
+                  <div className="space-y-3">
                     {labOrders.map((l, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 bg-primary/5 rounded-xl border border-primary/20">
-                        <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-primary text-lg">science</span>
-                          <span className="text-white text-sm">{l.concept.name}</span>
-                        </div>
+                      <div key={i} className="flex items-center justify-between p-4 bg-blue-50/50 rounded-2xl border border-blue-100 shadow-sm">
                         <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-blue-600 text-xl">science</span>
+                          <span className="text-black font-bold text-sm">{l.concept.name}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
                           <select
                             value={l.urgency}
                             onChange={(e) => {
@@ -664,13 +662,13 @@ export default function ConsultationPage() {
                               updated[i].urgency = e.target.value;
                               setLabOrders(updated);
                             }}
-                            className="bg-black/50 border border-slate-700/50 text-white text-xs px-3 py-1.5 rounded-lg outline-none"
+                            className="bg-white border border-black/10 text-black font-bold text-xs px-3 py-2 rounded-xl outline-none shadow-sm"
                           >
                             <option value="ROUTINE">Routine</option>
                             <option value="STAT">Stat (Urgent)</option>
                           </select>
-                          <button onClick={() => removeLabOrder(i)} className="text-slate-500 hover:text-red-400 transition-colors">
-                            <span className="material-symbols-outlined text-lg">close</span>
+                          <button onClick={() => removeLabOrder(i)} className="text-black/40 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-xl hover:bg-red-50">
+                            <span className="material-symbols-outlined text-xl">close</span>
                           </button>
                         </div>
                       </div>
@@ -684,11 +682,11 @@ export default function ConsultationPage() {
           {/* ===== DISPOSITION TAB ===== */}
           {activeTab === "disposition" && (
             <div className="space-y-6">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">swap_horiz</span>
+              <h3 className="text-black font-black text-sm uppercase tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600 text-xl">swap_horiz</span>
                 Disposition
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
                   { code: "ADMIT", label: "Admit Patient", icon: "hotel", color: "blue" },
                   { code: "DISCHARGE", label: "Discharge", icon: "exit_to_app", color: "green" },
@@ -698,25 +696,24 @@ export default function ConsultationPage() {
                   <button
                     key={opt.code}
                     onClick={() => setDispositionAction(dispositionAction === opt.code ? "" : opt.code)}
-                    className={`p-5 rounded-xl flex flex-col items-center gap-2 transition-all border ${
-                      dispositionAction === opt.code
-                        ? "bg-primary/10 border-primary/30 text-primary"
-                        : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
-                    }`}
+                    className={`p-6 rounded-2xl flex flex-col items-center gap-3 transition-all border shadow-sm ${dispositionAction === opt.code
+                      ? "bg-blue-50 border-blue-200 text-blue-700"
+                      : "bg-black/[0.02] border-black/5 text-black/60 hover:bg-black/[0.04] hover:text-black"
+                      }`}
                   >
-                    <span className="material-symbols-outlined text-2xl">{opt.icon}</span>
-                    <span className="text-sm font-medium">{opt.label}</span>
+                    <span className={`material-symbols-outlined text-3xl ${dispositionAction === opt.code ? "text-blue-600" : "text-black/40"}`}>{opt.icon}</span>
+                    <span className="text-sm font-bold">{opt.label}</span>
                   </button>
                 ))}
               </div>
               {dispositionAction && (
-                <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Disposition Notes</label>
+                <div className="pt-4">
+                  <label className="text-xs text-black/50 font-bold mb-2 block uppercase tracking-wider">Disposition Notes</label>
                   <textarea
                     value={dispositionNote}
                     onChange={(e) => setDispositionNote(e.target.value)}
-                    rows={3}
-                    className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm resize-none"
+                    rows={4}
+                    className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-500 text-black p-4 rounded-2xl outline-none text-sm font-medium resize-none shadow-sm transition-colors"
                     placeholder="Add notes about the disposition..."
                   />
                 </div>
@@ -727,18 +724,18 @@ export default function ConsultationPage() {
           {/* ===== NOTES TAB ===== */}
           {activeTab === "notes" && (
             <div className="space-y-6">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">edit_note</span>
+              <h3 className="text-black font-black text-sm uppercase tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600 text-xl">edit_note</span>
                 Consultation Notes
               </h3>
               <textarea
                 value={consultationNotes}
                 onChange={(e) => setConsultationNotes(e.target.value)}
-                rows={12}
-                className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-4 rounded-xl outline-none text-sm resize-none leading-relaxed"
+                rows={14}
+                className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-500 text-black p-5 rounded-2xl outline-none text-sm font-medium resize-none leading-relaxed shadow-sm transition-colors"
                 placeholder="Type your consultation notes here... These will be saved as part of the encounter."
               />
-              <p className="text-slate-500 text-xs">
+              <p className="text-black/50 font-bold text-xs uppercase tracking-wider">
                 Notes are saved as observations under the Consultation Note concept.
               </p>
             </div>
@@ -747,17 +744,17 @@ export default function ConsultationPage() {
       </div>
 
       {/* Floating Save Bar */}
-      <div className="sticky bottom-4 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl">
-        <div className="flex items-center gap-4 text-xs text-slate-400">
-          {diagnoses.length > 0 && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm text-primary">diagnosis</span> {diagnoses.length} diagnosis(es)</span>}
-          {drugOrders.length > 0 && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm text-primary">medication</span> {drugOrders.length} medication(s)</span>}
-          {labOrders.length > 0 && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm text-primary">biotech</span> {labOrders.length} lab order(s)</span>}
-          {dispositionAction && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm text-primary">swap_horiz</span> {dispositionAction}</span>}
+      <div className="sticky bottom-6 bg-white/90 backdrop-blur-xl border border-black/5 rounded-3xl p-5 flex items-center justify-between shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] ring-1 ring-black/5 z-50">
+        <div className="flex items-center gap-5 text-xs font-bold text-black/50 uppercase tracking-wider">
+          {diagnoses.length > 0 && <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-blue-600">diagnosis</span> {diagnoses.length} diagnosis(es)</span>}
+          {drugOrders.length > 0 && <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-blue-600">medication</span> {drugOrders.length} medication(s)</span>}
+          {labOrders.length > 0 && <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-blue-600">biotech</span> {labOrders.length} lab order(s)</span>}
+          {dispositionAction && <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px] text-blue-600">swap_horiz</span> {dispositionAction}</span>}
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="liquid-button text-background-dark font-bold px-8 py-3 rounded-xl flex items-center gap-2 text-sm disabled:opacity-50"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] font-bold px-8 py-3.5 rounded-2xl flex items-center gap-2 text-sm disabled:opacity-50 transition-all"
         >
           {saving ? (
             <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Saving...</>

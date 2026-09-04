@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 interface DiagnosisEntry {
@@ -102,132 +102,140 @@ export default function DiagnosesScreen() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-white text-4xl font-bold tracking-tight">Diagnoses</h1>
-        <p className="text-slate-400 mt-1">Record and view patient diagnoses using ICD-10 / SNOMED concepts.</p>
-      </div>
-
-      {/* Patient UUID */}
-      <div className="glass-panel border-l-4 border-l-primary p-6 rounded-r-xl bg-white/5 mb-8">
-        <label className="block text-slate-300 text-sm font-bold uppercase tracking-wider mb-2">Patient UUID</label>
-        <div className="flex gap-4">
-          <input
-            type="text"
-            className="flex-1 bg-black/20 border border-primary/30 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-            placeholder="Enter Patient UUID..."
-            value={patientUuid}
-            onChange={(e) => setPatientUuid(e.target.value)}
-          />
-          <button
-            onClick={fetchDiagnoses}
-            className="px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-all font-medium"
-          >
-            Load
-          </button>
+    <div className="bg-[#fafafa] min-h-screen pb-20">
+      <div className="p-4 md:p-8 lg:p-10 max-w-6xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-black tracking-tighter">Diagnoses</h1>
+            <p className="text-black/50 text-sm font-semibold mt-1 uppercase tracking-wider">Record and view patient diagnoses using ICD-10 / SNOMED concepts.</p>
+          </div>
         </div>
-      </div>
 
-      {notification.message && (
-        <div className={`mb-6 p-4 rounded-lg text-sm font-medium ${
-          notification.type === "error" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
-          "bg-green-500/10 text-green-400 border border-green-500/20"
-        }`}>{notification.message}</div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Record Diagnosis */}
-        <div className="glass-panel rounded-xl p-8">
-          <h3 className="text-white text-xl font-bold mb-6 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">add_circle</span>
-            Record Diagnosis
-          </h3>
-          <div className="space-y-5">
-            <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search Concept</label>
-              <input
-                type="text"
-                className="w-full bg-black/20 border border-primary/30 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                placeholder="Type diagnosis name (e.g. Malaria, Diabetes)..."
-                value={searchQuery}
-                onChange={(e) => searchConcepts(e.target.value)}
-              />
-              {conceptResults.length > 0 && (
-                <div className="mt-2 bg-slate-800 border border-slate-700 rounded-lg max-h-48 overflow-y-auto">
-                  {conceptResults.map((c) => (
-                    <button
-                      key={c.uuid}
-                      onClick={() => { setSelectedConcept(c); setSearchQuery(c.display); setConceptResults([]); }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors border-b border-slate-700/50 last:border-b-0"
-                    >
-                      {c.display}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {selectedConcept && (
-                <p className="mt-2 text-primary text-sm">Selected: <strong>{selectedConcept.display}</strong></p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Certainty</label>
-                <select value={certainty} onChange={e => setCertainty(e.target.value)} className="w-full bg-black/20 border border-primary/30 rounded-lg px-4 py-3 text-white outline-none">
-                  <option value="CONFIRMED">Confirmed</option>
-                  <option value="PRESUMED">Presumed</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Order</label>
-                <select value={diagOrder} onChange={e => setDiagOrder(e.target.value)} className="w-full bg-black/20 border border-primary/30 rounded-lg px-4 py-3 text-white outline-none">
-                  <option value="PRIMARY">Primary</option>
-                  <option value="SECONDARY">Secondary</option>
-                </select>
-              </div>
-            </div>
-
+        {/* Patient UUID */}
+        <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+          <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Patient UUID</label>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="text"
+              className="flex-1 bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
+              placeholder="Enter Patient UUID..."
+              value={patientUuid}
+              onChange={(e) => setPatientUuid(e.target.value)}
+            />
             <button
-              onClick={submitDiagnosis}
-              disabled={isSubmitting || !selectedConcept}
-              className="w-full py-3 bg-primary text-background-dark font-bold rounded-lg hover:bg-primary/90 transition-all disabled:opacity-50"
+              onClick={fetchDiagnoses}
+              className="bg-black/[0.03] text-black border-2 border-transparent hover:bg-black/[0.06] font-bold py-3.5 px-8 rounded-xl flex items-center justify-center transition-all text-sm"
             >
-              {isSubmitting ? "Recording..." : "Record Diagnosis"}
+              Load
             </button>
           </div>
         </div>
 
-        {/* Diagnosis History */}
-        <div className="glass-panel rounded-xl p-8">
-          <h3 className="text-white text-xl font-bold mb-6 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">history</span>
-            Diagnosis History
-          </h3>
-          {isLoading ? (
-            <div className="text-center py-8">
-              <span className="material-symbols-outlined text-primary text-3xl animate-spin">progress_activity</span>
-            </div>
-          ) : diagnoses.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <span className="material-symbols-outlined text-4xl mb-2 block">search_off</span>
-              No diagnoses found. Enter a Patient UUID and click Load.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {diagnoses.map((d) => (
-                <div key={d.uuid} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5">
-                  <div>
-                    <p className="text-white font-medium">{d.conceptName}</p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded">{d.certainty}</span>
-                      <span className="text-xs text-slate-400">{d.order}</span>
-                    </div>
+        {notification.message && (
+          <div className={`mb-6 p-4 rounded-lg text-sm font-medium ${notification.type === "error" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
+            "bg-green-500/10 text-green-400 border border-green-500/20"
+            }`}>{notification.message}</div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Record Diagnosis */}
+          <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+            <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
+              <span className="material-symbols-outlined text-blue-600 text-2xl">add_circle</span>
+              Record Diagnosis
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Search Concept</label>
+                <input
+                  type="text"
+                  className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
+                  placeholder="Type diagnosis name (e.g. Malaria, Diabetes)..."
+                  value={searchQuery}
+                  onChange={(e) => searchConcepts(e.target.value)}
+                />
+                {conceptResults.length > 0 && (
+                  <div className="mt-2 bg-white border border-black/10 shadow-lg rounded-xl max-h-48 overflow-y-auto relative z-10 overflow-hidden">
+                    {conceptResults.map((c) => (
+                      <button
+                        key={c.uuid}
+                        onClick={() => { setSelectedConcept(c); setSearchQuery(c.display); setConceptResults([]); }}
+                        className="w-full text-left px-5 py-3 text-sm text-black/70 hover:bg-blue-50 hover:text-blue-600 transition-colors border-b border-black/5 last:border-b-0 font-medium"
+                      >
+                        {c.display}
+                      </button>
+                    ))}
                   </div>
-                  <span className="text-slate-500 text-sm">{d.date}</span>
+                )}
+                {selectedConcept && (
+                  <p className="mt-3 text-blue-600 text-sm font-bold flex items-center gap-1.5"><span className="material-symbols-outlined text-lg">check_circle</span> Selected: {selectedConcept.display}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Certainty</label>
+                  <select value={certainty} onChange={e => setCertainty(e.target.value)} className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm appearance-none transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05] cursor-pointer">
+                    <option value="CONFIRMED">Confirmed</option>
+                    <option value="PRESUMED">Presumed</option>
+                  </select>
                 </div>
-              ))}
+                <div>
+                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Order</label>
+                  <select value={diagOrder} onChange={e => setDiagOrder(e.target.value)} className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm appearance-none transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05] cursor-pointer">
+                    <option value="PRIMARY">Primary</option>
+                    <option value="SECONDARY">Secondary</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                onClick={submitDiagnosis}
+                disabled={isSubmitting || !selectedConcept}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 text-sm shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]"
+              >
+                {isSubmitting ? (
+                  <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Recording...</>
+                ) : (
+                  <><span className="material-symbols-outlined text-lg">save</span> Record Diagnosis</>
+                )}
+              </button>
             </div>
-          )}
+          </div>
+
+          {/* Diagnosis History */}
+          <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+            <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
+              <span className="material-symbols-outlined text-blue-600 text-2xl">history</span>
+              Diagnosis History
+            </h3>
+            {isLoading ? (
+              <div className="text-center py-8">
+                <span className="material-symbols-outlined text-blue-600 text-3xl animate-spin">progress_activity</span>
+              </div>
+            ) : diagnoses.length === 0 ? (
+              <div className="text-center py-16 bg-black/[0.02] rounded-[1.5rem] border-2 border-dashed border-black/5 text-black/40 font-bold">
+                <span className="material-symbols-outlined text-5xl mb-3 block">search_off</span>
+                No diagnoses found.<br />Enter a Patient UUID and click Load.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {diagnoses.map((d) => (
+                  <div key={d.uuid} className="flex items-center justify-between p-5 bg-black/[0.03] rounded-2xl border border-black/5 hover:bg-black/[0.05] transition-colors">
+                    <div>
+                      <p className="text-black font-bold tracking-tight">{d.conceptName}</p>
+                      <div className="flex items-center gap-3 mt-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-1 rounded-md">{d.certainty}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-black/50">{d.order}</span>
+                      </div>
+                    </div>
+                    <span className="text-black/40 text-xs font-bold uppercase tracking-wider">{d.date}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

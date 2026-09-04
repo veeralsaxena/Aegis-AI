@@ -119,6 +119,27 @@ export async function searchPatientsBahmni(
     params.set("loginLocationUuid", options.loginLocationUuid);
   }
   const res = await authFetch(`/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene?${params}`);
+  if (!res.ok) {
+    if (res.status === 404) {
+      // Fallback to standard OpenMRS search
+      const fallbackRes = await authFetch(`/openmrs/ws/rest/v1/patient?q=${encodeURIComponent(query)}&v=full&limit=20`);
+      if (fallbackRes.ok) {
+        const fallbackData = await fallbackRes.json();
+        return (fallbackData.results || []).map((p: any) => ({
+          uuid: p.uuid,
+          givenName: p.person?.preferredName?.givenName || p.display?.split(' ')[0] || '',
+          familyName: p.person?.preferredName?.familyName || p.display?.split(' ').pop() || '',
+          identifier: p.identifiers?.[0]?.identifier || '',
+          gender: p.person?.gender || '',
+          dateCreated: p.auditInfo?.dateCreated || '',
+          age: p.person?.age || 0,
+          birthDate: p.person?.birthdate || '',
+          personId: p.person?.uuid || p.uuid
+        }));
+      }
+    }
+    return [];
+  }
   const data = await res.json();
   return data.pageOfResults || [];
 }

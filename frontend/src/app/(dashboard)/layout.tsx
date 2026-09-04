@@ -38,10 +38,10 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
 
   if (loading || !authenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-transparent text-foreground">
+      <div className="flex items-center justify-center min-h-screen bg-white">
         <div className="flex flex-col items-center gap-4">
-          <span className="material-symbols-outlined text-primary text-5xl animate-spin">progress_activity</span>
-          <p className="text-slate-400 text-sm">Verifying session...</p>
+          <span className="material-symbols-outlined text-blue-600 text-5xl animate-spin">progress_activity</span>
+          <p className="text-black/50 text-sm font-bold uppercase tracking-wider">Verifying session...</p>
         </div>
       </div>
     );
@@ -50,20 +50,17 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
-        <span
-          className="material-symbols-outlined text-primary text-2xl shrink-0"
-          style={{ filter: "drop-shadow(0 0 6px rgba(37,192,244,0.5))" }}
-        >
-          ecg_heart
-        </span>
-        <span className="text-lg font-bold tracking-tight text-white whitespace-nowrap">
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-black/5">
+        <div className="p-2 rounded-xl bg-black/5 shadow-inner flex items-center justify-center shrink-0">
+          <span className="material-symbols-outlined text-blue-600 text-xl">ecg_heart</span>
+        </div>
+        <span className="text-xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-black to-black/60 whitespace-nowrap">
           Aegis AI
         </span>
         {/* Desktop collapse toggle */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="ml-auto text-slate-500 hover:text-white transition-colors shrink-0 hidden md:block"
+          className="ml-auto text-black/40 hover:text-black transition-colors shrink-0 hidden md:block"
         >
           <span className="material-symbols-outlined text-xl">
             {sidebarOpen ? "chevron_left" : "chevron_right"}
@@ -72,14 +69,14 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
         {/* Mobile close */}
         <button
           onClick={() => setMobileOpen(false)}
-          className="ml-auto text-slate-500 hover:text-white transition-colors shrink-0 md:hidden"
+          className="ml-auto text-black/40 hover:text-black transition-colors shrink-0 md:hidden"
         >
           <span className="material-symbols-outlined text-xl">close</span>
         </button>
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
         {NAV_ITEMS.map((item) => {
           const isActive = item.exact
             ? pathname === item.href
@@ -88,16 +85,14 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group ${
-                isActive
-                  ? "bg-primary/10 text-primary shadow-[inset_0_0_0_1px_rgba(37,192,244,0.2)]"
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all group ${isActive
+                ? "bg-blue-600 shadow-[0_8px_20px_-6px_rgba(37,99,235,0.4)] text-white"
+                : "text-black/50 hover:text-black hover:bg-black/5"
+                }`}
             >
               <span
-                className={`material-symbols-outlined text-xl shrink-0 ${
-                  isActive ? "text-primary" : "text-slate-500 group-hover:text-white"
-                }`}
+                className={`material-symbols-outlined text-xl shrink-0 ${isActive ? "text-white" : "text-black/40 group-hover:text-blue-600"
+                  }`}
               >
                 {item.icon}
               </span>
@@ -108,18 +103,18 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* User Info */}
-      <div className="border-t border-white/5 px-4 py-4">
+      <div className="border-t border-black/5 px-5 py-5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-primary text-sm">person</span>
+          <div className="w-10 h-10 rounded-2xl bg-black/5 flex items-center justify-center shrink-0 shadow-inner">
+            <span className="material-symbols-outlined text-blue-600 text-lg">person</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-semibold truncate">{user?.display || "User"}</p>
-            <p className="text-slate-500 text-[10px] truncate">{locationName || "Bahmni Clinic"}</p>
+            <p className="text-black font-bold text-sm truncate">{user?.display || "User"}</p>
+            <p className="text-black/40 font-semibold text-[10px] uppercase tracking-wider truncate">{locationName || "Bahmni Clinic"}</p>
           </div>
           <button
             onClick={logout}
-            className="text-slate-500 hover:text-red-400 transition-colors shrink-0"
+            className="text-black/30 hover:text-red-500 transition-colors shrink-0 p-2 rounded-xl hover:bg-red-50"
             title="Logout"
           >
             <span className="material-symbols-outlined text-lg">logout</span>
@@ -130,20 +125,28 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen bg-transparent text-foreground">
+    <div className="flex min-h-screen bg-white text-black relative overflow-hidden">
+      {/* Subtle Grid Background for extreme depth */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03]"
+        style={{ backgroundImage: 'radial-gradient(black 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+      ></div>
+      {/* Spotlight glow behind the page */}
+      <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+
       {/* Mobile Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-40 md:hidden bg-slate-900/40 backdrop-blur-2xl border-b border-white/5 flex items-center px-4 py-3">
-        <button onClick={() => setMobileOpen(true)} className="text-slate-400 hover:text-white transition-colors">
+      <div className="fixed top-0 left-0 right-0 z-40 md:hidden bg-white/80 backdrop-blur-2xl border-b border-black/5 flex items-center px-4 py-3 shadow-sm">
+        <button onClick={() => setMobileOpen(true)} className="text-black/60 hover:text-black transition-colors">
           <span className="material-symbols-outlined text-2xl">menu</span>
         </button>
-        <span className="ml-3 text-lg font-bold text-white">Aegis AI</span>
+        <span className="ml-3 text-xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-black to-black/60">Aegis AI</span>
       </div>
 
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <aside className="relative w-72 h-full flex flex-col bg-slate-900/60 backdrop-blur-2xl border-r border-white/5">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="relative w-72 h-full flex flex-col bg-white border-r border-black/5 shadow-2xl">
             {sidebarContent}
           </aside>
         </div>
@@ -151,31 +154,27 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
 
       {/* Desktop Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 hidden md:flex flex-col bg-slate-900/40 backdrop-blur-2xl border-r border-white/5 transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-[72px]"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 hidden md:flex flex-col bg-white/80 backdrop-blur-2xl border-r border-black/5 shadow-[20px_0_60px_-15px_rgba(0,0,0,0.05)] transition-all duration-300 ${sidebarOpen ? "w-72" : "w-[88px]"
+          }`}
       >
         {sidebarOpen ? (
           sidebarContent
         ) : (
           <>
             {/* Collapsed Logo */}
-            <div className="flex items-center justify-center px-2 py-5 border-b border-white/5">
-              <span
-                className="material-symbols-outlined text-primary text-2xl"
-                style={{ filter: "drop-shadow(0 0 6px rgba(37,192,244,0.5))" }}
-              >
-                ecg_heart
-              </span>
+            <div className="flex items-center justify-center px-2 py-5 border-b border-black/5">
+              <div className="p-2 rounded-xl bg-black/5 shadow-inner flex items-center justify-center">
+                <span className="material-symbols-outlined text-blue-600 text-xl">ecg_heart</span>
+              </div>
             </div>
             <button
               onClick={() => setSidebarOpen(true)}
-              className="mx-auto mt-3 text-slate-500 hover:text-white transition-colors"
+              className="mx-auto mt-4 text-black/40 hover:text-black transition-colors"
             >
               <span className="material-symbols-outlined text-xl">chevron_right</span>
             </button>
             {/* Collapsed nav icons */}
-            <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-2">
               {NAV_ITEMS.map((item) => {
                 const isActive = item.exact
                   ? pathname === item.href
@@ -185,11 +184,10 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
                     key={item.href}
                     href={item.href}
                     title={item.label}
-                    className={`flex items-center justify-center p-2.5 rounded-lg transition-all ${
-                      isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-slate-500 hover:text-white hover:bg-white/5"
-                    }`}
+                    className={`flex items-center justify-center p-3 rounded-2xl transition-all ${isActive
+                      ? "bg-blue-600 shadow-[0_8px_20px_-6px_rgba(37,99,235,0.4)] text-white"
+                      : "text-black/40 hover:text-black hover:bg-black/5"
+                      }`}
                   >
                     <span className="material-symbols-outlined text-xl">{item.icon}</span>
                   </Link>
@@ -197,11 +195,11 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
               })}
             </nav>
             {/* Collapsed user */}
-            <div className="border-t border-white/5 px-2 py-4 flex flex-col items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-sm">person</span>
+            <div className="border-t border-black/5 px-2 py-5 flex flex-col items-center gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-black/5 flex items-center justify-center shadow-inner">
+                <span className="material-symbols-outlined text-blue-600 text-lg">person</span>
               </div>
-              <button onClick={logout} className="text-slate-500 hover:text-red-400 transition-colors" title="Logout">
+              <button onClick={logout} className="text-black/30 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50" title="Logout">
                 <span className="material-symbols-outlined text-lg">logout</span>
               </button>
             </div>
@@ -211,7 +209,7 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <main
-        className={`flex-1 transition-all duration-300 pt-14 md:pt-0 ${sidebarOpen ? "md:ml-64" : "md:ml-[72px]"}`}
+        className={`flex-1 transition-all duration-300 pt-16 md:pt-0 relative z-10 ${sidebarOpen ? "md:ml-72" : "md:ml-[88px]"}`}
       >
         {children}
       </main>
