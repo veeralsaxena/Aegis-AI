@@ -229,7 +229,7 @@ export async function getObservationsWithFallback(
       const results = obsData.results || [];
       const mapped = results.map(mapOpenmrsObsToBahmni);
       mapped.sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.observationDateTime).getTime() -
           new Date(a.observationDateTime).getTime()
       );

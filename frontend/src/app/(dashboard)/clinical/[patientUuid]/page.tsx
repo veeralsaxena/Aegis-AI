@@ -270,7 +270,7 @@ export default function PatientDashboardPage() {
     loadDashboard();
   }, [loadDashboard]);
 
-  const startVisit = async (visitTypeUuid: string) => {
+  const startVisit = async (visitTypeUuid: string, _visitTypeName?: string) => {
     try {
       const res = await authFetch("/openmrs/ws/rest/v1/visit", {
         method: "POST",
@@ -323,7 +323,7 @@ export default function PatientDashboardPage() {
     .filter(Boolean)
     .join(", ");
 
-  const allergies = extractAllergiesFromPatient(patient);
+  const allergies = extractAllergiesFromPatient(patient as any);
   const allIdentifiers =
     (patient?.identifiers as { display?: string; identifier?: string; identifierType?: { display?: string } }[]) || [];
   const programs = (patientProfile?.activePrograms as { display?: string; dateEnrolled?: string }[]) || [];
@@ -451,7 +451,7 @@ export default function PatientDashboardPage() {
                     <div key={i} className="bg-slate-50 border border-slate-100 p-3 rounded-lg">
                       <p className="text-slate-500 text-[10px] font-semibold mb-1 truncate uppercase tracking-widest">{v.concept?.shortName || v.concept?.name || "—"}</p>
                       <p className="text-slate-900 font-semibold text-lg">
-                        {typeof v.value === "object" ? v.value?.display || JSON.stringify(v.value) : v.value ?? "—"}
+                        {typeof v.value === "object" ? (v.value as any)?.display || JSON.stringify(v.value) : String(v.value ?? "—")}
                       </p>
                     </div>
                   ))}
@@ -568,7 +568,7 @@ export default function PatientDashboardPage() {
                           <p className="text-slate-400 text-xs mt-1 font-mono">Range: {l.minNormal} – {l.maxNormal}</p>
                         )}
                       </div>
-                      <span className="text-slate-900 font-semibold text-lg shrink-0">{l.result ?? "—"}</span>
+                      <span className="text-slate-900 font-semibold text-lg shrink-0">{typeof l.result === "object" ? JSON.stringify(l.result) : String(l.result ?? "—")}</span>
                     </div>
                   ))}
                 </div>
@@ -735,7 +735,7 @@ export default function PatientDashboardPage() {
             <td className="font-bold bg-neutral-100">Age</td>
             <td>{person?.age != null ? `${person.age} yrs` : "—"}</td>
             <td className="font-bold bg-neutral-100">DOB</td>
-            <td>{person?.birthdate ? person.birthdate.split("T")[0] : "—"}</td>
+            <td>{(person as any)?.birthdate ? (person as any).birthdate.split("T")[0] : "—"}</td>
           </tr>
           <tr>
             <td className="font-bold bg-neutral-100">Address</td>

@@ -618,11 +618,11 @@ export default function PatientDetailPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <Dropdown
-                    label={<>Gender <span className="text-rose-500">*</span></>}
+                    label="Gender *"
                     value={gender}
                     onChange={(value) => setGender(value)}
                     options={[
-                      { label: "Select Gender", value: "", disabled: true },
+                      { label: "Select Gender", value: "" },
                       { label: "Male", value: "M" },
                       { label: "Female", value: "F" },
                       { label: "Other", value: "O" },

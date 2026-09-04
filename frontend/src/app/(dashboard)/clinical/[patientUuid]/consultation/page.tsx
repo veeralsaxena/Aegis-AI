@@ -710,9 +710,8 @@ export default function ConsultationPage() {
                   <div className="mt-4">
                     <DifferentialPanel
                       patientUuid={patientUuid}
-                      doctorUuid={provider?.uuid}
                       chiefComplaint={chiefComplaintForAi}
-                      onSelectDiagnosis={(diagName) => {
+                      onDiagnosisSelected={(diagName: string) => {
                         setDiagSearchQuery(diagName);
                         setActiveTab("diagnoses");
                       }}
@@ -1130,6 +1129,5 @@ export default function ConsultationPage() {
           />
         </aside>
       </div>
-    </div>
   );
 }
