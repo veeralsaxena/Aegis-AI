@@ -44,6 +44,29 @@ def get_whisper_model() -> Any:
 
 
 async def transcribe_audio(audio_bytes: bytes, language: str | None = None) -> str:
+    if (WHISPER_MODE == "groq" or os.getenv("GROQ_API_KEY")) and os.getenv("GROQ_API_KEY"):
+        import openai
+
+        client = openai.AsyncOpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.getenv("GROQ_API_KEY"),
+        )
+        with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
+            f.write(audio_bytes)
+            fname = f.name
+        try:
+            with open(fname, "rb") as f:
+                transcript = await client.audio.transcriptions.create(
+                    model=os.getenv("WHISPER_MODEL", "whisper-large-v3-turbo"),
+                    file=f,
+                    language=language or "en",
+                    prompt=WHISPER_INITIAL_PROMPT,
+                )
+            return transcript.text or ""
+        finally:
+            if os.path.exists(fname):
+                os.unlink(fname)
+
     if WHISPER_MODE == "openai":
         import openai
 

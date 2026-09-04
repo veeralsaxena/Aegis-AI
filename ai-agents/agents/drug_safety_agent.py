@@ -80,6 +80,19 @@ def get_llm():
     global _llm_bound
     if _llm_bound is not None:
         return _llm_bound
+    if os.getenv("GROQ_API_KEY"):
+        from langchain_openai import ChatOpenAI
+
+        model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+        _llm_bound = ChatOpenAI(
+            model=model,
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
+            max_tokens=2048,
+            temperature=0.2,
+        ).bind_tools(TOOLS)
+        return _llm_bound
+
     gkey = gemini_api_key()
     if gkey:
         from langchain_google_genai import ChatGoogleGenerativeAI

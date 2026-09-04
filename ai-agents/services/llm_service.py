@@ -990,6 +990,26 @@ def _run_json_generation(
     user_message: str,
     max_output_tokens: int,
 ) -> dict:
+    if os.getenv("GROQ_API_KEY"):
+        import openai
+
+        client = openai.OpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.getenv("GROQ_API_KEY"),
+        )
+        model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message},
+            ],
+            max_tokens=max_output_tokens,
+            response_format={"type": "json_object"},
+        )
+        raw = response.choices[0].message.content or "{}"
+        return _parse_json_block(raw)
+
     gkey = gemini_api_key()
     if gkey:
         import httpx

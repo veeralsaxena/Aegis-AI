@@ -150,6 +150,25 @@ Generate differential diagnoses now."""
 
     raw = ""
 
+    def _groq():
+        import openai
+
+        client = openai.OpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.environ["GROQ_API_KEY"],
+        )
+        model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": DIFFERENTIAL_SYSTEM_PROMPT},
+                {"role": "user", "content": user_message},
+            ],
+            max_tokens=1500,
+            response_format={"type": "json_object"},
+        )
+        return response.choices[0].message.content or "{}"
+
     def _anthropic():
         import anthropic
 
@@ -204,7 +223,11 @@ Generate differential diagnoses now."""
             raw = "{}"
         return raw
 
-    if gemini_api_key():
+    if os.getenv("GROQ_API_KEY"):
+        import asyncio
+
+        raw = await asyncio.to_thread(_groq)
+    elif gemini_api_key():
         import asyncio
 
         raw = await asyncio.to_thread(_gemini)
