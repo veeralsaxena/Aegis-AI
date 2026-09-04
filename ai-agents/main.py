@@ -65,6 +65,7 @@ async def health():
         "status": "ok",
         "llm": {
             "gemini_configured": bool(gemini_api_key()),
+            "groq_configured": bool(os.getenv("GROQ_API_KEY", "").strip()),
             "openai_configured": bool(os.getenv("OPENAI_API_KEY", "").strip()),
             "anthropic_configured": bool(os.getenv("ANTHROPIC_API_KEY", "").strip()),
         },
