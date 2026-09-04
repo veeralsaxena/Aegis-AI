@@ -152,14 +152,14 @@ export default function VisitDetailsPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <Link
           href={`/patients/${uuid}`}
-          className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-sm"
+          className="inline-flex items-center gap-1.5 text-black/40 hover:text-black transition-colors text-sm font-bold"
         >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          <span className="material-symbols-outlined text-xl">arrow_back</span>
           Back to Patient
         </Link>
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-2 rounded-xl text-sm font-medium hover:bg-green-500/20 transition-colors print:hidden"
+          className="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 px-5 py-2.5 rounded-2xl text-sm font-bold transition-colors print:hidden"
         >
           <span className="material-symbols-outlined text-lg">print</span>
           Print Registration Card
@@ -167,59 +167,59 @@ export default function VisitDetailsPage() {
       </div>
 
       {/* Patient + Visit Info Bar */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white border border-black/5 rounded-[2rem] p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-primary text-2xl">person</span>
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-blue-600 text-3xl">person</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white">{patient?.person?.display || 'Patient'}</h1>
-            <p className="text-slate-400 text-xs">{identifier} • {patient?.person?.gender === "M" ? "Male" : "Female"} • {patient?.person?.age ?? '—'} yrs</p>
+            <h1 className="text-xl font-black text-black tracking-tight">{patient?.person?.display || 'Patient'}</h1>
+            <p className="text-black/50 font-bold text-xs uppercase tracking-wider mt-1">{identifier} • {patient?.person?.gender === "M" ? "Male" : "Female"} • {patient?.person?.age ?? '—'} yrs</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-xs font-medium flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+        <div className="flex items-center gap-3">
+          <span className="px-4 py-2 bg-green-50 border border-green-200 rounded-full text-green-600 text-xs font-bold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
             {activeVisit?.visitType?.display || 'Visit'}
           </span>
-          <span className="text-slate-500 text-xs">{activeVisit?.startDatetime ? new Date(activeVisit.startDatetime).toLocaleString() : ''}</span>
+          <span className="text-black/40 font-bold text-xs bg-black/5 px-3 py-2 rounded-full">{activeVisit?.startDatetime ? new Date(activeVisit.startDatetime).toLocaleString() : ''}</span>
         </div>
       </div>
 
       {/* Status message */}
       {message && (
-        <div className={`px-4 py-3 rounded-xl flex items-center gap-2 ${message.type === "success" ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
-          <span className={`material-symbols-outlined text-lg ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>
+        <div className={`px-5 py-4 rounded-2xl flex items-center gap-3 ${message.type === "success" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+          <span className="material-symbols-outlined text-xl">
             {message.type === "success" ? "check_circle" : "error"}
           </span>
-          <p className={`text-sm font-medium ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>{message.text}</p>
+          <p className="text-sm font-bold">{message.text}</p>
         </div>
       )}
 
       {/* Nutritional Values */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-lg">fitness_center</span>
+      <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+        <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
+          <span className="material-symbols-outlined text-blue-600 text-2xl">fitness_center</span>
           Nutritional Values
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="text-xs text-slate-400 mb-1 block">Height (cm)</label>
+            <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Height (cm)</label>
             <input
               type="number"
               step="0.1"
-              className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+              className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
               placeholder="e.g. 170"
               value={height}
               onChange={e => setHeight(e.target.value)}
             />
           </div>
           <div>
-            <label className="text-xs text-slate-400 mb-1 block">Weight (kg)</label>
+            <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Weight (kg)</label>
             <input
               type="number"
               step="0.1"
-              className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+              className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
               placeholder="e.g. 65"
               value={weight}
               onChange={e => setWeight(e.target.value)}
@@ -227,43 +227,46 @@ export default function VisitDetailsPage() {
           </div>
         </div>
         {height && weight && (
-          <div className="mt-3 p-3 bg-primary/5 border border-primary/10 rounded-xl">
-            <p className="text-primary text-sm font-medium">
-              BMI: {(parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2)).toFixed(1)} kg/m²
+          <div className="mt-5 p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between">
+            <p className="text-blue-700 text-sm font-bold">
+              Body Mass Index (BMI)
+            </p>
+            <p className="text-blue-800 text-lg font-black font-mono bg-blue-200/50 px-3 py-1 rounded-xl">
+              {(parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2)).toFixed(1)} <span className="text-sm font-bold">kg/m²</span>
             </p>
           </div>
         )}
       </div>
 
       {/* Vitals */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-lg">monitor_heart</span>
+      <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+        <h3 className="text-black font-black tracking-tight mb-8 flex items-center gap-2 text-xl">
+          <span className="material-symbols-outlined text-blue-600 text-2xl">monitor_heart</span>
           Vitals
         </h3>
 
         {/* Blood Pressure */}
-        <div className="mb-5">
-          <h4 className="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
-            <span className="material-symbols-outlined text-sm text-slate-500">bloodtype</span>
+        <div className="mb-8">
+          <h4 className="text-sm font-bold text-black/70 mb-4 flex items-center gap-2 bg-black/[0.03] p-3 rounded-xl w-max">
+            <span className="material-symbols-outlined text-red-500">bloodtype</span>
             Blood Pressure
           </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="text-xs text-slate-400 mb-1 block">Systolic (mmHg)</label>
+              <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Systolic (mmHg)</label>
               <input
                 type="number"
-                className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+                className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
                 placeholder="e.g. 120"
                 value={systolicBP}
                 onChange={e => setSystolicBP(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-xs text-slate-400 mb-1 block">Diastolic (mmHg)</label>
+              <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Diastolic (mmHg)</label>
               <input
                 type="number"
-                className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+                className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
                 placeholder="e.g. 80"
                 value={diastolicBP}
                 onChange={e => setDiastolicBP(e.target.value)}
@@ -273,19 +276,18 @@ export default function VisitDetailsPage() {
         </div>
 
         {/* Body Position */}
-        <div className="mb-5">
-          <label className="text-xs text-slate-400 mb-2 block">Body Position</label>
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-8">
+          <label className="text-xs font-bold text-black/60 mb-3 block uppercase tracking-wider">Body Position</label>
+          <div className="flex flex-wrap gap-3">
             {BODY_POSITIONS.map(pos => (
               <button
                 key={pos}
                 type="button"
                 onClick={() => setBodyPosition(bodyPosition === pos ? "" : pos)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                  bodyPosition === pos
-                    ? "bg-primary/10 border-primary/30 text-primary"
-                    : "bg-slate-800/50 border-slate-700/50 text-slate-400 hover:bg-slate-700/50 hover:text-white"
-                }`}
+                className={`px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${bodyPosition === pos
+                  ? "bg-blue-50 border-blue-200 text-blue-700 shadow-[0_4px_12px_-4px_rgba(37,99,235,0.2)]"
+                  : "bg-black/[0.02] border-transparent text-black/60 hover:bg-black/[0.05] hover:text-black"
+                  }`}
               >
                 {pos}
               </button>
@@ -294,22 +296,22 @@ export default function VisitDetailsPage() {
         </div>
 
         {/* Pulse */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-2">
           <div>
-            <label className="text-xs text-slate-400 mb-1 block">Pulse (beats/min)</label>
+            <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Pulse (beats/min)</label>
             <input
               type="number"
-              className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+              className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
               placeholder="e.g. 72"
               value={pulse}
               onChange={e => setPulse(e.target.value)}
             />
           </div>
           <div>
-            <label className="text-xs text-slate-400 mb-1 block">SpO₂ — Arterial Blood Oxygen Saturation (%)</label>
+            <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">SpO₂ — Oxygen Saturation (%)</label>
             <input
               type="number"
-              className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+              className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
               placeholder="e.g. 98"
               value={spo2}
               onChange={e => setSpo2(e.target.value)}
@@ -319,16 +321,16 @@ export default function VisitDetailsPage() {
       </div>
 
       {/* Fee Information */}
-      <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-lg">payments</span>
+      <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+        <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
+          <span className="material-symbols-outlined text-blue-600 text-2xl">payments</span>
           Fee Information
         </h3>
         <div className="max-w-xs">
-          <label className="text-xs text-slate-400 mb-1 block">Registration Fee (₹)</label>
+          <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Registration Fee (₹)</label>
           <input
             type="number"
-            className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm"
+            className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
             placeholder="e.g. 500"
             value={regFee}
             onChange={e => setRegFee(e.target.value)}
@@ -341,7 +343,7 @@ export default function VisitDetailsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex-1 liquid-button text-background-dark font-bold py-4 rounded-xl flex items-center justify-center gap-2 text-sm transition-all disabled:opacity-50"
+          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-5 px-6 rounded-2xl flex items-center justify-center gap-2 text-sm transition-all shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] disabled:opacity-50"
         >
           {saving ? (
             <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Saving...</>

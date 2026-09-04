@@ -85,33 +85,33 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
   return (
     <div>
   
-  <div className="relative z-10 flex min-h-screen">
+  <div className="bg-[#fafafa] min-h-screen">
 
 
     {/* Main Content */}
-    <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+    <main className="flex-1 overflow-y-auto p-6 lg:p-10 pb-48 lg:pb-48">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-semibold text-white tracking-tight">Medication Management</h1>
-            <p className="text-slate-400 text-sm font-light mt-1">Advanced real-time oversight of patient pharmacology, dosages, and contraindications.</p>
+            <h1 className="text-3xl font-semibold text-black tracking-tight">Medication Management</h1>
+            <p className="text-black/50 text-sm font-medium mt-1">Advanced real-time oversight of patient pharmacology, dosages, and contraindications.</p>
           </div>
         </div>
 
-        <div className="glass-panel rounded-2xl p-6 mb-8 relative border-border-dark">
-          <div className="flex items-center gap-2 text-primary mb-3">
-            <span className="material-symbols-outlined" style={{filter: 'drop-shadow(0 0 5px rgba(37,192,244,0.5))'}}>person_search</span>
+        <div className="bg-white border border-black/5 rounded-2xl shadow-sm p-6 mb-8 relative">
+          <div className="flex items-center gap-2 text-blue-600 mb-3">
+            <span className="material-symbols-outlined">person_search</span>
             <h3 className="font-medium tracking-wide">Select Patient</h3>
           </div>
           <div className="relative">
-            <input className="w-full glass-card border border-border-dark focus:border-primary rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 outline-none font-light transition-all focus:shadow-lg"
+            <input className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-3 pl-10 pr-4 text-black placeholder-black/30 outline-none font-medium transition-all"
               placeholder="Search patient by name..." value={patientQuery} onChange={e => handlePatientSearch(e.target.value)} />
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black/40 text-lg">search</span>
             {patientResults.length > 0 && (
-              <div className="absolute z-50 top-full left-0 right-0 mt-1 glass-panel border border-border-dark rounded-xl shadow-lg max-h-48 overflow-y-auto">
+              <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-black/10 rounded-xl shadow-lg max-h-48 overflow-y-auto">
                 {patientResults.map(p => (
                   <button key={p.uuid} onClick={() => selectPatient(p)}
-                    className="w-full text-left px-4 py-3 text-sm text-white hover:bg-primary/20 transition-colors border-b border-white/5 last:border-0">
+                    className="w-full text-left px-4 py-3 text-sm text-black hover:bg-blue-50 transition-colors border-b border-black/5 last:border-0 font-medium">
                     {p.person?.display || p.display}
                   </button>
                 ))}
@@ -130,20 +130,20 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
         )}
 
         {!selectedPatient ? (
-          <div className="glass-panel rounded-2xl p-16 flex flex-col items-center text-center">
-            <span className="material-symbols-outlined text-slate-600 text-6xl mb-4">medication</span>
-            <p className="text-slate-400 font-light">Select a patient to view and manage prescriptions</p>
+          <div className="bg-white border border-black/5 rounded-2xl shadow-sm p-16 flex flex-col items-center text-center">
+            <span className="material-symbols-outlined text-black/20 text-6xl mb-4">medication</span>
+            <p className="text-black/50 font-medium">Select a patient to view and manage prescriptions</p>
           </div>
         ) : (
           <>
             {/* Active Prescriptions Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">pill</span>
+              <h2 className="text-lg font-bold text-black flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-600">pill</span>
                 Active Prescriptions ({activeOrders.length})
               </h2>
               <button onClick={() => setShowBuilder(true)}
-                className="px-5 py-2.5 bg-primary hover:bg-primary/90 text-background-dark font-medium rounded-xl shadow-lg transition-all flex items-center gap-2 text-sm">
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm">
                 <span className="material-symbols-outlined text-lg">add</span>
                 New Prescription
               </button>
@@ -151,37 +151,37 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
 
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <span className="material-symbols-outlined text-primary text-4xl animate-spin">progress_activity</span>
+                <span className="material-symbols-outlined text-blue-600 text-4xl animate-spin">progress_activity</span>
               </div>
             ) : activeOrders.length === 0 ? (
-              <div className="glass-panel rounded-2xl p-12 text-center">
-                <span className="material-symbols-outlined text-slate-600 text-5xl mb-3">medication</span>
-                <p className="text-slate-400 text-sm font-light">No active prescriptions found</p>
+              <div className="bg-white border border-black/5 shadow-sm rounded-2xl p-12 text-center">
+                <span className="material-symbols-outlined text-black/20 text-5xl mb-3">medication</span>
+                <p className="text-black/50 text-sm font-medium">No active prescriptions found</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {activeOrders.map(order => {
                   const hasInteraction = Math.random() > 0.8;
                   return (
-                    <div key={order.uuid} className="glass-panel rounded-xl p-5 relative overflow-hidden group hover:border-primary/20 transition-all">
-                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div key={order.uuid} className="bg-white border border-black/5 shadow-sm rounded-xl p-5 relative overflow-hidden group hover:border-blue-600/30 hover:shadow-md transition-all">
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-start justify-between mb-3">
-                        <h3 className="text-white font-semibold text-base">{order.drug?.display || order.concept?.display || order.display}</h3>
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Active</span>
+                        <h3 className="text-black font-bold text-base">{order.drug?.display || order.concept?.display || order.display}</h3>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-600/20">Active</span>
                       </div>
-                      <p className="text-xs text-slate-500 mb-3">Patient: {order.patient?.display || selectedPatient.person?.display}</p>
+                      <p className="text-xs text-black/60 font-medium mb-3">Patient: {order.patient?.display || selectedPatient.person?.display}</p>
                       <div className="grid grid-cols-3 gap-3 mb-3">
-                        <div className="bg-black/20 rounded-lg p-2 text-center">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Dosage</p>
-                          <p className="text-white text-sm font-medium">{order.dose ? `${order.dose}${order.doseUnits?.display || "mg"}` : "N/A"}</p>
+                        <div className="bg-black/5 rounded-lg p-2 text-center">
+                          <p className="text-[10px] text-black/50 font-bold uppercase tracking-wider">Dosage</p>
+                          <p className="text-black text-sm font-bold">{order.dose ? `${order.dose}${order.doseUnits?.display || "mg"}` : "N/A"}</p>
                         </div>
-                        <div className="bg-black/20 rounded-lg p-2 text-center">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Route</p>
-                          <p className="text-white text-sm font-medium">Oral</p>
+                        <div className="bg-black/5 rounded-lg p-2 text-center">
+                          <p className="text-[10px] text-black/50 font-bold uppercase tracking-wider">Route</p>
+                          <p className="text-black text-sm font-bold">Oral</p>
                         </div>
-                        <div className="bg-black/20 rounded-lg p-2 text-center">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider">Freq.</p>
-                          <p className="text-white text-sm font-medium">{order.frequency?.display || "Daily"}</p>
+                        <div className="bg-black/5 rounded-lg p-2 text-center">
+                          <p className="text-[10px] text-black/50 font-bold uppercase tracking-wider">Freq.</p>
+                          <p className="text-black text-sm font-bold">{order.frequency?.display || "Daily"}</p>
                         </div>
                       </div>
                       {hasInteraction && (
@@ -198,28 +198,30 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
 
             {/* Prescription Builder */}
             {showBuilder && (
-              <div className="glass-panel rounded-2xl p-6 mt-8 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+              <div className="bg-white border border-black/5 shadow-sm rounded-2xl p-6 mt-8 relative">
+                <div className="absolute top-0 left-0 w-full h-[2px] rounded-t-2xl overflow-hidden">
+                   <div className="w-full h-full bg-gradient-to-r from-transparent via-blue-600/50 to-transparent" />
+                </div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary">edit_note</span>
+                  <h2 className="text-lg font-bold text-black flex items-center gap-2">
+                    <span className="material-symbols-outlined text-blue-600">edit_note</span>
                     Prescription Builder
                   </h2>
-                  <button onClick={() => setShowBuilder(false)} className="text-slate-400 hover:text-white transition-colors">
+                  <button onClick={() => setShowBuilder(false)} className="text-black/40 hover:text-black transition-colors">
                     <span className="material-symbols-outlined">close</span>
                   </button>
                 </div>
                 <div className="space-y-4">
                   <div className="relative">
-                    <label className="text-xs text-slate-400 mb-1.5 block font-light uppercase tracking-wider">Drug Name</label>
-                    <input className="w-full bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-3 px-4 text-white placeholder-slate-600 outline-none text-sm"
+                    <label className="text-xs text-black/60 mb-1.5 block font-bold uppercase tracking-wider">Drug Name</label>
+                    <input className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-3 px-4 text-black placeholder-black/30 outline-none text-sm font-medium"
                       placeholder="Search medication..." value={drugQuery}
                       onChange={e => { setDrugQuery(e.target.value); setSelectedDrug(null); }} />
                     {drugResults.length > 0 && !selectedDrug && (
-                      <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-40 overflow-y-auto">
+                      <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-black/10 rounded-xl shadow-lg max-h-40 overflow-y-auto">
                         {drugResults.map(d => (
                           <button key={d.uuid} onClick={() => { setSelectedDrug(d); setDrugQuery(d.display); setDrugResults([]); }}
-                            className="w-full text-left px-4 py-2.5 text-sm text-white hover:bg-primary/10 transition-colors border-b border-white/5 last:border-0">
+                            className="w-full text-left px-4 py-2.5 text-sm text-black hover:bg-blue-50 transition-colors border-b border-black/5 last:border-0 font-medium">
                             {d.display}
                           </button>
                         ))}
@@ -230,33 +232,33 @@ export default function Screen_medication_management_premium_84f5b2b67b214c0c910
                     <>
                       <div className="grid grid-cols-3 gap-4">
                         <div>
-                          <label className="text-xs text-slate-400 mb-1.5 block font-light">Dose</label>
-                          <input className="w-full bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-2.5 px-3 text-white placeholder-slate-600 outline-none text-sm"
+                          <label className="text-xs text-black/60 mb-1.5 block font-bold">Dose</label>
+                          <input className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-2.5 px-3 text-black placeholder-black/30 outline-none text-sm font-medium"
                             placeholder="500mg" value={rxForm.dose} onChange={e => setRxForm(f => ({ ...f, dose: e.target.value }))} />
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1.5 block font-light">Route</label>
-                          <select className="w-full bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-2.5 px-3 text-white outline-none text-sm appearance-none"
+                          <label className="text-xs text-black/60 mb-1.5 block font-bold">Route</label>
+                          <select className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-2.5 px-3 text-black outline-none text-sm appearance-none font-medium"
                             value={rxForm.route} onChange={e => setRxForm(f => ({ ...f, route: e.target.value }))}>
-                            <option className="bg-slate-900">Oral</option>
-                            <option className="bg-slate-900">IV</option>
-                            <option className="bg-slate-900">IM</option>
-                            <option className="bg-slate-900">Topical</option>
+                            <option className="bg-white">Oral</option>
+                            <option className="bg-white">IV</option>
+                            <option className="bg-white">IM</option>
+                            <option className="bg-white">Topical</option>
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-slate-400 mb-1.5 block font-light">Frequency</label>
-                          <input className="w-full bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-2.5 px-3 text-white placeholder-slate-600 outline-none text-sm"
+                          <label className="text-xs text-black/60 mb-1.5 block font-bold">Frequency</label>
+                          <input className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-2.5 px-3 text-black placeholder-black/30 outline-none text-sm font-medium"
                             placeholder="BID" value={rxForm.frequency} onChange={e => setRxForm(f => ({ ...f, frequency: e.target.value }))} />
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs text-slate-400 mb-1.5 block font-light">Notes</label>
-                        <textarea className="w-full bg-black/30 border border-slate-700/50 focus:border-primary rounded-xl py-2.5 px-3 text-white placeholder-slate-600 outline-none text-sm resize-none"
+                        <label className="text-xs text-black/60 mb-1.5 block font-bold">Notes</label>
+                        <textarea className="w-full bg-white border border-black/10 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 rounded-xl py-2.5 px-3 text-black placeholder-black/30 outline-none text-sm resize-none font-medium"
                           rows={2} placeholder="Additional instructions..." value={rxForm.notes} onChange={e => setRxForm(f => ({ ...f, notes: e.target.value }))} />
                       </div>
                       <button onClick={handlePrescribe} disabled={saving}
-                        className="liquid-button disabled:opacity-50 text-background-dark font-bold py-3 px-8 rounded-xl flex items-center gap-2 text-sm mt-4">
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl flex items-center justify-center gap-2 text-sm mt-4 shadow-sm transition-colors w-full md:w-auto">
                         {saving ? <><span className="animate-spin material-symbols-outlined text-sm">progress_activity</span> Saving...</> : <><span className="material-symbols-outlined text-sm">save</span> Create Prescription</>}
                       </button>
                     </>

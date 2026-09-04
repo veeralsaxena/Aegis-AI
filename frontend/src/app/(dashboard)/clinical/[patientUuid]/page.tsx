@@ -306,8 +306,8 @@ export default function PatientDashboardPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
-          <span className="material-symbols-outlined text-primary text-5xl animate-spin">progress_activity</span>
-          <p className="text-slate-400 text-sm">Loading clinical dashboard...</p>
+          <span className="material-symbols-outlined text-blue-600 text-5xl animate-spin">progress_activity</span>
+          <p className="text-black/50 font-bold text-sm">Loading clinical dashboard...</p>
         </div>
       </div>
     );
@@ -338,321 +338,283 @@ export default function PatientDashboardPage() {
 
   return (
     <>
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 print:hidden">
-      {/* Back + Patient Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/clinical" className="text-slate-400 hover:text-white transition-colors">
-          <span className="material-symbols-outlined text-xl">arrow_back</span>
-        </Link>
-        <PatientAvatar
-          authFetch={authFetch}
-          patientUuid={patientUuid}
-          personUuid={person?.uuid}
-          className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden"
-          iconClassName="text-primary text-2xl"
-        />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">{fullName}</h1>
-            {activeVisit && (
-              <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-xs font-medium flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                Active Visit — {activeVisit.visitType?.display}
-              </span>
-            )}
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-24">
+      <div className="max-w-[1100px] mx-auto p-6 lg:py-16">
+
+        {/* Back + Patient Header */}
+        <header className="mb-10">
+          <Link href="/clinical" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors mb-8">
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Registry
+          </Link>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-4 flex-wrap mb-2">
+                <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-slate-900">{fullName}</h1>
+                {activeVisit && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200/60">
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    Active Visit — {activeVisit.visitType?.display}
+                  </span>
+                )}
+              </div>
+              <p className="text-slate-500 text-sm flex items-center gap-2">
+                <span className="font-mono text-xs bg-slate-100 px-2 py-0.5">{patientId}</span>
+                {person?.gender && <span>&bull; {person.gender === "M" ? "Male" : person.gender === "F" ? "Female" : "Other"}</span>}
+                {person?.age != null && <span>&bull; {person.age} years</span>}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {activeVisit ? (
+                <>
+                  <button
+                    onClick={() => router.push(`/clinical/${patientUuid}/consultation`)}
+                    className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 text-sm font-medium transition-colors flex items-center gap-2 rounded-lg shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">edit_note</span>
+                    Resume Consultation
+                  </button>
+                  <button
+                    onClick={endVisit}
+                    className="text-rose-600 hover:bg-rose-50 px-4 py-2.5 text-sm font-medium transition-colors flex items-center gap-2 rounded-lg"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">stop_circle</span>
+                    End Visit
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+                    className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 text-sm font-medium transition-colors flex items-center gap-2 rounded-lg shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">stethoscope</span>
+                    Start Consultation
+                  </button>
+                  <button
+                    onClick={() => startVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10", "Emergency")}
+                    className="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2.5 text-sm font-medium transition-colors flex items-center gap-2 rounded-lg shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">local_hospital</span>
+                    Emergency
+                  </button>
+                </>
+              )}
+              <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+              <button
+                onClick={() => window.print()}
+                className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 hover:text-slate-900 p-2.5 rounded-lg transition-colors flex items-center shadow-sm"
+                title="Print Patient Record"
+              >
+                <span className="material-symbols-outlined text-[18px]">print</span>
+              </button>
+              <button
+                onClick={loadDashboard}
+                className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 hover:text-slate-900 p-2.5 rounded-lg transition-colors flex items-center shadow-sm"
+                title="Refresh Data"
+              >
+                <span className="material-symbols-outlined text-[18px]">refresh</span>
+              </button>
+            </div>
           </div>
-          <p className="text-slate-400 text-sm mt-0.5">
-            ID: <span className="text-primary font-mono">{patientId}</span>
-            {person?.gender && <> • {person.gender === "M" ? "Male" : person.gender === "F" ? "Female" : "Other"}</>}
-            {person?.age != null && <> • {person.age} years</>}
-          </p>
-        </div>
-      </div>
+        </header>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3">
-        {activeVisit ? (
-          <>
-            <button
-              onClick={() => router.push(`/clinical/${patientUuid}/consultation`)}
-              className="liquid-button text-background-dark font-bold px-6 py-3 rounded-xl flex items-center gap-2 text-sm"
-            >
-              <span className="material-symbols-outlined text-lg">edit_note</span>
-              Start Consultation
-            </button>
-            <button
-              onClick={endVisit}
-              className="bg-red-500/10 text-red-400 border border-red-500/20 font-medium rounded-xl px-5 py-3 hover:bg-red-500/20 transition-colors text-sm flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-lg">stop_circle</span>
-              End Visit
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5")}
-              className="liquid-button text-background-dark font-bold px-6 py-3 rounded-xl flex items-center gap-2 text-sm"
-            >
-              <span className="material-symbols-outlined text-lg">personal_injury</span>
-              Start OPD Visit
-            </button>
-            <button
-              onClick={() => startVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10")}
-              className="bg-red-500/10 text-red-400 border border-red-500/20 font-medium rounded-xl px-5 py-3 hover:bg-red-500/20 transition-colors text-sm flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-lg">local_hospital</span>
-              Start Emergency Visit
-            </button>
-          </>
-        )}
-        <Link
-          href={`/patients/${patientUuid}`}
-          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-lg">badge</span>
-          Registration / demographics
-        </Link>
-        <Link
-          href={`/appointments?patientUuid=${patientUuid}`}
-          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-lg">calendar_month</span>
-          View Appointments
-        </Link>
-        <button
-          onClick={() => window.print()}
-          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-lg">print</span>
-          Print OPD summary
-        </button>
-        <button
-          onClick={loadDashboard}
-          className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 border border-slate-700/50 rounded-xl px-5 py-3 text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-lg">refresh</span>
-          Refresh
-        </button>
-      </div>
+        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Clinical Overview</h2>
 
-      {/* Bahmni-style identifier & allergy strip */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 backdrop-blur-xl">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Patient identifiers</h3>
-          {allIdentifiers.length === 0 ? (
-            <p className="text-slate-500 text-sm">No identifiers</p>
-          ) : (
-            <ul className="space-y-1.5 text-sm">
-              {allIdentifiers.slice(0, 8).map((row, i) => (
-                <li key={i} className="flex justify-between gap-2 text-slate-300">
-                  <span className="text-slate-500 truncate">{row.identifierType?.display || "ID"}</span>
-                  <span className="font-mono text-primary shrink-0">{row.identifier || row.display?.replace(/^.*=\s*/, "")}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 backdrop-blur-xl">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Allergies &amp; contact</h3>
-          <p className="text-sm text-white">
-            <span className="text-slate-500">Allergies: </span>
-            {allergies.length ? allergies.join(", ") : "None recorded"}
-          </p>
-          {phoneAttr ? (
-            <p className="text-sm text-slate-400 mt-2">
-              <span className="text-slate-500">Phone: </span>
-              {String(phoneAttr)}
-            </p>
-          ) : null}
-        </div>
-      </div>
-
-      {(programs.length > 0 || relationships.length > 0) && (
+        {/* Dashboard Widgets Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {programs.length > 0 && (
-            <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-              <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">assignment</span>
-                <h3 className="text-white font-semibold text-sm">Programs</h3>
-              </div>
-              <div className="p-6 space-y-2 max-h-48 overflow-y-auto">
-                {programs.map((pr, i) => (
-                  <div key={i} className="text-sm text-slate-300 flex justify-between gap-2">
-                    <span>{pr.display || "Program"}</span>
-                    {pr.dateEnrolled && <span className="text-slate-500 text-xs">{pr.dateEnrolled}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {relationships.length > 0 && (
-            <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-              <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">family_restroom</span>
-                <h3 className="text-white font-semibold text-sm">Relationships</h3>
-              </div>
-              <div className="p-6 space-y-2 max-h-48 overflow-y-auto">
-                {relationships.map((rel, i) => (
-                  <div key={i} className="text-sm text-slate-300">
-                    <span className="text-slate-500">{rel.relationshipType?.display || "Related"}: </span>
-                    {rel.personA?.display || rel.personB?.display || "—"}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* Dashboard Widgets Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Vitals Widget */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">monitor_heart</span>
-            <h3 className="text-white font-semibold text-sm">Latest Vitals</h3>
+          {/* Vitals Widget */}
+          <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">monitor_heart</span>
+              <h3 className="text-slate-900 font-semibold text-sm tracking-wide uppercase">Latest Vitals</h3>
+            </div>
+            <div className="p-5">
+              {vitals.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm mb-3">No vitals recorded yet.</p>
+                  <button
+                    onClick={() => activeVisit ? router.push(`/clinical/${patientUuid}/consultation`) : startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+                    className="text-slate-900 font-medium text-sm hover:underline flex items-center justify-center gap-1 mx-auto"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    Record vitals
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {vitals.slice(0, 9).map((v, i) => (
+                    <div key={i} className="bg-slate-50 border border-slate-100 p-3 rounded-lg">
+                      <p className="text-slate-500 text-[10px] font-semibold mb-1 truncate uppercase tracking-widest">{v.concept?.shortName || v.concept?.name || "—"}</p>
+                      <p className="text-slate-900 font-semibold text-lg">
+                        {typeof v.value === "object" ? v.value?.display || JSON.stringify(v.value) : v.value ?? "—"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="p-6">
-            {vitals.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4">No vitals recorded yet</p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {vitals.slice(0, 9).map((v, i) => (
-                  <div key={`${v.concept?.name}-${v.observationDateTime}-${i}`} className="bg-white/5 rounded-xl p-3 border border-white/5">
-                    <p className="text-slate-400 text-xs mb-1 truncate">{v.concept?.shortName || v.concept?.name || "—"}</p>
-                    <p className="text-white font-semibold text-lg">{formatObsValue(v.value)}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Diagnoses Widget */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">diagnosis</span>
-            <h3 className="text-white font-semibold text-sm">Diagnoses</h3>
-          </div>
-          <div className="p-6">
-            {diagnoses.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4">No diagnoses recorded</p>
-            ) : (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {diagnoses.map((d, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                    <div>
-                      <p className="text-white text-sm font-medium">{d.codedAnswer?.name || d.freeTextAnswer || "Unknown"}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`text-xs px-2 py-0.5 rounded ${d.order === "PRIMARY" ? "bg-primary/10 text-primary" : "bg-slate-700 text-slate-300"}`}>
+          {/* Diagnoses Widget */}
+          <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">medical_information</span>
+              <h3 className="text-slate-900 font-semibold text-sm tracking-wide uppercase">Diagnoses</h3>
+            </div>
+            <div className="p-5">
+              {diagnoses.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm mb-3">No diagnoses recorded.</p>
+                  <button
+                    onClick={() => activeVisit ? router.push(`/clinical/${patientUuid}/consultation`) : startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+                    className="text-slate-900 font-medium text-sm hover:underline flex items-center justify-center gap-1 mx-auto"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    Add diagnosis
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {diagnoses.map((d, i) => (
+                    <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-50 rounded-lg">
+                      <p className="text-slate-900 text-sm font-medium">{d.codedAnswer?.name || d.freeTextAnswer || "Unknown"}</p>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded ${d.order === "PRIMARY" ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-700"}`}>
                           {d.order}
                         </span>
-                        <span className={`text-xs px-2 py-0.5 rounded ${d.certainty === "CONFIRMED" ? "bg-green-500/10 text-green-400" : "bg-amber-500/10 text-amber-400"}`}>
+                        <span className={`text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded ${d.certainty === "CONFIRMED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
                           {d.certainty}
                         </span>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Active Treatments Widget */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">medication</span>
-            <h3 className="text-white font-semibold text-sm">Active Treatments</h3>
-          </div>
-          <div className="p-6">
-            {drugOrders.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4">No active treatments</p>
-            ) : (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {drugOrders.map((d, i) => (
-                  <div key={i} className="p-3 bg-white/5 rounded-xl border border-white/5">
-                    <p className="text-white text-sm font-medium">{d.drug?.name || "Unknown Drug"}</p>
-                    {d.dosingInstructions && (
-                      <p className="text-slate-400 text-xs mt-1">
-                        {d.dosingInstructions.dose} {d.dosingInstructions.doseUnits} — {d.dosingInstructions.frequency} — {d.dosingInstructions.route}
-                      </p>
-                    )}
-                    {d.duration && (
-                      <p className="text-slate-500 text-xs mt-0.5">Duration: {d.duration} {d.durationUnits}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Lab Results Widget */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">biotech</span>
-            <h3 className="text-white font-semibold text-sm">Lab Results</h3>
-          </div>
-          <div className="p-6">
-            {labResults.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4">No lab results available</p>
-            ) : (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {labResults.map((l, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                    <div>
-                      <p className="text-white text-sm font-medium">{l.testName || "Test"}</p>
-                      {l.minNormal != null && l.maxNormal != null && (
-                        <p className="text-slate-500 text-xs mt-0.5">Normal: {l.minNormal}–{l.maxNormal}</p>
+          {/* Active Treatments Widget */}
+          <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">prescriptions</span>
+              <h3 className="text-slate-900 font-semibold text-sm tracking-wide uppercase">Active Treatments</h3>
+            </div>
+            <div className="p-5">
+              {drugOrders.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm mb-3">No active treatments.</p>
+                  <button
+                    onClick={() => activeVisit ? router.push(`/clinical/${patientUuid}/consultation`) : startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+                    className="text-slate-900 font-medium text-sm hover:underline flex items-center justify-center gap-1 mx-auto"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    Add treatment
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {drugOrders.map((d, i) => (
+                    <div key={i} className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-slate-900 text-sm font-medium">{d.drug?.name || "Unknown Drug"}</p>
+                      {d.dosingInstructions && (
+                        <p className="text-slate-500 text-xs mt-1.5 flex items-center gap-2">
+                          <span className="font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">{d.dosingInstructions.dose} {d.dosingInstructions.doseUnits}</span>
+                          <span>&bull;</span>
+                          <span>{d.dosingInstructions.frequency}</span>
+                          <span>&bull;</span>
+                          <span>{d.dosingInstructions.route}</span>
+                        </p>
+                      )}
+                      {d.duration && (
+                        <p className="text-slate-400 text-xs mt-1 font-mono">Dur: {d.duration} {d.durationUnits}</p>
                       )}
                     </div>
-                    <span className="text-primary font-semibold text-sm">{l.result ?? "—"}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Recent Visits Widget */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden lg:col-span-2">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">history</span>
-            <h3 className="text-white font-semibold text-sm">Visit History</h3>
-          </div>
-          <div className="p-6">
-            {visits.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4">No visits recorded</p>
-            ) : (
-              <div className="space-y-3 max-h-72 overflow-y-auto">
-                {visits.map((v) => (
-                  <div key={v.uuid} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${!v.stopDatetime ? "bg-green-500/10" : "bg-slate-800"}`}>
-                        <span className={`material-symbols-outlined text-lg ${!v.stopDatetime ? "text-green-400" : "text-slate-500"}`}>
-                          {!v.stopDatetime ? "check_circle" : "event_available"}
-                        </span>
-                      </div>
+          {/* Lab Results Widget */}
+          <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">science</span>
+              <h3 className="text-slate-900 font-semibold text-sm tracking-wide uppercase">Lab Results</h3>
+            </div>
+            <div className="p-5">
+              {labResults.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm mb-3">No lab results available.</p>
+                  <button
+                    onClick={() => activeVisit ? router.push(`/clinical/${patientUuid}/consultation`) : startVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
+                    className="text-slate-900 font-medium text-sm hover:underline flex items-center justify-center gap-1 mx-auto"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    Order labs
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {labResults.map((l, i) => (
+                    <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 bg-slate-50 rounded-lg">
                       <div>
-                        <p className="text-white text-sm font-medium">{v.visitType?.display || "Visit"}</p>
-                        <p className="text-slate-400 text-xs mt-0.5">
-                          {new Date(v.startDatetime).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
-                          {v.stopDatetime && ` — ${new Date(v.stopDatetime).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}`}
-                        </p>
+                        <p className="text-slate-900 text-sm font-medium">{l.testName || "Test"}</p>
+                        {l.minNormal != null && l.maxNormal != null && (
+                          <p className="text-slate-400 text-xs mt-1 font-mono">Range: {l.minNormal} – {l.maxNormal}</p>
+                        )}
                       </div>
+                      <span className="text-slate-900 font-semibold text-lg shrink-0">{l.result ?? "—"}</span>
                     </div>
-                    {!v.stopDatetime && (
-                      <span className="px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-xs font-medium">
-                        Active
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Recent Visits Widget */}
+          <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden lg:col-span-2">
+            <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-slate-400 text-[18px]">history</span>
+              <h3 className="text-slate-900 font-semibold text-sm tracking-wide uppercase">Visit History</h3>
+            </div>
+            <div className="p-0">
+              {visits.length === 0 ? (
+                <p className="text-slate-500 text-sm text-center py-10">No visits recorded.</p>
+              ) : (
+                <div className="divide-y divide-slate-100 max-h-80 overflow-y-auto">
+                  {visits.map((v) => (
+                    <div key={v.uuid} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 hover:bg-slate-50 transition-colors gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border ${!v.stopDatetime ? "bg-emerald-50 border-emerald-200" : "bg-slate-100 border-slate-200"}`}>
+                          <span className={`material-symbols-outlined text-[16px] ${!v.stopDatetime ? "text-emerald-600" : "text-slate-400"}`}>
+                            {!v.stopDatetime ? "check_circle" : "event_available"}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-slate-900 text-sm font-medium">{v.visitType?.display || "Visit"}</p>
+                          <p className="text-slate-500 text-[11px] mt-1 uppercase tracking-wide font-semibold">
+                            {new Date(v.startDatetime).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                            {v.stopDatetime && ` — ${new Date(v.stopDatetime).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}`}
+                          </p>
+                        </div>
+                      </div>
+                      {!v.stopDatetime && (
+                        <span className="shrink-0 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold uppercase tracking-wider">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
         </div>
 
         <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">

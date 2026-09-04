@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import Dropdown from "@/components/Dropdown";
 export default function NewPatientPage() {
   const { authFetch } = useAuth();
   const router = useRouter();
@@ -64,8 +64,8 @@ export default function NewPatientPage() {
   const startCamera = async () => {
     setCameraError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }
       });
       streamRef.current = stream;
       if (videoRef.current) {
@@ -76,7 +76,7 @@ export default function NewPatientPage() {
       setPhotoBlob(null);
     } catch (err: any) {
       console.error("Camera access denied:", err);
-      setCameraError(err.name === "NotAllowedError" 
+      setCameraError(err.name === "NotAllowedError"
         ? "Camera permission denied. Please allow camera access in your browser settings."
         : "Could not access camera. Please use the upload option instead.");
     }
@@ -242,44 +242,44 @@ export default function NewPatientPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 md:p-8 lg:p-10 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
           href="/patients"
-          className="text-slate-400 hover:text-white transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
         >
-          <span className="material-symbols-outlined text-xl">arrow_back</span>
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
         </Link>
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Register New Patient</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Create a new patient record in OmniCare</p>
+          <h1 className="text-2xl md:text-3xl font-medium text-slate-900 tracking-tight">Register New Patient</h1>
+          <p className="text-slate-500 text-[11px] font-semibold mt-1 uppercase tracking-wider">Create a new patient record in Aegis AI</p>
         </div>
       </div>
 
       {/* Status message */}
       {message && (
-        <div className={`px-4 py-3 rounded-xl flex items-center gap-2 ${message.type === "success" ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
-          <span className={`material-symbols-outlined text-lg ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>
+        <div className={`px-5 py-4 rounded-2xl flex items-center gap-3 shadow-sm ${message.type === "success" ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+          <span className={`material-symbols-outlined text-2xl ${message.type === "success" ? "text-green-600" : "text-red-600"}`}>
             {message.type === "success" ? "check_circle" : "error"}
           </span>
-          <p className={`text-sm font-medium ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>{message.text}</p>
+          <p className={`text-sm font-bold ${message.type === "success" ? "text-green-800" : "text-red-800"}`}>{message.text}</p>
         </div>
       )}
 
       {cameraError && (
-        <div className="px-4 py-3 rounded-xl flex items-center gap-2 bg-amber-500/10 border border-amber-500/20">
-          <span className="material-symbols-outlined text-lg text-amber-400">warning</span>
-          <p className="text-sm font-medium text-amber-400">{cameraError}</p>
+        <div className="px-5 py-4 rounded-2xl flex items-center gap-3 bg-amber-50 border border-amber-200 shadow-sm">
+          <span className="material-symbols-outlined text-2xl text-amber-600">warning</span>
+          <p className="text-sm font-bold text-amber-800">{cameraError}</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Photo Section */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl sticky top-20">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">photo_camera</span>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm sticky top-24">
+            <h3 className="text-slate-900 font-medium tracking-tight mb-5 flex items-center gap-2 text-lg">
+              <span className="material-symbols-outlined text-slate-500 text-xl">photo_camera</span>
               Patient Photo
             </h3>
 
@@ -293,35 +293,35 @@ export default function NewPatientPage() {
                   autoPlay
                   playsInline
                   muted
-                  className={`w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-white/20 bg-black ${isCameraOpen ? 'block' : 'hidden'}`}
+                  className={`w-full max-w-[280px] aspect-square object-cover rounded-lg mb-5 border border-slate-200 bg-slate-50 ${isCameraOpen ? 'block' : 'hidden'}`}
                 />
-                
+
                 {/* Photo Preview img replaces video when captured */}
                 {!isCameraOpen && photoPreview && (
                   <img
                     src={photoPreview}
                     alt="Patient preview"
-                    className="w-full max-w-[280px] aspect-square object-cover rounded-2xl mb-4 border-2 border-primary/30"
+                    className="w-full max-w-[280px] aspect-square object-cover rounded-lg mb-5 border border-slate-200 shadow-sm"
                   />
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   {isCameraOpen ? (
                     <>
                       <button
                         type="button"
                         onClick={capturePhoto}
-                        className="liquid-button text-background-dark font-bold rounded-xl px-5 py-2.5 flex items-center gap-2 text-sm"
+                        className="bg-slate-900 text-white font-medium rounded-lg px-5 py-2.5 flex items-center gap-2 text-sm hover:bg-slate-800 transition-colors shadow-sm"
                       >
-                        <span className="material-symbols-outlined text-lg">camera_alt</span>
+                        <span className="material-symbols-outlined text-[18px]">camera_alt</span>
                         Capture
                       </button>
                       <button
                         type="button"
                         onClick={stopCamera}
-                        className="bg-red-500/10 text-red-400 border border-red-500/20 font-medium rounded-xl px-4 py-2.5 hover:bg-red-500/20 transition-colors text-sm"
+                        className="bg-white text-rose-600 border border-rose-200 font-medium rounded-lg px-4 py-2.5 hover:bg-rose-50 transition-colors text-sm"
                       >
-                        <span className="material-symbols-outlined text-lg">close</span>
+                        <span className="material-symbols-outlined text-[18px]">close</span>
                         Cancel
                       </button>
                     </>
@@ -330,7 +330,7 @@ export default function NewPatientPage() {
                       <button
                         type="button"
                         onClick={startCamera}
-                        className="bg-primary/10 text-primary border border-primary/20 rounded-xl px-4 py-2 text-xs font-medium hover:bg-primary/20 transition-colors flex items-center gap-1"
+                        className="bg-white text-slate-600 border border-slate-200 rounded-lg px-4 py-2.5 text-xs font-medium hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-sm">camera_alt</span>
                         Retake
@@ -338,7 +338,7 @@ export default function NewPatientPage() {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="bg-slate-700/50 text-slate-300 rounded-xl px-4 py-2 text-xs font-medium hover:bg-slate-700 transition-colors flex items-center gap-1"
+                        className="bg-slate-50 text-slate-600 border border-slate-200 rounded-lg px-4 py-2.5 text-xs font-medium hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-sm">upload</span>
                         Replace
@@ -349,25 +349,25 @@ export default function NewPatientPage() {
               </div>
               {/* Default state: No camera, no photo */}
               {!isCameraOpen && !photoPreview && (
-                <div className="flex flex-col items-center gap-3 w-full">
-                  <div className="w-40 h-40 rounded-2xl bg-slate-800/50 border-2 border-dashed border-slate-700 flex items-center justify-center mb-2">
-                    <span className="material-symbols-outlined text-5xl text-slate-600">person</span>
+                <div className="flex flex-col items-center gap-4 w-full">
+                  <div className="w-40 h-40 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center mb-2">
+                    <span className="material-symbols-outlined text-5xl text-slate-300">person</span>
                   </div>
-                  <div className="flex gap-2 w-full justify-center">
+                  <div className="flex gap-3 w-full justify-center">
                     <button
                       type="button"
                       onClick={startCamera}
-                      className="flex-1 bg-primary/10 text-primary border border-primary/20 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 bg-white text-slate-600 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center justify-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-lg">camera_alt</span>
+                      <span className="material-symbols-outlined text-[18px]">camera_alt</span>
                       Camera
                     </button>
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex-1 bg-slate-700/50 text-slate-300 border border-slate-600/50 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 bg-slate-50 text-slate-600 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center justify-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-lg">upload</span>
+                      <span className="material-symbols-outlined text-[18px]">upload</span>
                       Upload
                     </button>
                   </div>
@@ -375,9 +375,9 @@ export default function NewPatientPage() {
               )}
             </div>
 
-            <div className="mt-6 flex items-center gap-2 text-xs text-slate-500 bg-slate-800/30 p-3 rounded-xl">
-              <span className="material-symbols-outlined text-primary text-sm">shield</span>
-              <p>HIPAA compliant. Photos are encrypted at rest.</p>
+            <div className="mt-6 flex items-center gap-2 text-[11px] font-medium text-slate-500 bg-slate-50 border border-slate-200 p-3 rounded-lg">
+              <span className="material-symbols-outlined text-emerald-600 text-sm">shield</span>
+              <p>HIPAA compliant. Photos are encrypted.</p>
             </div>
           </div>
         </div>
@@ -385,58 +385,59 @@ export default function NewPatientPage() {
         {/* Form Section */}
         <div className="lg:col-span-2 space-y-6">
           {/* Patient Name */}
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">badge</span>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="text-slate-900 font-medium tracking-tight mb-5 flex items-center gap-2 text-lg">
+              <span className="material-symbols-outlined text-slate-500 text-xl">badge</span>
               Patient Name
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">First Name <span className="text-red-400">*</span></label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="First Name" value={givenName} onChange={e => setGivenName(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">First Name <span className="text-rose-500">*</span></label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="First Name" value={givenName} onChange={e => setGivenName(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Middle Name</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Middle Name" value={middleName} onChange={e => setMiddleName(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Middle Name</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Middle Name" value={middleName} onChange={e => setMiddleName(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Last Name <span className="text-red-400">*</span></label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Last Name" value={familyName} onChange={e => setFamilyName(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Last Name <span className="text-rose-500">*</span></label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Last Name" value={familyName} onChange={e => setFamilyName(e.target.value)} />
               </div>
             </div>
           </div>
 
           {/* Demographics */}
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">diversity_3</span>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="text-slate-900 font-medium tracking-tight mb-5 flex items-center gap-2 text-lg">
+              <span className="material-symbols-outlined text-slate-500 text-xl">diversity_3</span>
               Demographics
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Gender <span className="text-red-400">*</span></label>
-                <select
-                  className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm appearance-none"
+                <Dropdown
+                  label="Gender"
+                  required
                   value={gender}
-                  onChange={e => setGender(e.target.value)}
-                >
-                  <option value="" disabled>Select Gender</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
-                  <option value="O">Other</option>
-                </select>
+                  onChange={setGender}
+                  options={[
+                    { label: "Male", value: "M", icon: "male" },
+                    { label: "Female", value: "F", icon: "female" },
+                    { label: "Other", value: "O", icon: "transgender" }
+                  ]}
+                  placeholder="Select Gender"
+                />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Date of Birth <span className="text-red-400">*</span></label>
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Date of Birth <span className="text-rose-500">*</span></label>
                 <div className="flex items-center gap-3">
                   <input
                     type="date"
-                    className="flex-1 bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm [color-scheme:dark]"
+                    className="flex-1 w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors"
                     value={birthdate}
                     onChange={e => setBirthdate(e.target.value)}
                   />
-                  <label className="flex items-center gap-1.5 cursor-pointer text-xs text-slate-400 whitespace-nowrap">
-                    <input type="checkbox" checked={estimated} onChange={e => setEstimated(e.target.checked)} className="rounded border-slate-600 bg-black/50 text-primary w-4 h-4" />
+                  <label className="flex items-center gap-2 cursor-pointer text-[10px] font-semibold uppercase tracking-wider text-slate-500 bg-slate-50 border border-slate-200 px-3 py-3.5 rounded-lg hover:bg-slate-100 transition-colors">
+                    <input type="checkbox" checked={estimated} onChange={e => setEstimated(e.target.checked)} className="rounded border-slate-300 text-slate-900 w-4 h-4 cursor-pointer" />
                     Est.
                   </label>
                 </div>
@@ -445,75 +446,75 @@ export default function NewPatientPage() {
           </div>
 
           {/* Address Information */}
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">location_on</span>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="text-slate-900 font-medium tracking-tight mb-5 flex items-center gap-2 text-lg">
+              <span className="material-symbols-outlined text-slate-500 text-xl">location_on</span>
               Address Information
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">House No / Flat No</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="House number" value={houseNo} onChange={e => setHouseNo(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">House No / Flat No</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="House number" value={houseNo} onChange={e => setHouseNo(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Locality / Sector</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Locality" value={locality} onChange={e => setLocality(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Locality / Sector</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Locality" value={locality} onChange={e => setLocality(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">City / Village</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="City" value={cityVillage} onChange={e => setCityVillage(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">City / Village</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="City" value={cityVillage} onChange={e => setCityVillage(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Pin Code</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Pin Code" value={pinCode} onChange={e => setPinCode(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Pin Code</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Pin Code" value={pinCode} onChange={e => setPinCode(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">District</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="District" value={district} onChange={e => setDistrict(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">District</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="District" value={district} onChange={e => setDistrict(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">State</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="State" value={state} onChange={e => setStateVal(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">State</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="State" value={state} onChange={e => setStateVal(e.target.value)} />
               </div>
             </div>
           </div>
 
           {/* Contact Information */}
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">call</span>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <h3 className="text-slate-900 font-medium tracking-tight mb-5 flex items-center gap-2 text-lg">
+              <span className="material-symbols-outlined text-slate-500 text-xl">call</span>
               Contact Information
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Email Address</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="email@example.com" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Email Address</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="email@example.com" type="email" value={email} onChange={e => setEmail(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Phone Number</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Phone Number</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs text-slate-400 mb-1 block">Alternate Phone</label>
-                <input className="w-full bg-black/50 border border-slate-700/50 focus:border-primary text-white p-3 rounded-xl outline-none text-sm" placeholder="Alternate" type="tel" value={altPhone} onChange={e => setAltPhone(e.target.value)} />
+                <label className="text-[10px] font-semibold text-slate-500 mb-1 block uppercase tracking-wider">Alternate Phone</label>
+                <input className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 text-slate-900 font-medium p-3 rounded-lg outline-none text-sm transition-colors" placeholder="Alternate" type="tel" value={altPhone} onChange={e => setAltPhone(e.target.value)} />
               </div>
             </div>
           </div>
 
-          {/* Action Buttons — Bahmni-style Save + Start Visit split button */}
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl">
-            <div className="flex flex-col sm:flex-row gap-3">
+          {/* Action Buttons */}
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-4">
               {/* Save button */}
               <button
                 type="button"
                 onClick={handleSaveOnly}
                 disabled={saving}
-                className="flex-shrink-0 bg-slate-700/50 text-white border border-slate-600/50 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:bg-slate-700 disabled:opacity-50 text-sm"
+                className="flex-shrink-0 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 text-sm"
               >
                 {saving ? (
-                  <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Saving...</>
+                  <><span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Saving...</>
                 ) : (
-                  <><span className="material-symbols-outlined text-lg">save</span> Save</>
+                  <><span className="material-symbols-outlined text-[18px]">save</span> Save Draft</>
                 )}
               </button>
 
@@ -523,9 +524,9 @@ export default function NewPatientPage() {
                   type="button"
                   onClick={() => handleStartVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
                   disabled={saving}
-                  className="flex-1 liquid-button text-background-dark font-bold py-3 px-6 rounded-l-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 text-sm"
+                  className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-l-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 text-sm shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-lg">personal_injury</span>
+                  <span className="material-symbols-outlined text-[18px]">personal_injury</span>
                   Start OPD Visit
                 </button>
                 <div className="relative">
@@ -533,21 +534,21 @@ export default function NewPatientPage() {
                     type="button"
                     onClick={() => setVisitDropdownOpen(!visitDropdownOpen)}
                     disabled={saving}
-                    className="liquid-button text-background-dark font-bold py-3 px-3 rounded-r-xl border-l border-black/20 transition-all disabled:opacity-50"
+                    className="bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-r-lg border-l border-white/20 transition-colors disabled:opacity-50 shadow-sm h-full"
                   >
-                    <span className="material-symbols-outlined text-lg">{visitDropdownOpen ? "expand_less" : "expand_more"}</span>
+                    <span className="material-symbols-outlined text-[18px]">{visitDropdownOpen ? "expand_less" : "expand_more"}</span>
                   </button>
 
                   {/* Dropdown */}
                   {visitDropdownOpen && (
-                    <div className="absolute bottom-full right-0 mb-2 bg-slate-800 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-20 min-w-[200px]">
+                    <div className="absolute bottom-full right-0 mb-2 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-20 min-w-[200px]">
                       <button
                         type="button"
                         onClick={() => handleStartVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10", "Emergency")}
-                        className="w-full px-4 py-3 text-left text-sm text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-2 font-medium"
+                        className="w-full px-4 py-3 text-left text-sm text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-3 font-medium"
                       >
-                        <span className="material-symbols-outlined text-lg">local_hospital</span>
-                        Start Emergency Visit
+                        <span className="material-symbols-outlined text-[18px]">local_hospital</span>
+                        Emergency Visit
                       </button>
                     </div>
                   )}

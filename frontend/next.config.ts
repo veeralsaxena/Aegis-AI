@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/openmrs/:path*',
-        destination: `${backendUrl}/openmrs/:path*`,
+        destination: `http://127.0.0.1:8080/openmrs/:path*`,
       },
       {
         source: '/bahmni/:path*',
