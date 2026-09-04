@@ -192,74 +192,72 @@ export default function ClinicalPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-black text-black tracking-tight flex items-center gap-3">
-            <span className="material-symbols-outlined text-blue-600 text-3xl">stethoscope</span>
-            Clinical
-          </h1>
-          <p className="text-black/50 font-bold text-sm mt-1">
-            Manage active patients, search records, and enter consultations
-          </p>
-        </div>
-        <button
-          onClick={fetchActivePatients}
-          className="bg-black/5 hover:bg-black/10 text-black/70 rounded-2xl px-5 py-2.5 text-sm font-bold transition-all flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-lg">refresh</span>
-          Refresh
-        </button>
-      </div>
+    <div className="min-h-screen bg-[#FDFDFD] text-slate-900 font-sans pb-24">
+      <div className="max-w-[1100px] mx-auto px-6 py-12 lg:py-20">
 
-      {/* Tabs */}
-      <div className="bg-white border border-black/5 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 overflow-hidden">
-        <div className="flex border-b border-black/5">
+        {/* Header */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-medium tracking-tight mb-4 text-slate-900">
+              Clinical Registry
+            </h1>
+            <p className="text-lg text-slate-600 leading-relaxed max-w-xl">
+              Manage your active patient consultations, or search the hospital registry to begin a new clinical encounter.
+            </p>
+          </div>
+          <button
+            onClick={fetchActivePatients}
+            className="shrink-0 flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 hover:border-slate-300 px-5 py-2.5 bg-white shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[18px]">refresh</span>
+            Sync Data
+          </button>
+        </header>
+
+        {/* Tabs */}
+        <nav className="flex gap-8 border-b border-slate-200 mb-10">
           <button
             onClick={() => setActiveTab("active")}
-            className={`flex-1 px-6 py-5 text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "active"
-              ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-              : "text-black/50 hover:text-black hover:bg-black/[0.02]"
+            className={`pb-4 text-sm font-medium transition-colors border-b-2 relative -mb-[1px] ${activeTab === "active"
+              ? "border-slate-900 text-slate-900"
+              : "border-transparent text-slate-500 hover:text-slate-800"
               }`}
           >
-            <span className="material-symbols-outlined text-xl">groups</span>
-            Active Patients
+            Active Encounters
             {activePatients.length > 0 && (
-              <span className="ml-1 px-2.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-black">
+              <span className="ml-2 text-xs bg-slate-100 text-slate-700 px-2 py-0.5 font-mono">
                 {activePatients.length}
               </span>
             )}
           </button>
           <button
             onClick={() => setActiveTab("search")}
-            className={`flex-1 px-6 py-5 text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "search"
-              ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-              : "text-black/50 hover:text-black hover:bg-black/[0.02]"
+            className={`pb-4 text-sm font-medium transition-colors border-b-2 relative -mb-[1px] ${activeTab === "search"
+              ? "border-slate-900 text-slate-900"
+              : "border-transparent text-slate-500 hover:text-slate-800"
               }`}
           >
-            <span className="material-symbols-outlined text-xl">person_search</span>
-            Search All Patients
+            Directory Search
           </button>
-        </div>
+        </nav>
 
         {/* Search Bar (only on search tab) */}
         {activeTab === "search" && (
-          <div className="p-6 border-b border-black/5">
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-black/40 text-xl">
+          <div className="mb-10">
+            <div className="relative max-w-2xl">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">
                 search
               </span>
               <input
                 type="text"
-                placeholder="Search by patient name, ID, or village..."
+                placeholder="Search by patient name, identifier, or location..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] rounded-2xl py-4 pl-12 pr-4 text-black font-medium placeholder-black/40 transition-all outline-none text-sm hover:bg-black/[0.05]"
+                className="w-full bg-slate-50/50 border border-slate-200 focus:border-slate-400 focus:bg-white text-slate-900 py-3.5 pl-12 pr-12 transition-colors outline-none text-base"
                 autoFocus
               />
               {searching && (
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 text-xl animate-spin">
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl animate-spin">
                   progress_activity
                 </span>
               )}
@@ -269,162 +267,171 @@ export default function ClinicalPage() {
 
         {/* Active Patients Tab Content */}
         {activeTab === "active" && (
-          <>
+          <div className="w-full">
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="flex flex-col items-center gap-4">
-                  <span className="material-symbols-outlined text-blue-600 text-4xl animate-spin">progress_activity</span>
-                  <p className="text-black/50 font-bold text-sm">Loading active patients...</p>
-                </div>
+              <div className="flex flex-col items-center justify-center py-32 text-slate-400">
+                <span className="material-symbols-outlined text-3xl animate-spin mb-4">progress_activity</span>
+                <p className="text-sm font-medium">Retrieving active encounters...</p>
               </div>
             ) : activePatients.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-                <div className="w-24 h-24 rounded-3xl bg-black/5 flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-black/40 text-5xl">group_off</span>
-                </div>
-                <h3 className="text-black text-xl font-black tracking-tight mb-2">No Active Patients</h3>
-                <p className="text-black/50 font-bold text-sm max-w-md">
-                  No patients currently have active visits at this location. Use the &quot;Search All Patients&quot; tab to find a patient and start a visit.
+              <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-slate-200 bg-slate-50/50">
+                <span className="material-symbols-outlined text-slate-300 text-4xl mb-4">inbox</span>
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No Active Encounters</h3>
+                <p className="text-slate-500 text-sm max-w-md">
+                  There are no patients currently registered for an active visit at this location.
                 </p>
               </div>
             ) : (
-              <>
+              <div className="w-full">
                 {/* Table Header */}
-                <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 border-b border-black/5 bg-black/[0.02] text-xs font-bold text-black/50 uppercase tracking-wider">
+                <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-slate-200 text-xs font-medium text-slate-500 uppercase tracking-widest">
                   <div className="col-span-2">ID</div>
-                  <div className="col-span-4">Name</div>
-                  <div className="col-span-2">Gender</div>
+                  <div className="col-span-4">Patient</div>
+                  <div className="col-span-2">Sex</div>
                   <div className="col-span-2">Age</div>
                   <div className="col-span-2">Status</div>
                 </div>
-                <div className="divide-y divide-black/5">
+                {/* Table Body */}
+                <div className="flex flex-col">
                   {activePatients.map((p) => (
                     <button
                       key={p.uuid}
                       onClick={() => navigateToPatient(p.uuid)}
-                      className="w-full text-left hover:bg-black/[0.02] transition-colors"
+                      className="group text-left border-b border-slate-100 hover:bg-slate-50 transition-colors"
                     >
                       {/* Desktop row */}
-                      <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 items-center">
-                        <div className="col-span-2 text-black/60 text-sm font-bold">{p.identifier || "—"}</div>
+                      <div className="hidden md:grid grid-cols-12 gap-4 py-5 items-center">
+                        <div className="col-span-2 text-sm text-slate-500 font-mono tracking-tight">{p.identifier || "—"}</div>
                         <div className="col-span-4 flex items-center gap-4">
-                          <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} />
-                          <span className="text-black text-sm font-bold truncate">{displayName(p)}</span>
+                          <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                            <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} iconClassName="text-slate-400 text-sm" />
+                          </div>
+                          <span className="text-base font-medium text-slate-800 group-hover:text-slate-900 transition-colors">
+                            {displayName(p)}
+                          </span>
                         </div>
-                        <div className="col-span-2 text-black/60 font-bold text-sm">
+                        <div className="col-span-2 text-slate-600 text-sm">
                           {p.gender === "M" ? "Male" : p.gender === "F" ? "Female" : p.gender || "—"}
                         </div>
-                        <div className="col-span-2 text-black/60 font-bold text-sm">{p.age ? `${p.age} yrs` : "—"}</div>
+                        <div className="col-span-2 text-slate-600 text-sm">
+                          {p.age ? `${p.age} years` : "—"}
+                        </div>
                         <div className="col-span-2">
                           {p.activeVisitUuid ? (
-                            <span className="px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-green-700 text-xs font-bold flex items-center gap-1.5 w-fit">
-                              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                              Active Visit
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200/60">
+                              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                              Active
                             </span>
                           ) : (
-                            <span className="text-black/40 font-bold text-xs bg-black/5 px-3 py-1.5 rounded-full">No active visit</span>
+                            <span className="text-slate-400 text-xs font-medium px-2.5 py-1 bg-slate-100">Inactive</span>
                           )}
                         </div>
                       </div>
-                      {/* Mobile card */}
-                      <div className="md:hidden px-6 py-5 flex items-center gap-4">
-                        <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 overflow-hidden" iconClassName="text-blue-600 text-xl" />
+
+                      {/* Mobile row */}
+                      <div className="md:hidden py-4 flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                          <PatientAvatar authFetch={authFetch} patientUuid={p.uuid} iconClassName="text-slate-400 text-base" />
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-black text-base font-bold truncate">{displayName(p)}</p>
-                          <p className="text-black/50 font-bold text-xs mt-1 uppercase tracking-wider">
-                            {p.identifier || "—"} • {p.gender === "M" ? "Male" : "Female"} • {p.age ? `${p.age} yrs` : "—"}
+                          <p className="text-slate-900 text-base font-medium truncate">{displayName(p)}</p>
+                          <p className="text-slate-500 text-sm mt-1">
+                            <span className="font-mono text-xs mr-2">{p.identifier || "—"}</span>
+                            {p.gender === "M" ? "Male" : "Female"} • {p.age ? `${p.age}y` : "—"}
                           </p>
                         </div>
                         {p.activeVisitUuid && (
-                          <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full mt-2 shrink-0" />
                         )}
-                        <span className="material-symbols-outlined text-black/30 text-xl">chevron_right</span>
                       </div>
                     </button>
                   ))}
                 </div>
-              </>
+              </div>
             )}
-          </>
+          </div>
         )}
 
         {/* Search Tab Content */}
         {activeTab === "search" && (
-          <>
+          <div className="w-full">
             {!query.trim() ? (
-              <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-                <div className="w-24 h-24 rounded-3xl bg-blue-50 flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-blue-600 text-5xl">person_search</span>
-                </div>
-                <h3 className="text-black text-xl font-black tracking-tight mb-2">Search for Patients</h3>
-                <p className="text-black/50 font-bold text-sm max-w-md">
-                  Type a patient&apos;s name, ID, or village in the search bar above to find their records.
+              <div className="flex flex-col items-center justify-center py-32 text-center text-slate-500">
+                <span className="material-symbols-outlined text-4xl mb-4 text-slate-300">search</span>
+                <p className="text-sm max-w-sm leading-relaxed">
+                  Enter a patient's name, identifier, or location to query the hospital registry.
                 </p>
               </div>
             ) : searchResults.length === 0 && !searching ? (
-              <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-                <span className="material-symbols-outlined text-black/20 text-6xl mb-4">person_off</span>
-                <p className="text-black/60 font-bold text-base">No patients found for &ldquo;<span className="text-black">{query}</span>&rdquo;</p>
+              <div className="flex flex-col items-center justify-center py-32 text-center">
+                <p className="text-slate-600 font-medium">No records found for &ldquo;<span className="text-slate-900">{query}</span>&rdquo;</p>
+                <p className="text-slate-400 text-sm mt-2">Try adjusting your search terms.</p>
               </div>
             ) : (
-              <>
+              <div className="w-full">
                 {/* Table Header */}
-                <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 border-b border-black/5 bg-black/[0.02] text-xs font-bold text-black/50 uppercase tracking-wider">
+                <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-slate-200 text-xs font-medium text-slate-500 uppercase tracking-widest">
                   <div className="col-span-2">ID</div>
-                  <div className="col-span-4">Name</div>
-                  <div className="col-span-2">Gender</div>
+                  <div className="col-span-4">Patient</div>
+                  <div className="col-span-2">Sex</div>
                   <div className="col-span-2">Age</div>
                   <div className="col-span-2">Status</div>
                 </div>
-                <div className="divide-y divide-black/5">
+                {/* Table Body */}
+                <div className="flex flex-col">
                   {searchResults.map((p) => (
                     <button
                       key={p.uuid}
                       onClick={() => navigateToPatient(p.uuid)}
-                      className="w-full text-left hover:bg-black/[0.02] transition-colors"
+                      className="group text-left border-b border-slate-100 hover:bg-slate-50 transition-colors"
                     >
-                      <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 items-center">
-                        <div className="col-span-2 text-black/60 text-sm font-bold">{p.identifier || "—"}</div>
+                      <div className="hidden md:grid grid-cols-12 gap-4 py-5 items-center">
+                        <div className="col-span-2 text-sm text-slate-500 font-mono tracking-tight">{p.identifier || "—"}</div>
                         <div className="col-span-4 flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-blue-600 text-lg">person</span>
+                          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                            <span className="material-symbols-outlined text-slate-400 text-sm">person</span>
                           </div>
-                          <span className="text-black text-sm font-bold truncate">{displayName(p)}</span>
+                          <span className="text-base font-medium text-slate-800 group-hover:text-slate-900 transition-colors">
+                            {displayName(p)}
+                          </span>
                         </div>
-                        <div className="col-span-2 text-black/60 font-bold text-sm">
+                        <div className="col-span-2 text-slate-600 text-sm">
                           {p.gender === "M" ? "Male" : p.gender === "F" ? "Female" : p.gender || "—"}
                         </div>
-                        <div className="col-span-2 text-black/60 font-bold text-sm">{p.age ? `${p.age} yrs` : "—"}</div>
+                        <div className="col-span-2 text-slate-600 text-sm">{p.age ? `${p.age} years` : "—"}</div>
                         <div className="col-span-2">
                           {p.activeVisitUuid ? (
-                            <span className="px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-green-700 text-xs font-bold flex items-center gap-1.5 w-fit">
-                              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                              Active Visit
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200/60">
+                              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                              Active
                             </span>
                           ) : (
-                            <span className="text-black/40 font-bold text-xs bg-black/5 px-3 py-1.5 rounded-full">No active visit</span>
+                            <span className="text-slate-400 text-xs font-medium px-2.5 py-1 bg-slate-100">Inactive</span>
                           )}
                         </div>
                       </div>
-                      {/* Mobile */}
-                      <div className="md:hidden px-6 py-5 flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-blue-600 text-xl">person</span>
+                      {/* Mobile row */}
+                      <div className="md:hidden py-4 flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                          <span className="material-symbols-outlined text-slate-400 text-base">person</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-black text-base font-bold truncate">{displayName(p)}</p>
-                          <p className="text-black/50 font-bold text-xs mt-1 uppercase tracking-wider">
-                            {p.identifier || "—"} • {p.gender === "M" ? "Male" : "Female"} • {p.age ? `${p.age} yrs` : "—"}
+                          <p className="text-slate-900 text-base font-medium truncate">{displayName(p)}</p>
+                          <p className="text-slate-500 text-sm mt-1">
+                            <span className="font-mono text-xs mr-2">{p.identifier || "—"}</span>
+                            {p.gender === "M" ? "Male" : "Female"} • {p.age ? `${p.age}y` : "—"}
                           </p>
                         </div>
-                        <span className="material-symbols-outlined text-black/30 text-xl">chevron_right</span>
+                        {p.activeVisitUuid && (
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full mt-2 shrink-0" />
+                        )}
                       </div>
                     </button>
                   ))}
                 </div>
-              </>
+              </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

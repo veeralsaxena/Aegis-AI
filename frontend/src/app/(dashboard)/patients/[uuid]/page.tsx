@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Dropdown from "@/components/Dropdown";
 
 interface Visit {
   uuid: string;
@@ -107,7 +108,7 @@ export default function PatientDetailPage() {
         person.attributes?.forEach((attr: any) => {
           const typeDisplay = attr.attributeType?.display?.toLowerCase() || "";
           if (typeDisplay.includes("phone") || attr.attributeType?.uuid === "c1f4239f-3f10-11e4-adec-0800271c1b75") {
-                     // Assuming first phone attribute found is primary
+            // Assuming first phone attribute found is primary
             if (!phone) setPhone(attr.value);
             else setAltPhone(attr.value);
           } else if (typeDisplay.includes("email")) {
@@ -168,8 +169,8 @@ export default function PatientDetailPage() {
   const startCamera = async () => {
     setCameraError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }
       });
       streamRef.current = stream;
       if (videoRef.current) {
@@ -180,7 +181,7 @@ export default function PatientDetailPage() {
       setPhotoBlob(null);
     } catch (err: any) {
       console.error("Camera access denied:", err);
-      setCameraError(err.name === "NotAllowedError" 
+      setCameraError(err.name === "NotAllowedError"
         ? "Camera permission denied. Please allow camera access in your browser settings."
         : "Could not access camera. Please use the upload option instead.");
     }
@@ -223,7 +224,7 @@ export default function PatientDetailPage() {
 
   const updatePatient = async (): Promise<any> => {
     const address1 = [houseNo, locality].filter(Boolean).join(", ");
-    
+
     // Construct person payload
     const personPayload: any = {
       names: [{
@@ -272,7 +273,7 @@ export default function PatientDetailPage() {
           reader.onerror = reject;
           reader.readAsDataURL(photoBlob);
         });
-        
+
         await authFetch(`/openmrs/ws/rest/v1/bahmnicore/patientprofile/${uuid}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -343,7 +344,7 @@ export default function PatientDetailPage() {
         }),
       });
       if (!visitRes.ok) throw new Error(`Failed to start ${visitName} visit`);
-      
+
       setMessage({ type: "success", text: `${visitName} Visit started for ${givenName} ${familyName}!` });
       window.scrollTo(0, 0);
       await loadData(); // refresh visit list
@@ -375,22 +376,22 @@ export default function PatientDetailPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/patients"
-              className="text-black/40 hover:text-black transition-colors"
+              className="text-slate-500 hover:text-slate-900 transition-colors"
             >
               <span className="material-symbols-outlined text-2xl">arrow_back</span>
             </Link>
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-black tracking-tight flex items-center gap-3">
+              <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-slate-900 flex items-center gap-3">
                 Edit Patient Details
                 {hasActiveVisit && (
-                  <span className="px-3 py-1 bg-green-50 border border-green-200 rounded-full text-green-600 text-xs font-bold flex items-center gap-1.5 translate-y-[2px]">
+                  <span className="px-3 py-1 bg-green-50 border border-green-200 rounded-full text-green-600 text-xs font-semibold flex items-center gap-1.5 translate-y-[2px]">
                     <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                     Active Visit
                   </span>
                 )}
               </h1>
-              <p className="text-black/50 text-sm font-bold mt-0.5 uppercase tracking-wider">
-                ID: <span className="text-blue-600 font-mono font-bold">{identifier}</span>
+              <p className="text-slate-500 text-sm font-semibold mt-0.5 uppercase tracking-wider">
+                ID: <span className="text-slate-900 font-mono font-bold">{identifier}</span>
               </p>
             </div>
           </div>
@@ -399,11 +400,11 @@ export default function PatientDetailPage() {
             {/* Quick Actions (only show if active visit) */}
             {hasActiveVisit && (
               <div className="hidden md:flex gap-3 mr-2">
-                <Link href={`/vitals?patient=${uuid}`} className="bg-black/5 hover:bg-black/10 text-black rounded-xl px-4 py-2.5 text-xs font-bold transition-colors flex items-center gap-1.5">
+                <Link href={`/vitals?patient=${uuid}`} className="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm">
                   <span className="material-symbols-outlined text-sm">monitor_heart</span>
                   Vitals
                 </Link>
-                <Link href={`/diagnoses?patient=${uuid}`} className="bg-black/5 hover:bg-black/10 text-black rounded-xl px-4 py-2.5 text-xs font-bold transition-colors flex items-center gap-1.5">
+                <Link href={`/diagnoses?patient=${uuid}`} className="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm">
                   <span className="material-symbols-outlined text-sm">stethoscope</span>
                   Diagnosis
                 </Link>
@@ -411,24 +412,24 @@ export default function PatientDetailPage() {
             )}
 
             {/* Print Button */}
-            <button 
+            <button
               type="button"
               onClick={() => window.print()}
-              className="hidden sm:flex bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-100 rounded-xl px-5 py-2.5 text-sm font-bold transition-colors items-center gap-2"
+              className="hidden sm:flex bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-5 py-2.5 text-sm font-medium transition-colors items-center gap-2 shadow-sm"
             >
               <span className="material-symbols-outlined text-lg">download</span>
-              Download Registration Card
+              Registration Card
             </button>
           </div>
         </div>
 
         {/* Status message */}
         {message && (
-          <div className={`px-4 py-3 rounded-xl flex items-center gap-2 ${message.type === "success" ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
-            <span className={`material-symbols-outlined text-lg ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>
+          <div className={`px-4 py-3 rounded-xl flex items-center gap-2 ${message.type === "success" ? "bg-green-50 border border-green-200" : "bg-rose-50 border border-rose-200"}`}>
+            <span className={`material-symbols-outlined text-lg ${message.type === "success" ? "text-green-600" : "text-rose-600"}`}>
               {message.type === "success" ? "check_circle" : "error"}
             </span>
-            <p className={`text-sm font-medium ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>{message.text}</p>
+            <p className={`text-sm font-medium ${message.type === "success" ? "text-green-700" : "text-rose-700"}`}>{message.text}</p>
           </div>
         )}
 
@@ -442,9 +443,9 @@ export default function PatientDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Photo Section */}
           <div className="lg:col-span-1">
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 sticky top-24">
-              <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
-                <span className="material-symbols-outlined text-blue-600 text-2xl">photo_camera</span>
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6 sticky top-24">
+              <h3 className="text-slate-900 font-semibold tracking-tight mb-6 flex items-center gap-2 text-lg">
+                <span className="material-symbols-outlined text-slate-500 text-xl">photo_camera</span>
                 Patient Photo
               </h3>
 
@@ -461,7 +462,7 @@ export default function PatientDetailPage() {
                     muted
                     className={`w-full max-w-[280px] aspect-square object-cover rounded-[1.5rem] mb-6 border-4 border-black/5 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] bg-black/5 ${isCameraOpen ? 'block' : 'hidden'}`}
                   />
-                  
+
                   {/* Photo Preview img replaces video when captured (either existing or new) */}
                   {!isCameraOpen && (photoPreview || existingPhotoUrl) && (
                     <img
@@ -513,7 +514,7 @@ export default function PatientDetailPage() {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Default state: No camera, no photo */}
                 {!isCameraOpen && !photoPreview && !existingPhotoUrl && (
                   <div className="flex flex-col items-center gap-4 w-full">
@@ -542,8 +543,8 @@ export default function PatientDetailPage() {
                 )}
               </div>
 
-              <div className="mt-8 flex items-center gap-2 text-xs font-medium text-black/50 bg-black/5 p-4 rounded-xl shadow-inner">
-                <span className="material-symbols-outlined text-blue-600 text-base">shield</span>
+              <div className="mt-8 flex items-center gap-2 text-xs font-medium text-slate-500 bg-slate-50 border border-slate-100 p-4 rounded-xl shadow-sm">
+                <span className="material-symbols-outlined text-slate-400 text-base">shield</span>
                 <p>HIPAA compliant. Photos are encrypted at rest.</p>
               </div>
             </div>
@@ -552,58 +553,58 @@ export default function PatientDetailPage() {
           {/* Form Section */}
           <div className="lg:col-span-2 space-y-6">
             {/* Patient Name */}
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
-              <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
-                <span className="material-symbols-outlined text-blue-600 text-2xl">badge</span>
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6">
+              <h3 className="text-slate-900 font-semibold tracking-tight mb-6 flex items-center gap-2 text-lg">
+                <span className="material-symbols-outlined text-slate-500 text-xl">badge</span>
                 Patient Name
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">First Name <span className="text-red-500">*</span></label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="First Name" value={givenName} onChange={e => setGivenName(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">First Name <span className="text-rose-500">*</span></label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="First Name" value={givenName} onChange={e => setGivenName(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Middle Name</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Middle Name" value={middleName} onChange={e => setMiddleName(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Middle Name</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Middle Name" value={middleName} onChange={e => setMiddleName(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Last Name <span className="text-red-500">*</span></label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Last Name" value={familyName} onChange={e => setFamilyName(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Last Name <span className="text-rose-500">*</span></label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Last Name" value={familyName} onChange={e => setFamilyName(e.target.value)} />
                 </div>
               </div>
             </div>
 
             {/* Demographics */}
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
-              <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
-                <span className="material-symbols-outlined text-blue-600 text-2xl">diversity_3</span>
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6">
+              <h3 className="text-slate-900 font-semibold tracking-tight mb-6 flex items-center gap-2 text-lg">
+                <span className="material-symbols-outlined text-slate-500 text-xl">diversity_3</span>
                 Demographics
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Gender <span className="text-red-500">*</span></label>
-                  <select
-                    className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm appearance-none transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05] cursor-pointer"
+                  <Dropdown
+                    label={<>Gender <span className="text-rose-500">*</span></>}
                     value={gender}
-                    onChange={e => setGender(e.target.value)}
-                  >
-                    <option value="" disabled>Select Gender</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                    <option value="O">Other</option>
-                  </select>
+                    onChange={(value) => setGender(value)}
+                    options={[
+                      { label: "Select Gender", value: "", disabled: true },
+                      { label: "Male", value: "M" },
+                      { label: "Female", value: "F" },
+                      { label: "Other", value: "O" },
+                    ]}
+                  />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Date of Birth <span className="text-red-500">*</span></label>
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Date of Birth <span className="text-rose-500">*</span></label>
                   <div className="flex items-center gap-4">
                     <input
                       type="date"
-                      className="flex-1 bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]"
+                      className="flex-1 bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100"
                       value={birthdate}
                       onChange={e => setBirthdate(e.target.value)}
                     />
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-black/50 whitespace-nowrap bg-black/5 px-3 py-3.5 rounded-xl hover:bg-black/10 transition-colors">
-                      <input type="checkbox" checked={estimated} onChange={e => setEstimated(e.target.checked)} className="rounded border-black/20 text-blue-600 w-4 h-4 cursor-pointer" />
+                    <label className="flex items-center gap-2 cursor-pointer text-[10px] font-semibold text-slate-600 whitespace-nowrap bg-slate-50 border border-slate-200 px-3 py-3 rounded-xl hover:bg-slate-100 transition-colors uppercase tracking-wider">
+                      <input type="checkbox" checked={estimated} onChange={e => setEstimated(e.target.checked)} className="rounded border-slate-300 text-slate-900 w-4 h-4 cursor-pointer" />
                       Est.
                     </label>
                   </div>
@@ -612,70 +613,70 @@ export default function PatientDetailPage() {
             </div>
 
             {/* Address Information */}
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
-              <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
-                <span className="material-symbols-outlined text-blue-600 text-2xl">location_on</span>
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6">
+              <h3 className="text-slate-900 font-semibold tracking-tight mb-6 flex items-center gap-2 text-lg">
+                <span className="material-symbols-outlined text-slate-500 text-xl">location_on</span>
                 Address Information
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">House No / Flat No</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="House number" value={houseNo} onChange={e => setHouseNo(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">House No / Flat No</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="House number" value={houseNo} onChange={e => setHouseNo(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Locality / Sector</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Locality" value={locality} onChange={e => setLocality(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Locality / Sector</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Locality" value={locality} onChange={e => setLocality(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">City / Village</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="City" value={cityVillage} onChange={e => setCityVillage(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">City / Village</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="City" value={cityVillage} onChange={e => setCityVillage(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Pin Code</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Pin Code" value={pinCode} onChange={e => setPinCode(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Pin Code</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Pin Code" value={pinCode} onChange={e => setPinCode(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">District</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="District" value={district} onChange={e => setDistrict(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">District</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="District" value={district} onChange={e => setDistrict(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">State</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="State" value={stateVal} onChange={e => setStateVal(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">State</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="State" value={stateVal} onChange={e => setStateVal(e.target.value)} />
                 </div>
               </div>
             </div>
 
             {/* Contact Information */}
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
-              <h3 className="text-black font-black tracking-tight mb-6 flex items-center gap-2 text-xl">
-                <span className="material-symbols-outlined text-blue-600 text-2xl">call</span>
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6">
+              <h3 className="text-slate-900 font-semibold tracking-tight mb-6 flex items-center gap-2 text-lg">
+                <span className="material-symbols-outlined text-slate-500 text-xl">call</span>
                 Contact Information
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Email Address</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="email@example.com" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Email Address</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="email@example.com" type="email" value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Phone Number</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Phone Number</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-black/60 mb-2 block uppercase tracking-wider">Alternate Phone</label>
-                  <input className="w-full bg-black/[0.03] border-2 border-transparent focus:bg-white focus:border-blue-600 text-black font-medium p-3.5 rounded-xl outline-none text-sm transition-all focus:shadow-[0_4px_20px_-4px_rgba(37,99,235,0.15)] hover:bg-black/[0.05]" placeholder="Alternate" type="tel" value={altPhone} onChange={e => setAltPhone(e.target.value)} />
+                  <label className="text-[10px] text-slate-500 font-semibold mb-1 block uppercase tracking-wider">Alternate Phone</label>
+                  <input className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 font-medium p-3 rounded-xl outline-none text-sm transition-all shadow-sm hover:bg-slate-100" placeholder="Alternate" type="tel" value={altPhone} onChange={e => setAltPhone(e.target.value)} />
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons — Bahmni-style Save + Start Visit split button */}
-            <div className="bg-white border border-black/5 rounded-[2rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5">
+            {/* Action Buttons */}
+            <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Save button */}
                 <button
                   type="button"
                   onClick={handleSaveOnly}
                   disabled={saving}
-                  className="flex-shrink-0 bg-black/[0.03] text-black border-2 border-transparent hover:bg-black/[0.06] font-bold py-4 px-8 rounded-2xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 text-sm hover:scale-[1.02] active:scale-100"
+                  className="flex-shrink-0 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 text-sm shadow-sm"
                 >
                   {saving ? (
                     <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Saving...</>
@@ -691,7 +692,7 @@ export default function PatientDetailPage() {
                       type="button"
                       onClick={() => handleStartVisit("13a5ea15-82bc-45ee-b07d-763c346e1cf5", "OPD")}
                       disabled={saving}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-l-2xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 text-sm shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]"
+                      className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-l-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 text-sm shadow-sm"
                     >
                       <span className="material-symbols-outlined text-lg">personal_injury</span>
                       Start OPD Visit
@@ -701,18 +702,18 @@ export default function PatientDetailPage() {
                         type="button"
                         onClick={() => setVisitDropdownOpen(!visitDropdownOpen)}
                         disabled={saving}
-                        className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-4 px-4 rounded-r-2xl border-l border-white/20 transition-all disabled:opacity-50 shadow-[10px_10px_30px_-10px_rgba(37,99,235,0.5)] h-full"
+                        className="bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-3 rounded-r-lg border-l border-white/20 transition-colors disabled:opacity-50 shadow-sm h-full"
                       >
                         <span className="material-symbols-outlined text-lg">{visitDropdownOpen ? "expand_less" : "expand_more"}</span>
                       </button>
 
                       {/* Dropdown */}
                       {visitDropdownOpen && (
-                        <div className="absolute bottom-full right-0 mb-3 bg-white border border-black/10 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] overflow-hidden z-20 min-w-[240px]">
+                        <div className="absolute bottom-full right-0 mb-2 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-20 min-w-[220px]">
                           <button
                             type="button"
                             onClick={() => handleStartVisit("ff237ff8-b5c0-46a6-9abc-1017c6a0ff10", "Emergency")}
-                            className="w-full px-5 py-4 text-left text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-3 font-bold border-l-4 border-transparent hover:border-red-500"
+                            className="w-full px-4 py-3 text-left text-sm text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-3 font-medium"
                           >
                             <span className="material-symbols-outlined text-xl">local_hospital</span>
                             Start Emergency Visit
@@ -726,7 +727,7 @@ export default function PatientDetailPage() {
                     <button
                       type="button"
                       onClick={() => router.push(`/patients/${uuid}/visit-details`)}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all text-sm shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]"
+                      className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors text-sm shadow-sm"
                     >
                       <span className="material-symbols-outlined text-lg">edit_note</span>
                       Enter Visit Details
@@ -738,7 +739,7 @@ export default function PatientDetailPage() {
           </div>
         </div>
       </div>
-      
+
       {/* PRINT UI: Registration card overlay — Bahmni Form Mimic */}
       <div className="hidden print:block absolute inset-0 bg-white text-black z-[9999] p-8 -m-4">
         <div className="max-w-2xl mx-auto border-4 border-black p-6 bg-white relative">
@@ -747,71 +748,71 @@ export default function PatientDetailPage() {
             <h1 className="text-3xl font-extrabold uppercase tracking-widest text-black">Aegis AI Medical Center</h1>
             <h2 className="text-xl font-bold uppercase tracking-wider text-gray-800 mt-1 pb-2">Patient Registration Card</h2>
           </div>
-          
+
           <div className="flex justify-between items-start mb-6 gap-6">
             {/* Left Data Area */}
             <div className="flex-1">
-               <table className="w-full text-left text-lg border-collapse">
-                 <tbody>
-                   <tr className="border-b-2 border-dashed border-gray-300">
-                     <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Patient ID</th>
-                     <td className="py-2.5 font-mono font-bold text-xl text-black">{identifier || "N/A"}</td>
-                   </tr>
-                   <tr className="border-b-2 border-dashed border-gray-300">
-                     <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Patient Name</th>
-                     <td className="py-2.5 px-1 font-extrabold text-black uppercase text-xl">
-                       {givenName} {middleName} {familyName}
-                     </td>
-                   </tr>
-                   <tr className="border-b-2 border-dashed border-gray-300">
-                     <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Gender / Age</th>
-                     <td className="py-2.5 px-1 text-black font-bold uppercase text-lg">
-                       {gender === "M" ? "Male" : gender === "F" ? "Female" : "Other"} 
-                       {birthdate ? ` • ${Math.floor((new Date().getTime() - new Date(birthdate).getTime()) / 31557600000)} YRS` : ""}
-                     </td>
-                   </tr>
-                   <tr className="border-b-2 border-dashed border-gray-300">
-                     <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Address</th>
-                     <td className="py-2.5 px-1 text-black font-semibold uppercase text-base">
-                       {[houseNo, locality, cityVillage, district, stateVal, pinCode].filter(Boolean).join(", ") || "NOT PROVIDED"}
-                     </td>
-                   </tr>
-                   <tr className="border-b-2 border-dashed border-gray-300">
-                     <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Mobile</th>
-                     <td className="py-2.5 px-1 text-black font-bold font-mono text-lg">{phone || "N/A"}</td>
-                   </tr>
-                 </tbody>
-               </table>
+              <table className="w-full text-left text-lg border-collapse">
+                <tbody>
+                  <tr className="border-b-2 border-dashed border-gray-300">
+                    <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Patient ID</th>
+                    <td className="py-2.5 font-mono font-bold text-xl text-black">{identifier || "N/A"}</td>
+                  </tr>
+                  <tr className="border-b-2 border-dashed border-gray-300">
+                    <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Patient Name</th>
+                    <td className="py-2.5 px-1 font-extrabold text-black uppercase text-xl">
+                      {givenName} {middleName} {familyName}
+                    </td>
+                  </tr>
+                  <tr className="border-b-2 border-dashed border-gray-300">
+                    <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Gender / Age</th>
+                    <td className="py-2.5 px-1 text-black font-bold uppercase text-lg">
+                      {gender === "M" ? "Male" : gender === "F" ? "Female" : "Other"}
+                      {birthdate ? ` • ${Math.floor((new Date().getTime() - new Date(birthdate).getTime()) / 31557600000)} YRS` : ""}
+                    </td>
+                  </tr>
+                  <tr className="border-b-2 border-dashed border-gray-300">
+                    <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Address</th>
+                    <td className="py-2.5 px-1 text-black font-semibold uppercase text-base">
+                      {[houseNo, locality, cityVillage, district, stateVal, pinCode].filter(Boolean).join(", ") || "NOT PROVIDED"}
+                    </td>
+                  </tr>
+                  <tr className="border-b-2 border-dashed border-gray-300">
+                    <th className="py-2.5 px-1 w-1/3 text-gray-700 uppercase text-xs tracking-widest">Mobile</th>
+                    <td className="py-2.5 px-1 text-black font-bold font-mono text-lg">{phone || "N/A"}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             {/* Right Photo Area */}
             <div className="w-48 h-48 border-[6px] border-black bg-gray-100 flex flex-col items-center justify-center shrink-0 relative overflow-hidden">
-               {existingPhotoUrl || photoPreview ? (
-                  <img src={existingPhotoUrl || photoPreview || undefined} alt="Patient" className="w-full h-full object-cover grayscale" style={{ filter: 'grayscale(100%) contrast(120%)' }} />
-               ) : (
-                  <>
-                    <span className="material-symbols-outlined text-6xl text-gray-400">face</span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest mt-2 text-gray-500">Attach Photo Here</span>
-                  </>
-               )}
+              {existingPhotoUrl || photoPreview ? (
+                <img src={existingPhotoUrl || photoPreview || undefined} alt="Patient" className="w-full h-full object-cover grayscale" style={{ filter: 'grayscale(100%) contrast(120%)' }} />
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-6xl text-gray-400">face</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest mt-2 text-gray-500">Attach Photo Here</span>
+                </>
+              )}
             </div>
           </div>
 
           {/* Footer Barcode Area */}
           <div className="mt-8 pt-6 border-t-[3px] border-black flex justify-between items-end">
-             <div>
-                <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-1">Date of Registration</p>
-                <p className="text-xl font-mono font-bold text-black">{new Date().toLocaleDateString('en-IN')}</p>
-             </div>
-             
-             {/* Mock Barcode Output */}
-             <div className="text-right flex flex-col items-end">
-                <div className="px-4 py-2 border-2 border-black flex space-x-1 justify-center bg-gray-50 max-w-fit mb-2">
-                   {/* Simplified visual barcode bars for aesthetic since actual font might not load in printers */}
-                   <div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-3 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-3 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div>
-                </div>
-                <p className="text-xs font-black uppercase tracking-widest text-black">SCAN AT COUNTER</p>
-             </div>
+            <div>
+              <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-1">Date of Registration</p>
+              <p className="text-xl font-mono font-bold text-black">{new Date().toLocaleDateString('en-IN')}</p>
+            </div>
+
+            {/* Mock Barcode Output */}
+            <div className="text-right flex flex-col items-end">
+              <div className="px-4 py-2 border-2 border-black flex space-x-1 justify-center bg-gray-50 max-w-fit mb-2">
+                {/* Simplified visual barcode bars for aesthetic since actual font might not load in printers */}
+                <div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-3 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-3 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div><div className="w-2 h-8 bg-black"></div><div className="w-1 h-8 bg-black"></div>
+              </div>
+              <p className="text-xs font-black uppercase tracking-widest text-black">SCAN AT COUNTER</p>
+            </div>
           </div>
         </div>
       </div>

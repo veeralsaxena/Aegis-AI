@@ -405,12 +405,12 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "number":
           return (
             <div key={field.id}>
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-1.5 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1.5 block">{field.label}</label>
               <input
                 type="number"
                 value={value}
                 onChange={(e) => updateField(formId, field.id, e.target.value)}
-                className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-3 rounded-xl outline-none text-sm transition-colors placeholder:text-black/30"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-3 rounded-lg outline-none text-sm transition-colors placeholder:text-slate-400"
                 placeholder={field.placeholder || "—"}
               />
             </div>
@@ -419,12 +419,12 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "text":
           return (
             <div key={field.id}>
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-1.5 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1.5 block">{field.label}</label>
               <input
                 type="text"
                 value={value}
                 onChange={(e) => updateField(formId, field.id, e.target.value)}
-                className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-3 rounded-xl outline-none text-sm transition-colors placeholder:text-black/30"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-3 rounded-lg outline-none text-sm transition-colors placeholder:text-slate-400"
                 placeholder={field.placeholder || ""}
               />
             </div>
@@ -433,12 +433,12 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "textarea":
           return (
             <div key={field.id} className="col-span-full">
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-1.5 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1.5 block">{field.label}</label>
               <textarea
                 value={value}
                 onChange={(e) => updateField(formId, field.id, e.target.value)}
                 rows={4}
-                className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-3 rounded-xl outline-none text-sm resize-none transition-colors placeholder:text-black/30 leading-relaxed"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-3 rounded-lg outline-none text-sm resize-none transition-colors placeholder:text-slate-400 leading-relaxed"
                 placeholder={field.placeholder || ""}
               />
             </div>
@@ -447,12 +447,12 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "date":
           return (
             <div key={field.id}>
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-1.5 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1.5 block">{field.label}</label>
               <input
                 type="date"
                 value={value}
                 onChange={(e) => updateField(formId, field.id, e.target.value)}
-                className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-3 rounded-xl outline-none text-sm transition-colors"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-3 rounded-lg outline-none text-sm transition-colors"
               />
             </div>
           );
@@ -460,9 +460,9 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "autocomplete":
           return (
             <div key={field.id} className="relative col-span-full">
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-1.5 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1.5 block">{field.label}</label>
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-base">search</span>
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
                 <input
                   type="text"
                   value={activeAutocomplete === `${formId}.${field.id}` ? ccQuery : value || ""}
@@ -471,17 +471,17 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                     setCcQuery(e.target.value);
                   }}
                   onFocus={() => setActiveAutocomplete(`${formId}.${field.id}`)}
-                  className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-3 pl-10 rounded-xl outline-none text-sm transition-colors placeholder:text-black/30"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-3 pl-10 rounded-lg outline-none text-sm transition-colors placeholder:text-slate-400"
                   placeholder={field.placeholder || "Search…"}
                 />
                 {ccSearching && activeAutocomplete === `${formId}.${field.id}` && (
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-blue-600 text-base animate-spin">
+                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-base animate-spin">
                     progress_activity
                   </span>
                 )}
               </div>
               {activeAutocomplete === `${formId}.${field.id}` && ccResults.length > 0 && (
-                <div className="absolute z-30 top-full left-0 right-0 mt-1 bg-white border border-black/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto">
+                <div className="absolute z-30 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                   {ccResults.map((c) => (
                     <button
                       key={c.uuid}
@@ -491,7 +491,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                         setCcResults([]);
                         setActiveAutocomplete(null);
                       }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-black/60 hover:bg-blue-50 hover:text-blue-700 transition-colors border-b border-black/5 last:border-0"
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors border-b border-slate-100 last:border-0"
                     >
                       {c.display}
                     </button>
@@ -504,7 +504,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         case "buttonGroup":
           return (
             <div key={field.id} className="col-span-full">
-              <label className="text-xs text-black/50 font-bold uppercase tracking-wider mb-2 block">{field.label}</label>
+              <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-2 block">{field.label}</label>
               <div className="flex flex-wrap gap-2">
                 {(field.options || []).map((opt) => {
                   const isSelected = value === opt.value;
@@ -512,10 +512,10 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                     <button
                       key={opt.value}
                       onClick={() => updateField(formId, field.id, isSelected ? "" : opt.value)}
-                      className={`px-3.5 py-2 text-xs font-bold rounded-lg border transition-all ${
+                      className={`px-3.5 py-2 text-xs font-semibold rounded-lg border transition-all ${
                         isSelected
-                          ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm"
-                          : "bg-black/[0.02] border-black/10 text-black/50 hover:bg-black/[0.04] hover:text-black"
+                          ? "bg-slate-900 border-slate-900 text-white shadow-sm"
+                          : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                     >
                       {isSelected && (
@@ -544,9 +544,9 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
         ════════════════════════════════════════════ */}
         {sidebarOpen && (
           <div className="w-48 lg:w-52 flex-shrink-0 mr-3 lg:mr-4">
-            <div className="sticky top-4 bg-white border border-black/5 rounded-2xl shadow-sm ring-1 ring-black/5 py-2 max-h-[calc(100vh-120px)] overflow-y-auto">
-              <div className="px-3 py-2 border-b border-black/5 mb-1">
-                <p className="text-[10px] uppercase tracking-widest text-black/40 font-bold">Active Forms</p>
+            <div className="sticky top-4 bg-white border border-slate-200 rounded-xl shadow-sm py-2 max-h-[calc(100vh-120px)] overflow-y-auto">
+              <div className="px-3 py-2 border-b border-slate-200 mb-1">
+                <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Active Forms</p>
               </div>
               {sortedForms.map((instance) => {
                 const formDef = FORM_REGISTRY.find((f) => f.id === instance.formId);
@@ -555,12 +555,12 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                   <button
                     key={instance.formId}
                     onClick={() => scrollToForm(instance.formId)}
-                    className="w-full text-left px-3 py-2.5 text-sm text-black/60 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-2 group"
+                    className="w-full text-left px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center gap-2 group"
                   >
                     {instance.isPinned && (
-                      <span className="material-symbols-outlined text-xs text-blue-600">push_pin</span>
+                      <span className="material-symbols-outlined text-xs text-slate-400">push_pin</span>
                     )}
-                    <span className="material-symbols-outlined text-base text-black/40 group-hover:text-blue-600 transition-colors">
+                    <span className="material-symbols-outlined text-base text-slate-400 group-hover:text-slate-900 transition-colors">
                       {formDef.icon}
                     </span>
                     <span className="truncate">{formDef.name}</span>
@@ -568,7 +568,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                 );
               })}
               {activeForms.length === 0 && (
-                <p className="text-xs text-slate-600 px-3 py-4 text-center">No forms active</p>
+                <p className="text-xs text-slate-500 px-3 py-4 text-center">No forms active</p>
               )}
             </div>
           </div>
@@ -582,7 +582,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-xl bg-black/[0.02] border border-black/5 text-black/40 hover:text-black hover:bg-black/[0.04] transition-colors"
+              className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               title={sidebarOpen ? "Hide sidebar" : "Show form navigation"}
             >
               <span className="material-symbols-outlined text-xl">
@@ -593,7 +593,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
             <div className="relative" ref={pickerRef}>
               <button
                 onClick={() => setShowFormPicker(!showFormPicker)}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] font-bold px-5 py-3 rounded-2xl flex items-center gap-2 text-sm transition-all"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm transition-colors"
               >
                 <span className="material-symbols-outlined text-lg">add</span>
                 Add New Obs Form
@@ -601,17 +601,17 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
 
               {/* ── Form Picker Dropdown ── */}
               {showFormPicker && (
-                <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[480px] max-h-[420px] bg-white border border-black/10 rounded-[2rem] shadow-2xl z-40 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[480px] max-h-[420px] bg-white border border-slate-200 rounded-xl shadow-lg z-40 overflow-hidden">
                   {/* Search bar */}
-                  <div className="p-3 border-b border-black/5">
+                  <div className="p-3 border-b border-slate-200">
                     <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black/40 text-base">search</span>
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
                       <input
                         type="text"
                         value={formSearchQuery}
                         onChange={(e) => setFormSearchQuery(e.target.value)}
                         placeholder="Search Obs Form"
-                        className="w-full bg-black/[0.02] border border-black/10 focus:border-blue-600 text-black p-2.5 pl-10 rounded-xl outline-none text-sm placeholder:text-black/40"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 text-slate-900 p-2.5 pl-10 rounded-lg outline-none text-sm placeholder:text-slate-400"
                         autoFocus
                       />
                     </div>
@@ -622,9 +622,9 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                       <button
                         key={form.id}
                         onClick={() => addForm(form.id)}
-                        className="p-3 bg-black/[0.02] border border-black/5 rounded-2xl text-left text-xs text-black/60 font-bold hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all"
+                        className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-left text-xs text-slate-600 font-semibold hover:bg-slate-100 hover:border-slate-300 hover:text-slate-900 transition-all"
                       >
-                        <span className="material-symbols-outlined text-base mb-1 block text-black/40">{form.icon}</span>
+                        <span className="material-symbols-outlined text-base mb-1 block text-slate-400">{form.icon}</span>
                         {form.name}
                       </button>
                     ))}
@@ -658,17 +658,17 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
               <div
                 key={instance.formId}
                 ref={(el) => { formRefs.current[instance.formId] = el; }}
-                className={`bg-white border rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 overflow-hidden transition-all ${
-                  instance.isPinned ? "border-blue-400 shadow-blue-500/10" : "border-black/5"
+                className={`bg-white border rounded-xl overflow-hidden transition-all shadow-sm ${
+                  instance.isPinned ? "border-slate-400" : "border-slate-200"
                 }`}
               >
                 {/* ── Card Header ── */}
-                <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-50/50 to-white border-b border-black/5">
+                <div className="flex items-center justify-between px-5 py-4 bg-white border-b border-slate-200">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-blue-600 text-xl">{formDef.icon}</span>
-                    <h3 className="text-black font-black uppercase tracking-tight text-sm">{formDef.name}</h3>
+                    <span className="material-symbols-outlined text-slate-400 text-xl">{formDef.icon}</span>
+                    <h3 className="text-slate-900 font-semibold uppercase tracking-wider text-sm">{formDef.name}</h3>
                     {instance.isPinned && (
-                      <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-md font-bold">
+                      <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-md font-semibold border border-slate-200">
                         PINNED
                       </span>
                     )}
@@ -677,7 +677,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                     {/* Expand / Collapse all sections */}
                     <button
                       onClick={() => toggleExpand(instance.formId)}
-                      className="p-2 rounded-xl text-black/40 hover:text-black hover:bg-black/[0.04] transition-colors"
+                      className="p-2 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                       title={instance.isExpanded ? "Collapse" : "Expand"}
                     >
                       <span className="material-symbols-outlined text-xl">
@@ -687,10 +687,10 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                     {/* Pin / Unpin */}
                     <button
                       onClick={() => togglePin(instance.formId)}
-                      className={`p-2 rounded-xl transition-colors ${
+                      className={`p-2 rounded-lg transition-colors ${
                         instance.isPinned
-                          ? "text-blue-600 bg-blue-50 hover:bg-blue-100"
-                          : "text-black/40 hover:text-black hover:bg-black/[0.04]"
+                          ? "text-slate-900 bg-slate-100 hover:bg-slate-200"
+                          : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
                       }`}
                       title={instance.isPinned ? "Unpin" : "Pin to top"}
                     >
@@ -699,7 +699,7 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                     {/* Remove */}
                     <button
                       onClick={() => removeForm(instance.formId)}
-                      className="p-2 rounded-xl text-black/40 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                       title="Remove form"
                     >
                       <span className="material-symbols-outlined text-xl">delete</span>
@@ -720,16 +720,16 @@ const ObservationForms = forwardRef<ObservationFormsHandle, ObservationFormsProp
                               onClick={() => toggleSection(section.id)}
                               className="flex items-center gap-2 mb-4 group"
                             >
-                              <span className="material-symbols-outlined text-base text-blue-600 transition-transform group-hover:text-black" style={{ transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)" }}>
+                              <span className="material-symbols-outlined text-base text-slate-400 transition-transform group-hover:text-slate-900" style={{ transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)" }}>
                                 expand_more
                               </span>
-                              <span className="text-xs font-bold text-black/60 uppercase tracking-wider group-hover:text-black transition-colors">
+                              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider group-hover:text-slate-900 transition-colors">
                                 {section.title}
                               </span>
                             </button>
                           ) : (
-                            <p className="text-xs font-bold text-black/60 uppercase tracking-wider mb-4 flex items-center gap-2">
-                              <span className="w-1.5 h-4 bg-blue-600 rounded-full inline-block"></span>
+                            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                              <span className="w-1.5 h-4 bg-slate-300 rounded-full inline-block"></span>
                               {section.title}
                             </p>
                           )}
