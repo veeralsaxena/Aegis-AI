@@ -622,7 +622,7 @@ export default function ConsultationPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] p-4 md:p-6 lg:p-8 pb-32">
-      <div className="max-w-[1600px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-8 xl:items-start">
+      <div className="w-full max-w-[1700px] mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_420px] gap-8 items-start">
         <div className="min-w-0 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 flex-wrap pb-6 border-b border-slate-200">
@@ -1120,7 +1120,7 @@ export default function ConsultationPage() {
       </div>
         </div>
 
-        <aside className="mt-8 space-y-4 xl:mt-0 xl:sticky xl:top-8 xl:self-start">
+        <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start lg:h-[calc(100vh-3rem)] overflow-y-auto pr-1">
           <ScribePanel
             layout="embedded"
             patientUuid={patientUuid}

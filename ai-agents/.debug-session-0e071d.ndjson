@@ -801,3 +801,100 @@
 {"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1776348739892, "runId": "post-fix"}
 {"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1776348754893, "runId": "post-fix"}
 {"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1776348754894, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529701092, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529701095, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:transcribe_and_generate:entry", "message": "handler entered after get_db", "data": {"patient_uuid_len": 36, "transcript_form_len": 0, "audio_present": true, "audio_filename": "consultation.webm"}, "timestamp": 1788529701097, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:audio_read", "message": "audio bytes read", "data": {"byte_len": 187741}, "timestamp": 1788529701097, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:whisper_ok", "message": "transcription finished", "data": {"transcript_len": 118, "mode": "fallback:groq", "diarization_available": false}, "timestamp": 1788529701899, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S2", "location": "scribe.py:soap_ok", "message": "consultation draft generated", "data": {"keys": ["visit_summary", "soap", "speaker_analysis", "speaker_turns", "suggestions"]}, "timestamp": 1788529704212, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:success", "message": "returning 200", "data": {"draft_id_set": true}, "timestamp": 1788529704214, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529710629, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529710630, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529710968, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529710969, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529710973, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529710973, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529776263, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529776268, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529776277, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529776277, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529791258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529791258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529806258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529806259, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529821257, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529821258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529836267, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529836268, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529851266, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529851268, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529866261, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529866261, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529881261, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529881261, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529896263, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529896264, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529911257, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529911258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529912570, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529912570, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:transcribe_and_generate:entry", "message": "handler entered after get_db", "data": {"patient_uuid_len": 36, "transcript_form_len": 0, "audio_present": true, "audio_filename": "consultation.webm"}, "timestamp": 1788529912570, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:audio_read", "message": "audio bytes read", "data": {"byte_len": 34003}, "timestamp": 1788529912571, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:whisper_ok", "message": "transcription finished", "data": {"transcript_len": 39, "mode": "fallback:groq", "diarization_available": false}, "timestamp": 1788529913005, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S2", "location": "scribe.py:soap_ok", "message": "consultation draft generated", "data": {"keys": ["visit_summary", "soap", "speaker_analysis", "speaker_turns", "suggestions"]}, "timestamp": 1788529914300, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:success", "message": "returning 200", "data": {"draft_id_set": true}, "timestamp": 1788529914301, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529926279, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529926280, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529939142, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529939143, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529941258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529941258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529975429, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529975431, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788529975437, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788529975438, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530310234, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530310236, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530310243, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530310243, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530313646, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530313647, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530313650, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530313650, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530314892, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530314892, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530314895, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530314895, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530316253, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530316253, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530316257, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530316258, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530331257, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530331260, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530339765, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530339765, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:transcribe_and_generate:entry", "message": "handler entered after get_db", "data": {"patient_uuid_len": 36, "transcript_form_len": 0, "audio_present": true, "audio_filename": "consultation.webm"}, "timestamp": 1788530339766, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:audio_read", "message": "audio bytes read", "data": {"byte_len": 238021}, "timestamp": 1788530339766, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S1", "location": "scribe.py:whisper_ok", "message": "transcription finished", "data": {"transcript_len": 90, "mode": "fallback:groq", "diarization_available": false}, "timestamp": 1788530340267, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S2", "location": "scribe.py:soap_ok", "message": "consultation draft generated", "data": {"keys": ["visit_summary", "soap", "speaker_analysis", "speaker_turns", "suggestions"]}, "timestamp": 1788530342939, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S0", "location": "scribe.py:success", "message": "returning 200", "data": {"draft_id_set": true}, "timestamp": 1788530342942, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530346251, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530346252, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530357046, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530357047, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530359073, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530359074, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530359077, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530359077, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530367837, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530367839, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530367842, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530367842, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530375923, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530375923, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530375926, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530375926, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530504945, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530504948, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "before SessionLocal", "data": {}, "timestamp": 1788530504954, "runId": "post-fix"}
+{"sessionId": "0e071d", "hypothesisId": "H_S4", "location": "database.py:get_db", "message": "session created", "data": {}, "timestamp": 1788530504954, "runId": "post-fix"}

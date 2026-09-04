@@ -477,7 +477,7 @@ export function ScribePanel({
       <div className={shellClass}>
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-slate-900">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-300">
                 <span className="material-symbols-outlined text-xl">graphic_eq</span>
               </span>
@@ -552,7 +552,7 @@ export function ScribePanel({
             <button
               type="button"
               onClick={stopRecordingAndProcess}
-              className="w-full rounded-xl bg-red-600 py-3 text-sm font-semibold text-white hover:bg-red-500"
+              className="w-full rounded-xl bg-red-600 py-3 text-sm font-semibold text-slate-900 hover:bg-red-500"
             >
               Stop &amp; generate draft
             </button>
@@ -566,7 +566,7 @@ export function ScribePanel({
               onChange={(e) => setPastedTranscript(e.target.value)}
               rows={6}
               placeholder="Paste or type the consultation dialogue (20+ characters). Works without Whisper."
-              className="w-full resize-y rounded-xl border border-white/10 bg-black/50 p-3 text-xs leading-relaxed text-slate-200 outline-none placeholder:text-slate-600 focus:border-cyan-500/40"
+              className="w-full resize-y rounded-xl border border-white/10 bg-slate-50 p-3 text-xs leading-relaxed text-slate-200 outline-none placeholder:text-slate-600 focus:border-cyan-500/40"
             />
             <button
               type="button"
@@ -581,10 +581,10 @@ export function ScribePanel({
 
         {state === "processing" && (
           <div className="flex flex-col items-center gap-3 py-8">
-            <span className="material-symbols-outlined animate-spin text-3xl text-cyan-400">
+            <span className="material-symbols-outlined animate-spin text-3xl text-slate-900">
               progress_activity
             </span>
-            <p className="text-center text-sm text-slate-400">
+            <p className="text-center text-sm text-slate-500">
               Transcribing, structuring SOAP, and preparing review draft…
             </p>
           </div>
@@ -635,8 +635,8 @@ export function ScribePanel({
           <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden rounded-[28px] border border-white/10 bg-slate-950 shadow-2xl">
             <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 md:px-6">
               <div>
-                <h3 className="text-lg font-semibold text-white">Review ambient scribe draft</h3>
-                <p className="mt-1 text-xs text-slate-400">
+                <h3 className="text-lg font-semibold text-slate-900">Review ambient scribe draft</h3>
+                <p className="mt-1 text-xs text-slate-500">
                   Edit what the agent inferred, then choose what to apply into this consultation.
                 </p>
               </div>
@@ -669,13 +669,13 @@ export function ScribePanel({
                     rows={4}
                     className="w-full resize-y rounded-xl border border-white/10 bg-black/35 p-3 text-sm text-slate-100 outline-none focus:border-cyan-500/40"
                   />
-                  <p className="mt-3 text-xs leading-relaxed text-slate-400">
+                  <p className="mt-3 text-xs leading-relaxed text-slate-500">
                     {draft.speaker_analysis.notes || "Role attribution was inferred from conversational cues."}
                   </p>
                 </section>
 
                 <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="text-sm font-semibold text-white">Apply to consultation</div>
+                  <div className="text-sm font-semibold text-slate-900">Apply to consultation</div>
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {[
                       ["notes", "Notes + SOAP"],
@@ -697,7 +697,7 @@ export function ScribePanel({
                               [key]: e.target.checked,
                             }))
                           }
-                          className="h-4 w-4 rounded border-slate-600 bg-black/50 text-cyan-400"
+                          className="h-4 w-4 rounded border-slate-600 bg-slate-50 text-slate-900"
                         />
                         {label}
                       </label>
@@ -708,7 +708,7 @@ export function ScribePanel({
 
               {draft.speaker_turns.length > 0 && (
                 <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <div className="mb-3 text-sm font-semibold text-white">Inferred speaker turns</div>
+                  <div className="mb-3 text-sm font-semibold text-slate-900">Inferred speaker turns</div>
                   <div className="space-y-2">
                     {draft.speaker_turns.map((turn, index) => (
                       <div
@@ -739,7 +739,7 @@ export function ScribePanel({
               )}
 
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="mb-3 text-sm font-semibold text-white">SOAP</div>
+                <div className="mb-3 text-sm font-semibold text-slate-900">SOAP</div>
                 <div className="grid gap-3 md:grid-cols-2">
                   {(["subjective", "objective", "assessment", "plan"] as const).map((field) => (
                     <div key={field}>
@@ -758,7 +758,7 @@ export function ScribePanel({
 
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-white">Diagnoses</div>
+                  <div className="text-sm font-semibold text-slate-900">Diagnoses</div>
                   <span className="text-xs text-slate-500">
                     Remove anything you do not want applied
                   </span>
@@ -833,7 +833,7 @@ export function ScribePanel({
               </section>
 
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="mb-3 text-sm font-semibold text-white">Medication suggestions</div>
+                <div className="mb-3 text-sm font-semibold text-slate-900">Medication suggestions</div>
                 {draft.suggestions.medications.length === 0 ? (
                   <p className="text-sm text-slate-500">No medication changes were confidently inferred.</p>
                 ) : (
@@ -974,7 +974,7 @@ export function ScribePanel({
               </section>
 
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="mb-3 text-sm font-semibold text-white">Lab orders and disposition</div>
+                <div className="mb-3 text-sm font-semibold text-slate-900">Lab orders and disposition</div>
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
                   <div className="space-y-3">
                     {draft.suggestions.lab_orders.length === 0 ? (
@@ -1029,7 +1029,7 @@ export function ScribePanel({
                   </div>
 
                   <div className="rounded-2xl border border-white/5 bg-black/25 p-4">
-                    <div className="mb-3 text-sm font-semibold text-white">Disposition</div>
+                    <div className="mb-3 text-sm font-semibold text-slate-900">Disposition</div>
                     <select
                       value={draft.suggestions.disposition.action}
                       onChange={(e) =>
@@ -1077,7 +1077,7 @@ export function ScribePanel({
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <div className="grid gap-4 lg:grid-cols-3">
                   <div className="lg:col-span-1">
-                    <div className="mb-2 text-sm font-semibold text-white">Follow-up</div>
+                    <div className="mb-2 text-sm font-semibold text-slate-900">Follow-up</div>
                     <textarea
                       value={draft.suggestions.follow_up}
                       onChange={(e) =>
@@ -1094,7 +1094,7 @@ export function ScribePanel({
                     />
                   </div>
                   <div>
-                    <div className="mb-2 text-sm font-semibold text-white">Patient instructions</div>
+                    <div className="mb-2 text-sm font-semibold text-slate-900">Patient instructions</div>
                     <textarea
                       value={draft.suggestions.patient_instructions.join("\n")}
                       onChange={(e) =>
@@ -1105,7 +1105,7 @@ export function ScribePanel({
                     />
                   </div>
                   <div>
-                    <div className="mb-2 text-sm font-semibold text-white">Red flags</div>
+                    <div className="mb-2 text-sm font-semibold text-slate-900">Red flags</div>
                     <textarea
                       value={draft.suggestions.red_flags.join("\n")}
                       onChange={(e) => updateStringList("red_flags", e.target.value)}
@@ -1117,7 +1117,7 @@ export function ScribePanel({
               </section>
 
               <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="mb-2 text-sm font-semibold text-white">Transcript</div>
+                <div className="mb-2 text-sm font-semibold text-slate-900">Transcript</div>
                 <textarea
                   value={transcript}
                   readOnly
@@ -1128,7 +1128,7 @@ export function ScribePanel({
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-4 md:px-6">
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-slate-500">
                 The doctor remains the final decision maker. Nothing is charted until you apply it and save the consultation.
               </div>
               <div className="flex flex-wrap gap-2">

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Aegis AI",
+  title: "Saarthi",
   description: "Next-generation healthcare management",
 };
 

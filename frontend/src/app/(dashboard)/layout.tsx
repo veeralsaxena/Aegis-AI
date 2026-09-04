@@ -52,11 +52,8 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
     <>
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-200">
-        <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined text-slate-700 text-xl">ecg_heart</span>
-        </div>
         <span className="text-xl font-bold tracking-tight text-slate-900 whitespace-nowrap">
-          Aegis AI
+          Saarthi
         </span>
         {/* Desktop collapse toggle */}
         <button
@@ -132,7 +129,7 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
         <button onClick={() => setMobileOpen(true)} className="text-slate-500 hover:text-slate-900 transition-colors">
           <span className="material-symbols-outlined text-2xl">menu</span>
         </button>
-        <span className="ml-3 text-lg font-bold tracking-tight text-slate-900">Aegis AI</span>
+        <span className="ml-3 text-lg font-bold tracking-tight text-slate-900">Saarthi</span>
       </div>
 
       {/* Mobile Sidebar Overlay */}
