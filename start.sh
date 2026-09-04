@@ -29,9 +29,11 @@ echo -e "${BLUE}=========================================${NC}"
 echo -e "${BLUE}        🛡️ Aegis AI — Full Stack         ${NC}"
 echo -e "${BLUE}=========================================${NC}"
 
-# Free up ports if lingering
-echo -e "${GREEN}1. Checking ports :${AI_PORT} and :${FRONT_PORT}...${NC}"
+# Free up ports and locks if lingering
+echo -e "${GREEN}1. Checking ports :${AI_PORT}, :${FRONT_PORT} and lock files...${NC}"
+pkill -f "next dev" 2>/dev/null || true
 lsof -ti :$AI_PORT -ti :$FRONT_PORT | xargs kill -9 2>/dev/null || true
+rm -f "$ROOT/frontend/.next/dev/lock" 2>/dev/null || true
 
 # 2. Docker & Bahmni Lite
 if [[ "${SKIP_BAHMNI:-}" != "1" ]]; then
