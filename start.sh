@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 #
-# One command: Bahmni (Docker) + AI sidecar (FastAPI) + Next.js
+# One command: Bahmni (Docker) + AI sidecar (FastAPI + Groq) + Next.js Frontend
 # Usage: ./start.sh
-#   SKIP_BAHMNI=1 ./start.sh   — only AI agents + frontend (Bahmni already running elsewhere)
 #
 
 set -e
@@ -15,6 +14,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 AI_PORT="${AI_AGENTS_PORT:-8001}"
+FRONT_PORT="${PORT:-3000}"
 
 cleanup() {
   if [[ -n "${AI_AGENTS_PID:-}" ]] && kill -0 "$AI_AGENTS_PID" 2>/dev/null; then
@@ -25,65 +25,88 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo -e "${BLUE}=== Aegis AI — full stack ===${NC}"
+echo -e "${BLUE}=========================================${NC}"
+echo -e "${BLUE}        🛡️ Aegis AI — Full Stack         ${NC}"
+echo -e "${BLUE}=========================================${NC}"
 
+# Free up ports if lingering
+echo -e "${GREEN}1. Checking ports :${AI_PORT} and :${FRONT_PORT}...${NC}"
+lsof -ti :$AI_PORT -ti :$FRONT_PORT | xargs kill -9 2>/dev/null || true
+
+# 2. Docker & Bahmni Lite
 if [[ "${SKIP_BAHMNI:-}" != "1" ]]; then
-  echo -e "${BLUE}=== Bahmni Lite (Docker) ===${NC}"
+  echo -e "\n${BLUE}=== Bahmni Lite (Docker) ===${NC}"
+  if ! docker info >/dev/null 2>&1; then
+    echo -e "${YELLOW}Docker daemon not responding. Launching Docker Desktop...${NC}"
+    open -a "/Applications/Docker.app" 2>/dev/null || open -a "Docker" 2>/dev/null || true
+    echo -n "Waiting for Docker daemon to become ready..."
+    for i in {1..30}; do
+      if docker info >/dev/null 2>&1; then
+        echo -e " ${GREEN}Ready!${NC}"
+        break
+      fi
+      echo -n "."
+      sleep 2
+    done
+  fi
+
   cd "$ROOT/backend"
-  echo -e "${GREEN}Starting Docker Compose...${NC}"
+  echo -e "${GREEN}Starting Bahmni EMR containers (COMPOSE_PROJECT_NAME=bahmni-lite)...${NC}"
   COMPOSE_PROJECT_NAME=bahmni-lite docker compose up -d
   cd "$ROOT"
 else
-  echo -e "${YELLOW}SKIP_BAHMNI=1 — not starting Docker${NC}"
+  echo -e "${YELLOW}SKIP_BAHMNI=1 — skipping Docker startup${NC}"
 fi
 
-echo -e "\n${BLUE}=== AI agents (FastAPI on 127.0.0.1:${AI_PORT}) ===${NC}"
-if [[ ! -f "$ROOT/ai-agents/.env" ]]; then
-  echo -e "${YELLOW}Missing ai-agents/.env — copy from ai-agents/.env.example (GOOGLE_API_KEY, DATABASE_URL, BAHMNI_*)${NC}"
-fi
-
-if [[ ! -x "$ROOT/ai-agents/.venv/bin/python" ]]; then
-  echo -e "${GREEN}Creating Python venv in ai-agents/.venv ...${NC}"
+# 3. AI Agents Sidecar (FastAPI + Groq)
+echo -e "\n${BLUE}=== AI Agents Sidecar (FastAPI on 127.0.0.1:${AI_PORT}) ===${NC}"
+if [[ ! -d "$ROOT/ai-agents/.venv" ]]; then
+  echo -e "${GREEN}Creating Python virtual environment in ai-agents/.venv...${NC}"
   python3 -m venv "$ROOT/ai-agents/.venv"
 fi
 
-echo -e "${GREEN}Installing Python dependencies (quiet)...${NC}"
-"$ROOT/ai-agents/.venv/bin/pip" install -q -r "$ROOT/ai-agents/requirements.txt"
-
-echo -e "${GREEN}Verifying ai-agents can import (needs python-multipart for scribe forms, etc.)...${NC}"
-if ! ( cd "$ROOT/ai-agents" && ./.venv/bin/python -c "from main import app" ); then
-  echo -e "${RED}Import failed. Run:${NC} cd ai-agents && .venv/bin/pip install -r requirements.txt"
-  exit 1
+if [[ ! -f "$ROOT/ai-agents/.venv/bin/uvicorn" ]]; then
+  echo -e "${GREEN}Installing Python dependencies...${NC}"
+  "$ROOT/ai-agents/.venv/bin/pip" install -q -r "$ROOT/ai-agents/requirements.txt"
 fi
 
-echo -e "${GREEN}Applying DB schema (optional, needs PostgreSQL + DATABASE_URL)...${NC}"
-(
-  cd "$ROOT/ai-agents"
-  ./.venv/bin/python scripts/init_db.py
-) || echo -e "${YELLOW}init_db skipped or failed — fix DATABASE_URL and Postgres if you need persistence.${NC}"
+echo -e "${GREEN}Verifying AI agent imports...${NC}"
+if ! ( cd "$ROOT/ai-agents" && ./.venv/bin/python -c "from main import app" ); then
+  echo -e "${RED}AI agent import failed. Check dependencies.${NC}"
+  exit 1
+fi
 
 (
   cd "$ROOT/ai-agents"
   exec ./.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port "$AI_PORT"
 ) &
 AI_AGENTS_PID=$!
+echo -e "${GREEN}AI Agents running on PID ${AI_AGENTS_PID}${NC}"
 
-echo -e "${GREEN}AI agents PID ${AI_AGENTS_PID}${NC}"
 sleep 1
-
 if curl -sf "http://127.0.0.1:${AI_PORT}/health" >/dev/null; then
-  echo -e "${GREEN}AI health OK at http://127.0.0.1:${AI_PORT}/health${NC}"
+  echo -e "${GREEN}✓ AI agents health check passed (http://127.0.0.1:${AI_PORT}/health)${NC}"
 else
-  echo -e "${YELLOW}AI service did not respond on /health yet — check ai-agents logs / .env${NC}"
+  echo -e "${YELLOW}Notice: AI service starting up...${NC}"
 fi
 
-echo -e "\n${BLUE}=== Next.js frontend ===${NC}"
+# 4. Next.js Frontend
+echo -e "\n${BLUE}=== Next.js Frontend (Port ${FRONT_PORT}) ===${NC}"
 cd "$ROOT/frontend"
 if [[ ! -d node_modules ]]; then
-  echo -e "${GREEN}npm install...${NC}"
+  echo -e "${GREEN}Installing frontend node_modules...${NC}"
   npm install
 fi
 
-echo -e "${GREEN}Starting dev server (proxies /ai-service → http://127.0.0.1:${AI_PORT})${NC}"
-echo -e "${BLUE}Open the app in the browser — AI calls use the same origin.${NC}"
+echo -e "${GREEN}Compiling and verifying TypeScript...${NC}"
+npx tsc --noEmit
+echo -e "${GREEN}✓ TypeScript compilation verified with 0 errors!${NC}"
+
+echo -e "\n${BLUE}=========================================${NC}"
+echo -e "${GREEN}🚀 Application is LIVE:${NC}"
+echo -e "   • Frontend:     ${BLUE}http://localhost:${FRONT_PORT}${NC}"
+echo -e "   • Bahmni EMR:   ${BLUE}http://localhost:8080/openmrs${NC}"
+echo -e "   • AI Sidecar:   ${BLUE}http://127.0.0.1:${AI_PORT}${NC}"
+echo -e "${BLUE}=========================================${NC}\n"
+
 npm run dev
