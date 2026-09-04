@@ -45,7 +45,7 @@ export default function CDSAgentAlerts({ patientUuid }: CDSAgentAlertsProps) {
   }, [patientUuid]);
 
   return (
-    <div className="bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-xl p-6 relative overflow-hidden group">
+    <div className="bg-white border border-slate-200 shadow-sm rounded-2xl backdrop-blur-xl p-6 relative overflow-hidden group">
       {/* ArmorIQ Branding Watermark */}
       <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity">
         <span className="text-xs font-bold tracking-widest uppercase">Secured by ArmorIQ</span>
@@ -66,9 +66,9 @@ export default function CDSAgentAlerts({ patientUuid }: CDSAgentAlertsProps) {
 
         <div className="flex-1 space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-white font-semibold flex items-center gap-2">
+            <h3 className="text-slate-900 font-semibold flex items-center gap-2">
               Clinical Decision Support
-              <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-slate-400 uppercase tracking-tighter">AI Agent</span>
+              <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 uppercase tracking-tighter">AI Agent</span>
             </h3>
             {decision && (
               <span className={`text-[10px] px-2 py-0.5 rounded uppercase font-bold ${
@@ -79,7 +79,7 @@ export default function CDSAgentAlerts({ patientUuid }: CDSAgentAlertsProps) {
             )}
           </div>
 
-          <p className="text-slate-400 text-sm leading-relaxed">
+          <p className="text-slate-500 text-sm leading-relaxed">
             {analyzing ? "Analyzing latest patient vitals and medications for potential interactions..." : 
              decision?.allowed ? "No contraindications found for proposed care plan." : 
              decision?.reason}
@@ -100,7 +100,7 @@ export default function CDSAgentAlerts({ patientUuid }: CDSAgentAlertsProps) {
               {decision.suggestedMitigation && (
                 <button 
                   onClick={simulateCDSCheck}
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-slate-800 hover:bg-slate-700 text-slate-900 text-xs font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-sm">escalator_warning</span>
                   {decision.suggestedMitigation}

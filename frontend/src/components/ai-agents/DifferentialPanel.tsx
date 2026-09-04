@@ -107,7 +107,7 @@ export function DifferentialPanel({
     High: "bg-emerald-500/15 text-emerald-300",
     Medium: "bg-amber-500/15 text-amber-200",
     Med: "bg-amber-500/15 text-amber-200",
-    Low: "bg-slate-500/15 text-slate-400",
+    Low: "bg-slate-500/15 text-slate-500",
   };
 
   return (
@@ -116,7 +116,7 @@ export function DifferentialPanel({
         type="button"
         onClick={fetchSuggestions}
         disabled={loading || chiefComplaint.length < 5}
-        className="rounded-lg border border-indigo-500/40 bg-indigo-500/10 px-4 py-2 text-xs font-medium text-indigo-200 disabled:opacity-40"
+        className="rounded-lg border border-slate-300 bg-slate-900 px-4 py-2 text-xs font-medium text-slate-900 hover:bg-slate-800 shadow-sm disabled:opacity-40"
       >
         {loading ? "Generating…" : "Suggest differential diagnoses"}
       </button>
@@ -131,31 +131,31 @@ export function DifferentialPanel({
       )}
 
       {visible && !loading && differentials.length > 0 && (
-        <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-slate-900/60">
-          <div className="flex items-center justify-between border-b border-white/5 bg-indigo-500/10 px-3 py-2">
-            <span className="text-xs font-semibold text-indigo-200">AI differential suggestions</span>
-            <button type="button" onClick={handleDismiss} className="text-[10px] text-slate-400 hover:text-white">
+        <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-2">
+            <span className="text-xs font-semibold text-slate-900">AI differential suggestions</span>
+            <button type="button" onClick={handleDismiss} className="text-[10px] text-slate-500 hover:text-slate-900">
               Dismiss
             </button>
           </div>
           {clinicalNote && (
-            <div className="border-b border-white/5 bg-black/20 px-3 py-2 text-[11px] text-slate-400">
+            <div className="border-b border-slate-100 bg-slate-50 px-3 py-2 text-[11px] text-slate-500">
               {clinicalNote}
             </div>
           )}
           {differentials.map((diff) => (
-            <div key={diff.rank} className="border-b border-white/5 last:border-0">
-              <div className="flex w-full items-start gap-3 px-3 py-3 hover:bg-white/5">
+            <div key={diff.rank} className="border-b border-slate-100 last:border-0">
+              <div className="flex w-full items-start gap-3 px-3 py-3 hover:bg-slate-50">
                 <button
                   type="button"
                   onClick={() => setExpanded(expanded === diff.rank ? null : diff.rank)}
                   className="flex min-w-0 flex-1 items-start gap-3 text-left"
                 >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-200">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-slate-900">
                     {diff.rank}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-slate-900">
                       {diff.diagnosis}
                       {diff.icd10_code ? (
                         <span className="ml-2 font-mono text-[10px] text-slate-500">{diff.icd10_code}</span>
@@ -173,13 +173,13 @@ export function DifferentialPanel({
                 <button
                   type="button"
                   onClick={() => handleSelect(diff)}
-                  className="shrink-0 rounded-lg bg-indigo-600 px-2 py-1 text-[10px] font-medium text-white"
+                  className="shrink-0 rounded-lg bg-indigo-600 px-2 py-1 text-[10px] font-medium text-slate-900"
                 >
                   Set diagnosis
                 </button>
               </div>
               {expanded === diff.rank && (
-                <div className="space-y-2 border-t border-white/5 px-3 pb-3 pl-14 text-[11px] text-slate-400">
+                <div className="space-y-2 border-t border-white/5 px-3 pb-3 pl-14 text-[11px] text-slate-500">
                   <p>
                     <span className="font-medium text-slate-300">Reasoning: </span>
                     {diff.reasoning}

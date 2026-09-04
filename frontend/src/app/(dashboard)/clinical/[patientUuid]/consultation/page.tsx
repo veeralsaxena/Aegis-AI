@@ -124,13 +124,12 @@ export default function ConsultationPage() {
       const name = medicationName.trim();
       if (!name) return;
       try {
-        await fetch(aiFetchUrl("/drug-safety/check"), {
+        await fetch(aiFetchUrl("/api/alerts/check-drug"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             patient_uuid: patientUuid,
-            doctor_uuid: provider?.uuid,
-            medication_name: name,
+            drug_name: name,
           }),
         });
       } catch { /* ignore */ }
@@ -622,7 +621,7 @@ export default function ConsultationPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] p-4 md:p-6 lg:p-8 pb-32">
-      <div className="w-full max-w-[1700px] mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_420px] gap-8 items-start">
+      <div className="w-full max-w-[1750px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-8 items-start">
         <div className="min-w-0 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 flex-wrap pb-6 border-b border-slate-200">
@@ -1120,7 +1119,7 @@ export default function ConsultationPage() {
       </div>
         </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start lg:h-[calc(100vh-3rem)] overflow-y-auto pr-1">
+        <aside className="w-full space-y-4 lg:sticky lg:top-6 lg:self-start lg:h-[calc(100vh-3rem)] overflow-y-auto pr-1">
           <ScribePanel
             layout="embedded"
             patientUuid={patientUuid}

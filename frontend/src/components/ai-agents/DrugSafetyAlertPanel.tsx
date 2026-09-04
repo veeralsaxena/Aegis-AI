@@ -113,12 +113,12 @@ export function DrugSafetyAlertPanel({
             key={alert.id}
             className={`rounded-xl border p-4 ${
               isCritical
-                ? "border-red-500/40 bg-red-500/10"
+                ? "border-rose-200 bg-rose-50/70 shadow-sm"
                 : "border-amber-500/30 bg-amber-500/5"
             }`}
           >
             <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
-              <h4 className={`text-sm font-semibold ${isCritical ? "text-red-300" : "text-amber-200"}`}>
+              <h4 className={`text-sm font-semibold ${isCritical ? "text-rose-700" : "text-amber-800"}`}>
                 {isCritical ? "Critical: " : "Warning: "}
                 {alert.title}
               </h4>
@@ -126,15 +126,15 @@ export function DrugSafetyAlertPanel({
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
                     ruleData.decision === "BLOCK"
-                      ? "bg-red-500/20 text-red-300"
-                      : "bg-amber-500/20 text-amber-200"
+                      ? "bg-red-500/20 text-rose-700"
+                      : "bg-amber-500/20 text-amber-800"
                   }`}
                 >
                   {ruleData.decision}
                 </span>
               )}
             </div>
-            <p className="text-xs leading-relaxed text-slate-300">
+            <p className="text-xs leading-relaxed text-slate-700">
               {(alert.body || "").split("\n\n")[0]}
             </p>
             {concerns.length > 0 && (
@@ -142,7 +142,7 @@ export function DrugSafetyAlertPanel({
                 {concerns.map((c, i) => (
                   <li
                     key={i}
-                    className="rounded-lg bg-black/20 px-3 py-1.5 text-[11px] text-slate-300"
+                    className="rounded-lg bg-black/20 px-3 py-1.5 text-[11px] text-slate-700"
                   >
                     <span className="font-medium text-slate-200">
                       {(c.concern_type || "concern").replace(/_/g, " ")}:{" "}
@@ -162,8 +162,8 @@ export function DrugSafetyAlertPanel({
               </p>
             ) : null}
             {ruleData.monitoring && ruleData.decision !== "BLOCK" ? (
-              <p className="mt-2 text-[11px] text-slate-400">
-                <span className="font-semibold text-slate-300">If proceeding: </span>
+              <p className="mt-2 text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-700">If proceeding: </span>
                 {ruleData.monitoring}
               </p>
             ) : null}
@@ -177,7 +177,7 @@ export function DrugSafetyAlertPanel({
               <button
                 type="button"
                 onClick={() => handleAcknowledge(alert.id)}
-                className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white"
+                className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-slate-900"
               >
                 Acknowledge
               </button>
@@ -185,7 +185,7 @@ export function DrugSafetyAlertPanel({
                 <button
                   type="button"
                   onClick={() => handleOverride(alert.id)}
-                  className="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-slate-300"
+                  className="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-slate-700"
                 >
                   Override with reason
                 </button>
